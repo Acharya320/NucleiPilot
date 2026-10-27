@@ -1,0 +1,25 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# --- Secrets / environment ---
+.env
+.env.*
+!.env.example
+
+# --- Results: ignore scratch runs, keep only curated final evidence ---
+results/*.json
+results/*.csv
+!results/final/
+
+# --- Never commit protected assignment materials ---
+*.pdf
+
+# --- OS / editor noise ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

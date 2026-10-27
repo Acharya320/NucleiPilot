@@ -1,0 +1,27 @@
+id: demo-admin-validation
+
+info:
+  name: Toy App - Management Endpoint Missing Authentication (Validation)
+  author: nucleipilot
+  severity: medium
+  description: |
+    Synthetic VALIDATION that the toy app's management endpoint does not require
+    authentication. This is the stronger confirmation that should follow the
+    admin indicator before a finding is reported. Synthetic; localhost only.
+  tags: nucleipilot,toy,admin,validation
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/management/status"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        condition: and
+        words:
+          - "authentication"
+          - "not-required"
