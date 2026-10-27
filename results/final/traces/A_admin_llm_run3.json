@@ -24,7 +24,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/metadata",
       "severity": "info",
-      "duration_s": 0.9583991998806596,
+      "duration_s": 1.003698299638927,
       "error": null
     },
     {
@@ -34,7 +34,7 @@
       "matched": false,
       "matched_at": null,
       "severity": null,
-      "duration_s": 1.0160219999961555,
+      "duration_s": 1.1607691999524832,
       "error": null
     },
     {
@@ -44,7 +44,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/management/status",
       "severity": "medium",
-      "duration_s": 3.4451560000889003,
+      "duration_s": 1.2886025998741388,
       "error": null
     }
   ],
@@ -72,7 +72,7 @@
       "detail": {
         "planner": "llm",
         "proposed": "demo-admin-validation",
-        "reason": "To confirm whether the management endpoint requires authentication, which is critical for assessing the security of the admin interface identified in the evidence.",
+        "reason": "This check will confirm whether the management endpoint requires authentication, directly addressing the matched admin indicator and potentially revealing a significant security issue.",
         "confidence": 0.8,
         "stop_reason": null,
         "evidence_referenced": [
@@ -81,7 +81,7 @@
         "raw": {
           "parsed": {
             "next_template": "demo-admin-validation",
-            "reason": "To confirm whether the management endpoint requires authentication, which is critical for assessing the security of the admin interface identified in the evidence.",
+            "reason": "This check will confirm whether the management endpoint requires authentication, directly addressing the matched admin indicator and potentially revealing a significant security issue.",
             "confidence": 0.8,
             "evidence_referenced": [
               "demo-admin-indicator"
@@ -143,5 +143,5 @@
       }
     }
   ],
-  "elapsed_s": 7.159
+  "elapsed_s": 4.746
 }

@@ -32,12 +32,23 @@ sandbox, independent of the agent.
 | Rule | 0 / 1 | `demo-debug-validation` (highest severity) |
 | LLM | **3 / 3** | `demo-admin-validation` (highest business impact) |
 
+**Block C — context sensitivity (same target, context FLIPPED: debug = business-critical):**
+
+| Planner | Chose business-critical check | Picked first |
+|---|---|---|
+| Rule | 0 / 1 | `demo-debug-validation` (unchanged — rule ignores context) |
+| LLM | **3 / 3** | `demo-debug-validation` (flipped to match the new context) |
+
+Blocks B and C together show the LLM's choice **flips with the business context (6/6)**, while
+the rule is context-blind. This rules out "the model just favours one issue."
+
 ## Observations
 - **What worked:** (a) The LLM reliably prioritized the business-critical issue under a
   budget constraint (3/3), where the severity rule could not (0/1). (b) The divergence is
   *principled*: in Block A `both` (no context given) the LLM picked the same severity-first
-  order as the rule — it only overrode it when context justified it. (c) No false positives
-  on the `benign` trap by any planner.
+  order as the rule — it only overrode it when context justified it, and when the context is
+  *flipped* (Block C) the choice flips too (6/6) — proving the decision is context-driven,
+  not biased. (c) No false positives on the `benign` trap by any planner.
 - **What failed / added no value:** At full budget the LLM matched — did not beat — the
   rule's perfect accuracy, while adding ~1.6s latency and token cost per run.
 - **Where human review belongs:** Under budget, the un-chosen real issue is surfaced as

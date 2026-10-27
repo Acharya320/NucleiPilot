@@ -21,7 +21,7 @@
       "matched": false,
       "matched_at": null,
       "severity": null,
-      "duration_s": 0.9703244999982417,
+      "duration_s": 3.093080900143832,
       "error": null
     },
     {
@@ -31,7 +31,7 @@
       "matched": false,
       "matched_at": null,
       "severity": null,
-      "duration_s": 1.0362514001317322,
+      "duration_s": 0.9877599002793431,
       "error": null
     }
   ],
@@ -84,5 +84,5 @@
       }
     }
   ],
-  "elapsed_s": 2.036
+  "elapsed_s": 4.106
 }

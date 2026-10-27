@@ -25,7 +25,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/metadata",
       "severity": "info",
-      "duration_s": 1.2706226999871433,
+      "duration_s": 1.0819282000884414,
       "error": null
     },
     {
@@ -35,7 +35,7 @@
       "matched": false,
       "matched_at": null,
       "severity": null,
-      "duration_s": 2.1725085000507534,
+      "duration_s": 0.9996972996741533,
       "error": null
     },
     {
@@ -45,7 +45,7 @@
       "matched": false,
       "matched_at": null,
       "severity": null,
-      "duration_s": 1.7916699000634253,
+      "duration_s": 0.9975636000744998,
       "error": null
     },
     {
@@ -55,7 +55,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/management/status",
       "severity": "medium",
-      "duration_s": 1.2402667999267578,
+      "duration_s": 1.0016973000019789,
       "error": null
     }
   ],
@@ -146,5 +146,5 @@
       }
     }
   ],
-  "elapsed_s": 6.536
+  "elapsed_s": 4.226
 }

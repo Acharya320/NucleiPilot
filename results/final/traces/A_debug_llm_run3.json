@@ -24,7 +24,7 @@
       "matched": false,
       "matched_at": null,
       "severity": null,
-      "duration_s": 1.245189200155437,
+      "duration_s": 1.136925600003451,
       "error": null
     },
     {
@@ -34,7 +34,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/debug/config",
       "severity": "info",
-      "duration_s": 1.1517365998588502,
+      "duration_s": 2.0937540996819735,
       "error": null
     },
     {
@@ -44,7 +44,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/debug/confirm",
       "severity": "high",
-      "duration_s": 1.1885714000090957,
+      "duration_s": 0.9792438000440598,
       "error": null
     }
   ],
@@ -72,7 +72,7 @@
       "detail": {
         "planner": "llm",
         "proposed": "demo-debug-validation",
-        "reason": "To confirm the presence of the debug interface and assess the severity of the potential issue, as it has high impact and is already indicated by the matched evidence.",
+        "reason": "Running the debug validation check will confirm whether the debug interface is actually exposed, which is a high-impact issue given the matched indicator.",
         "confidence": 0.9,
         "stop_reason": null,
         "evidence_referenced": [
@@ -81,7 +81,7 @@
         "raw": {
           "parsed": {
             "next_template": "demo-debug-validation",
-            "reason": "To confirm the presence of the debug interface and assess the severity of the potential issue, as it has high impact and is already indicated by the matched evidence.",
+            "reason": "Running the debug validation check will confirm whether the debug interface is actually exposed, which is a high-impact issue given the matched indicator.",
             "confidence": 0.9,
             "evidence_referenced": [
               "demo-debug-indicator"
@@ -90,7 +90,7 @@
           },
           "usage": {
             "prompt_tokens": 365,
-            "completion_tokens": 63
+            "completion_tokens": 58
           },
           "model": "openai/gpt-4o-mini"
         }
@@ -143,5 +143,5 @@
       }
     }
   ],
-  "elapsed_s": 4.882
+  "elapsed_s": 5.62
 }

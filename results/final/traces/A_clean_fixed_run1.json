@@ -23,7 +23,7 @@
       "matched": false,
       "matched_at": null,
       "severity": null,
-      "duration_s": 1.023888099938631,
+      "duration_s": 1.3491715998388827,
       "error": null
     },
     {
@@ -33,7 +33,7 @@
       "matched": false,
       "matched_at": null,
       "severity": null,
-      "duration_s": 1.0770974000915885,
+      "duration_s": 3.0853762002661824,
       "error": null
     },
     {
@@ -43,7 +43,7 @@
       "matched": false,
       "matched_at": null,
       "severity": null,
-      "duration_s": 1.187421299982816,
+      "duration_s": 1.0789419999346137,
       "error": null
     },
     {
@@ -53,7 +53,7 @@
       "matched": false,
       "matched_at": null,
       "severity": null,
-      "duration_s": 2.1684319996275008,
+      "duration_s": 1.0532084996812046,
       "error": null
     }
   ],
@@ -144,5 +144,5 @@
       }
     }
   ],
-  "elapsed_s": 5.62
+  "elapsed_s": 6.63
 }

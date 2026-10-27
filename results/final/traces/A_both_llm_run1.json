@@ -26,7 +26,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/metadata",
       "severity": "info",
-      "duration_s": 2.914890000130981,
+      "duration_s": 1.0525352000258863,
       "error": null
     },
     {
@@ -36,7 +36,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/debug/config",
       "severity": "info",
-      "duration_s": 0.962298299651593,
+      "duration_s": 1.1668893001042306,
       "error": null
     },
     {
@@ -46,7 +46,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/debug/confirm",
       "severity": "high",
-      "duration_s": 1.0942768999375403,
+      "duration_s": 2.205433299764991,
       "error": null
     },
     {
@@ -56,7 +56,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/management/status",
       "severity": "medium",
-      "duration_s": 0.9800291997380555,
+      "duration_s": 1.00166040007025,
       "error": null
     }
   ],
@@ -85,7 +85,7 @@
         "planner": "llm",
         "proposed": "demo-debug-validation",
         "reason": "The debug interface has a higher severity and potential impact, making it more critical to confirm its exposure.",
-        "confidence": 0.85,
+        "confidence": 0.8,
         "stop_reason": null,
         "evidence_referenced": [
           "demo-debug-indicator"
@@ -94,7 +94,7 @@
           "parsed": {
             "next_template": "demo-debug-validation",
             "reason": "The debug interface has a higher severity and potential impact, making it more critical to confirm its exposure.",
-            "confidence": 0.85,
+            "confidence": 0.8,
             "evidence_referenced": [
               "demo-debug-indicator"
             ],
@@ -181,5 +181,5 @@
       }
     }
   ],
-  "elapsed_s": 9.537
+  "elapsed_s": 8.615
 }

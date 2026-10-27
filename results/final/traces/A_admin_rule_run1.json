@@ -24,7 +24,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/metadata",
       "severity": "info",
-      "duration_s": 1.055120900273323,
+      "duration_s": 0.9262371999211609,
       "error": null
     },
     {
@@ -34,7 +34,7 @@
       "matched": false,
       "matched_at": null,
       "severity": null,
-      "duration_s": 1.1750996001064777,
+      "duration_s": 2.242634499911219,
       "error": null
     },
     {
@@ -44,7 +44,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/management/status",
       "severity": "medium",
-      "duration_s": 1.3843471999280155,
+      "duration_s": 1.8420929000712931,
       "error": null
     }
   ],
@@ -128,5 +128,5 @@
       }
     }
   ],
-  "elapsed_s": 3.68
+  "elapsed_s": 5.163
 }

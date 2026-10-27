@@ -24,7 +24,7 @@
       "matched": false,
       "matched_at": null,
       "severity": null,
-      "duration_s": 1.039326500147581,
+      "duration_s": 0.9724726998247206,
       "error": null
     },
     {
@@ -34,7 +34,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/debug/config",
       "severity": "info",
-      "duration_s": 1.1316744000650942,
+      "duration_s": 1.0557375000789762,
       "error": null
     },
     {
@@ -44,7 +44,7 @@
       "matched": false,
       "matched_at": null,
       "severity": null,
-      "duration_s": 3.16377090010792,
+      "duration_s": 2.3542536003515124,
       "error": null
     }
   ],
@@ -143,5 +143,5 @@
       }
     }
   ],
-  "elapsed_s": 7.262
+  "elapsed_s": 5.92
 }

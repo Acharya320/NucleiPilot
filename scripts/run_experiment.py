@@ -33,7 +33,19 @@ CONTEXT_B = {
     },
     "note": "Only ONE follow-up is permitted (budget=1). Prioritize business impact.",
 }
-CORRECT_B = "demo-admin-validation"   # the business-impact-optimal choice given CONTEXT_B
+CORRECT_B = "demo-admin-validation"   # business-impact-optimal choice given CONTEXT_B
+
+# Block C uses the SAME target with the context FLIPPED (debug is now critical).
+# A context-driven agent should flip its choice; a biased one would not.
+CONTEXT_C = {
+    "environment": "authorized local sandbox",
+    "assets": {
+        "admin": "The management surface is an internal low-traffic admin tool (low impact).",
+        "debug": "The debug interface is exposed on the PAYMENTS gateway (business-critical).",
+    },
+    "note": "Only ONE follow-up is permitted (budget=1). Prioritize business impact.",
+}
+CORRECT_C = "demo-debug-validation"   # business-impact-optimal choice given CONTEXT_C
 
 rows = []
 
@@ -100,6 +112,23 @@ try:
 finally:
     httpd.shutdown(); httpd.server_close()
 
+# ---- Block C: context sensitivity (flip so DEBUG is business-critical) ----
+print("### BLOCK C -- context sensitivity: DEBUG is now business-critical ###")
+httpd = serve("both")
+target = f"http://127.0.0.1:{PORT}"
+try:
+    run = workflow.run_workflow(target, RulePlanner(), budget=1, target_context=CONTEXT_C)
+    record("C", "both", "rule", 1, 1, run, gtB,
+           decision_correct=(evaluate.first_decision(run) == CORRECT_C))
+    save_trace("C_both_rule_run1", run)
+    for i in range(1, LLM_REPEAT + 1):
+        run = workflow.run_workflow(target, LLMPlanner(), budget=1, target_context=CONTEXT_C)
+        record("C", "both", "llm", i, 1, run, gtB,
+               decision_correct=(evaluate.first_decision(run) == CORRECT_C))
+        save_trace(f"C_both_llm_run{i}", run)
+finally:
+    httpd.shutdown(); httpd.server_close()
+
 # ---- write comparison.csv ----
 cols = ["block", "profile", "planner", "run", "budget", "tp", "fp", "fn", "n_templates",
         "elapsed_s", "prompt_tokens", "completion_tokens", "invalid_or_blocked",
@@ -151,12 +180,19 @@ for planner in ("fixed", "rule", "llm"):
               f"{evaluate.fmt(a['precision']):5} {evaluate.fmt(a['recall']):5} "
               f"{a['avg_tmpl']:^7.2f} {a['avg_lat']:^7.2f} {a['tokens']:^7} {a['invalid']:^7}")
 
-print("\n==================== BLOCK B: budget-1 prioritization ('both') ====================")
-for planner in ("rule", "llm"):
-    rs = [r for r in rows if r["block"] == "B" and r["planner"] == planner]
-    correct = sum(r["decision_correct"] or 0 for r in rs)
-    chose = ", ".join(sorted({r["decision_first"] for r in rs}))
-    print(f"  {planner:5}: {correct}/{len(rs)} chose the business-critical check  (picked: {chose})")
+for block, ctx_label in (("B", "admin=critical -> expect admin-validation"),
+                         ("C", "debug=critical -> expect debug-validation")):
+    print(f"\n========== BLOCK {block}: budget-1 prioritization ({ctx_label}) ==========")
+    for planner in ("rule", "llm"):
+        rs = [r for r in rows if r["block"] == block and r["planner"] == planner]
+        correct = sum(r["decision_correct"] or 0 for r in rs)
+        chose = ", ".join(sorted({r["decision_first"] for r in rs}))
+        print(f"  {planner:5}: {correct}/{len(rs)} chose the business-critical check  (picked: {chose})")
+
+llm_b = {r["decision_first"] for r in rows if r["block"] == "B" and r["planner"] == "llm"}
+llm_c = {r["decision_first"] for r in rows if r["block"] == "C" and r["planner"] == "llm"}
+flipped = llm_b == {"demo-admin-validation"} and llm_c == {"demo-debug-validation"}
+print(f"\nCONTEXT SENSITIVITY: LLM choice flips with context = {flipped}  (B->{llm_b}, C->{llm_c})")
 
 print(f"\nSaved -> {os.path.join(FINAL, 'comparison.csv')}")
 print(f"Saved -> {os.path.join(FINAL, 'environment.txt')}")

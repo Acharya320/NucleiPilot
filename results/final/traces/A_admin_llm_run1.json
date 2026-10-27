@@ -24,7 +24,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/metadata",
       "severity": "info",
-      "duration_s": 0.9169365996494889,
+      "duration_s": 1.0089569999836385,
       "error": null
     },
     {
@@ -34,7 +34,7 @@
       "matched": false,
       "matched_at": null,
       "severity": null,
-      "duration_s": 1.0683750002644956,
+      "duration_s": 0.9880421999841928,
       "error": null
     },
     {
@@ -44,7 +44,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/management/status",
       "severity": "medium",
-      "duration_s": 0.9582384000532329,
+      "duration_s": 2.4044800996780396,
       "error": null
     }
   ],
@@ -72,7 +72,7 @@
       "detail": {
         "planner": "llm",
         "proposed": "demo-admin-validation",
-        "reason": "This check will confirm whether the management endpoint requires authentication, directly addressing the matched admin indicator and potentially revealing a significant security issue.",
+        "reason": "To confirm whether the management endpoint requires authentication, which is critical given the matched admin indicator, potentially exposing sensitive operations.",
         "confidence": 0.8,
         "stop_reason": null,
         "evidence_referenced": [
@@ -81,7 +81,7 @@
         "raw": {
           "parsed": {
             "next_template": "demo-admin-validation",
-            "reason": "This check will confirm whether the management endpoint requires authentication, directly addressing the matched admin indicator and potentially revealing a significant security issue.",
+            "reason": "To confirm whether the management endpoint requires authentication, which is critical given the matched admin indicator, potentially exposing sensitive operations.",
             "confidence": 0.8,
             "evidence_referenced": [
               "demo-admin-indicator"
@@ -90,7 +90,7 @@
           },
           "usage": {
             "prompt_tokens": 356,
-            "completion_tokens": 57
+            "completion_tokens": 55
           },
           "model": "openai/gpt-4o-mini"
         }
@@ -143,5 +143,5 @@
       }
     }
   ],
-  "elapsed_s": 4.871
+  "elapsed_s": 6.276
 }

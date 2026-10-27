@@ -32,7 +32,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/metadata",
       "severity": "info",
-      "duration_s": 1.030107899568975,
+      "duration_s": 1.042418200057,
       "error": null
     },
     {
@@ -42,7 +42,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/debug/config",
       "severity": "info",
-      "duration_s": 0.9901239997707307,
+      "duration_s": 1.1509107002057135,
       "error": null
     },
     {
@@ -52,7 +52,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/management/status",
       "severity": "medium",
-      "duration_s": 1.1024740003049374,
+      "duration_s": 3.1960102999582887,
       "error": null
     }
   ],
@@ -80,8 +80,8 @@
       "detail": {
         "planner": "llm",
         "proposed": "demo-admin-validation",
-        "reason": "Validating the management endpoint's authentication is critical due to its connection to the business-critical PAYMENTS service, which poses a higher risk if left unprotected.",
-        "confidence": 0.9,
+        "reason": "Validating the management endpoint's authentication is critical due to its connection to the business-critical PAYMENTS service, which poses a higher impact if compromised.",
+        "confidence": 0.8,
         "stop_reason": null,
         "evidence_referenced": [
           "demo-admin-indicator"
@@ -89,8 +89,8 @@
         "raw": {
           "parsed": {
             "next_template": "demo-admin-validation",
-            "reason": "Validating the management endpoint's authentication is critical due to its connection to the business-critical PAYMENTS service, which poses a higher risk if left unprotected.",
-            "confidence": 0.9,
+            "reason": "Validating the management endpoint's authentication is critical due to its connection to the business-critical PAYMENTS service, which poses a higher impact if compromised.",
+            "confidence": 0.8,
             "evidence_referenced": [
               "demo-admin-indicator"
             ],
@@ -98,7 +98,7 @@
           },
           "usage": {
             "prompt_tokens": 496,
-            "completion_tokens": 63
+            "completion_tokens": 61
           },
           "model": "openai/gpt-4o-mini"
         }
@@ -131,5 +131,5 @@
       }
     }
   ],
-  "elapsed_s": 4.332
+  "elapsed_s": 7.263
 }

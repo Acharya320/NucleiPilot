@@ -26,7 +26,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/metadata",
       "severity": "info",
-      "duration_s": 0.9808853999711573,
+      "duration_s": 1.00888939993456,
       "error": null
     },
     {
@@ -36,7 +36,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/debug/config",
       "severity": "info",
-      "duration_s": 2.2111935997381806,
+      "duration_s": 2.1521563003771007,
       "error": null
     },
     {
@@ -46,7 +46,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/debug/confirm",
       "severity": "high",
-      "duration_s": 1.0281976000405848,
+      "duration_s": 0.987293400336057,
       "error": null
     },
     {
@@ -56,7 +56,7 @@
       "matched": true,
       "matched_at": "http://127.0.0.1:8790/management/status",
       "severity": "medium",
-      "duration_s": 1.0293503999710083,
+      "duration_s": 1.049570499919355,
       "error": null
     }
   ],
@@ -84,8 +84,8 @@
       "detail": {
         "planner": "llm",
         "proposed": "demo-debug-validation",
-        "reason": "The debug interface has a higher severity and potential impact, making it more critical to confirm its exposure.",
-        "confidence": 0.85,
+        "reason": "The debug interface has a high severity issue and confirming its exposure will provide critical information about potential vulnerabilities.",
+        "confidence": 0.9,
         "stop_reason": null,
         "evidence_referenced": [
           "demo-debug-indicator"
@@ -93,8 +93,8 @@
         "raw": {
           "parsed": {
             "next_template": "demo-debug-validation",
-            "reason": "The debug interface has a higher severity and potential impact, making it more critical to confirm its exposure.",
-            "confidence": 0.85,
+            "reason": "The debug interface has a high severity issue and confirming its exposure will provide critical information about potential vulnerabilities.",
+            "confidence": 0.9,
             "evidence_referenced": [
               "demo-debug-indicator"
             ],
@@ -181,5 +181,5 @@
       }
     }
   ],
-  "elapsed_s": 8.439
+  "elapsed_s": 9.056
 }
