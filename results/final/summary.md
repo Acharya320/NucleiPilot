@@ -58,6 +58,13 @@ the rule is context-blind. This rules out "the model just favours one issue."
   injected (malformed JSON, invented template id, out-of-scope target) the harness fails
   safe — see `safety_checks.md`.
 
+## Generalization (real CVE, outside the toy lab)
+The same agent pattern was run against a real **Grafana 8.3.0** container using Nuclei's
+**official** templates. Given the detected version and two candidate CVEs (budget 1), the LLM
+chose the applicable `CVE-2021-43798` over the inapplicable `CVE-2020-13379` and confirmed a
+real arbitrary-file-read (`/etc/passwd`). This shows the approach is not tied to our own toy
+templates. Evidence: `results/final/vulhub_grafana_demo.json`.
+
 ## Limitations
 Toy environment, 2 issue classes, small sample, a single model, localhost only. "Decision
 correct" in Block B is defined as the business-impact-optimal choice given the stated

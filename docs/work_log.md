@@ -17,6 +17,8 @@ and README are grounded in what actually happened. Newest entries at the bottom.
 | 27 Oct | all (Block A) | real Nuclei | fixed/rule/llm×3 | `scripts/run_experiment.py` → `results/final/comparison.csv` | Full budget: all planners precision=recall=1.00, 0 FP; rule+llm avg 3.0 templates vs fixed 4.0; llm 0 invalid over 15 runs, ~6.5k tokens | Write summary.md |
 | 27 Oct | both (Block B, budget 1) | real Nuclei | rule vs llm×3 | same harness | Prioritization: rule 0/1, **llm 3/3** chose the business-critical admin check (stable across repeats) | VulHub demo (Day 4-5) |
 | 27 Oct | — (fakes) | none | safety | `scripts/safety_checks.py` → `results/final/safety_checks.md` | 4/4 pass: out-of-scope reject, invented-id block, malformed-JSON safe stop, STOP on clean. Test suite now 23 tests. | — |
+| 27 Oct | 'both' flipped ctx (Block C) | real Nuclei | rule vs llm×3 | `scripts/run_experiment.py` | Context flip: LLM 3/3 picked debug when debug=critical (B→admin, C→debug); context-sensitivity verified (6/6), not biased | — |
+| 27 Oct | **Grafana 8.3.0 (real app)** | real Nuclei (OFFICIAL templates) | llm | `scripts/vulhub_demo.py` → `results/final/vulhub_grafana_demo.json` | **Generalization:** agent read version 8.3.0, chose applicable CVE-2021-43798 over distractor CVE-2020-13379, confirmed real /etc/passwd read. Same framework, real app we didn't write. | Written brief + deck + video |
 
 ## Notes / decisions
 - **Target strategy:** toy sandbox = measurement bench (controllable ground truth);

@@ -80,6 +80,22 @@ copy .env.example .env   # then paste your OpenRouter key into .env
 .\.venv\Scripts\python.exe scripts\llm_decision_demo.py
 ```
 
+## Generalization — real CVE on a real app (Grafana)
+
+The same agent pattern also runs against an app we did **not** write. Against a local
+**Grafana 8.3.0** container, the agent fingerprints the version, then — given two candidate
+CVEs and a budget of 1 — reasons from the detected version to pick the **applicable** one
+(`CVE-2021-43798`, affecting 8.0.0–8.3.0) over a distractor (`CVE-2020-13379`, 3.0.1–7.0.1),
+authorizes it, and confirms a real arbitrary-file-read using Nuclei's **official** template.
+Evidence: `results/final/vulhub_grafana_demo.json`.
+
+```powershell
+docker run -d --name np-grafana -p 3000:3000 grafana/grafana:8.3.0
+nuclei -update-templates            # download the official community templates
+.\.venv\Scripts\python.exe scripts\vulhub_demo.py
+docker rm -f np-grafana             # stop the target when done
+```
+
 ## Repo layout
 
 ```
