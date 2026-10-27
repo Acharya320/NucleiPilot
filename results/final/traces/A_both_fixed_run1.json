@@ -1,0 +1,151 @@
+{
+  "target": "http://127.0.0.1:8790",
+  "planner": "fixed",
+  "budget": 2,
+  "target_context": {},
+  "fired_indicators": [
+    "demo-admin-indicator",
+    "demo-debug-indicator"
+  ],
+  "assessment": {
+    "admin": "CONFIRMED",
+    "debug": "CONFIRMED"
+  },
+  "templates_run": [
+    "demo-admin-indicator",
+    "demo-admin-validation",
+    "demo-debug-indicator",
+    "demo-debug-validation"
+  ],
+  "n_templates_run": 4,
+  "observations": [
+    {
+      "template_id": "demo-admin-indicator",
+      "kind": "indicator",
+      "issue": "admin",
+      "matched": true,
+      "matched_at": "http://127.0.0.1:8790/metadata",
+      "severity": "info",
+      "duration_s": 1.0274481996893883,
+      "error": null
+    },
+    {
+      "template_id": "demo-debug-indicator",
+      "kind": "indicator",
+      "issue": "debug",
+      "matched": true,
+      "matched_at": "http://127.0.0.1:8790/debug/config",
+      "severity": "info",
+      "duration_s": 1.1153521002270281,
+      "error": null
+    },
+    {
+      "template_id": "demo-debug-validation",
+      "kind": "validation",
+      "issue": "debug",
+      "matched": true,
+      "matched_at": "http://127.0.0.1:8790/debug/confirm",
+      "severity": "high",
+      "duration_s": 1.6270380998030305,
+      "error": null
+    },
+    {
+      "template_id": "demo-admin-validation",
+      "kind": "validation",
+      "issue": "admin",
+      "matched": true,
+      "matched_at": "http://127.0.0.1:8790/management/status",
+      "severity": "medium",
+      "duration_s": 2.35388970002532,
+      "error": null
+    }
+  ],
+  "trace": [
+    {
+      "step": "discovery",
+      "detail": {
+        "template": "demo-admin-indicator",
+        "matched": true,
+        "evidence_at": "http://127.0.0.1:8790/metadata",
+        "error": null
+      }
+    },
+    {
+      "step": "discovery",
+      "detail": {
+        "template": "demo-debug-indicator",
+        "matched": true,
+        "evidence_at": "http://127.0.0.1:8790/debug/config",
+        "error": null
+      }
+    },
+    {
+      "step": "decision",
+      "detail": {
+        "planner": "fixed",
+        "proposed": "demo-debug-validation",
+        "reason": "fixed/exhaustive: run every template regardless of evidence",
+        "confidence": null,
+        "stop_reason": null,
+        "evidence_referenced": [],
+        "raw": null
+      }
+    },
+    {
+      "step": "policy",
+      "detail": {
+        "proposed": "demo-debug-validation",
+        "ok": true,
+        "reason": "approved: 'demo-debug-validation' is in the allowlist and eligible"
+      }
+    },
+    {
+      "step": "action",
+      "detail": {
+        "template": "demo-debug-validation",
+        "executed": true,
+        "matched": true,
+        "evidence_at": "http://127.0.0.1:8790/debug/confirm"
+      }
+    },
+    {
+      "step": "decision",
+      "detail": {
+        "planner": "fixed",
+        "proposed": "demo-admin-validation",
+        "reason": "fixed/exhaustive: run every template regardless of evidence",
+        "confidence": null,
+        "stop_reason": null,
+        "evidence_referenced": [],
+        "raw": null
+      }
+    },
+    {
+      "step": "policy",
+      "detail": {
+        "proposed": "demo-admin-validation",
+        "ok": true,
+        "reason": "approved: 'demo-admin-validation' is in the allowlist and eligible"
+      }
+    },
+    {
+      "step": "action",
+      "detail": {
+        "template": "demo-admin-validation",
+        "executed": true,
+        "matched": true,
+        "evidence_at": "http://127.0.0.1:8790/management/status"
+      }
+    },
+    {
+      "step": "reassess",
+      "detail": {
+        "assessment": {
+          "admin": "CONFIRMED",
+          "debug": "CONFIRMED"
+        }
+      }
+    }
+  ],
+  "elapsed_s": 6.176
+}

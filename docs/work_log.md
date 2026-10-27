@@ -14,6 +14,9 @@ and README are grounded in what actually happened. Newest entries at the bottom.
 | 27 Oct | admin | **real Nuclei** | (scanner only) | `scripts/scan_once.py --profile admin` → `results/day1_admin_scan.json` | admin indicator+validation MATCHED; debug templates correctly did NOT match; authentic HTTP evidence captured | Build planners |
 | 27 Oct | clean/benign/admin/both | real Nuclei | fixed, rule | `scripts/compare_rule_vs_fixed.py` | Rule uses fewer templates (clean 2 vs 4), **no false positive incl. the benign trap**, same verdicts | Add LLM planner |
 | 27 Oct | both (budget 1) | real Nuclei | **llm** (gpt-4o-mini) vs rule | `scripts/llm_decision_demo.py` → `results/day2_llm_both_budget1.json` | With payments-context, LLM chose `demo-admin-validation` (business impact); severity rule chose `demo-debug-validation`. Policy guard approved the LLM choice. ~556 tokens. | Day 3: repeat 3×, metrics, failure/safety cases |
+| 27 Oct | all (Block A) | real Nuclei | fixed/rule/llm×3 | `scripts/run_experiment.py` → `results/final/comparison.csv` | Full budget: all planners precision=recall=1.00, 0 FP; rule+llm avg 3.0 templates vs fixed 4.0; llm 0 invalid over 15 runs, ~6.5k tokens | Write summary.md |
+| 27 Oct | both (Block B, budget 1) | real Nuclei | rule vs llm×3 | same harness | Prioritization: rule 0/1, **llm 3/3** chose the business-critical admin check (stable across repeats) | VulHub demo (Day 4-5) |
+| 27 Oct | — (fakes) | none | safety | `scripts/safety_checks.py` → `results/final/safety_checks.md` | 4/4 pass: out-of-scope reject, invented-id block, malformed-JSON safe stop, STOP on clean. Test suite now 23 tests. | — |
 
 ## Notes / decisions
 - **Target strategy:** toy sandbox = measurement bench (controllable ground truth);

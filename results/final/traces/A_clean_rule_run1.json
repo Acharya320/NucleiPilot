@@ -1,0 +1,88 @@
+{
+  "target": "http://127.0.0.1:8790",
+  "planner": "rule",
+  "budget": 2,
+  "target_context": {},
+  "fired_indicators": [],
+  "assessment": {
+    "admin": "CLEAN",
+    "debug": "CLEAN"
+  },
+  "templates_run": [
+    "demo-admin-indicator",
+    "demo-debug-indicator"
+  ],
+  "n_templates_run": 2,
+  "observations": [
+    {
+      "template_id": "demo-admin-indicator",
+      "kind": "indicator",
+      "issue": "admin",
+      "matched": false,
+      "matched_at": null,
+      "severity": null,
+      "duration_s": 1.6215415997430682,
+      "error": null
+    },
+    {
+      "template_id": "demo-debug-indicator",
+      "kind": "indicator",
+      "issue": "debug",
+      "matched": false,
+      "matched_at": null,
+      "severity": null,
+      "duration_s": 1.0027191997505724,
+      "error": null
+    }
+  ],
+  "trace": [
+    {
+      "step": "discovery",
+      "detail": {
+        "template": "demo-admin-indicator",
+        "matched": false,
+        "evidence_at": null,
+        "error": null
+      }
+    },
+    {
+      "step": "discovery",
+      "detail": {
+        "template": "demo-debug-indicator",
+        "matched": false,
+        "evidence_at": null,
+        "error": null
+      }
+    },
+    {
+      "step": "decision",
+      "detail": {
+        "planner": "rule",
+        "proposed": null,
+        "reason": "no fired indicator has a pending validation",
+        "confidence": null,
+        "stop_reason": "no eligible follow-up",
+        "evidence_referenced": [],
+        "raw": null
+      }
+    },
+    {
+      "step": "policy",
+      "detail": {
+        "proposed": null,
+        "ok": true,
+        "reason": "stop is always permitted"
+      }
+    },
+    {
+      "step": "reassess",
+      "detail": {
+        "assessment": {
+          "admin": "CLEAN",
+          "debug": "CLEAN"
+        }
+      }
+    }
+  ],
+  "elapsed_s": 2.706
+}

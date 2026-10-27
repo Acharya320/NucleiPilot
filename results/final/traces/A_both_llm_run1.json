@@ -1,0 +1,185 @@
+{
+  "target": "http://127.0.0.1:8790",
+  "planner": "llm",
+  "budget": 2,
+  "target_context": {},
+  "fired_indicators": [
+    "demo-admin-indicator",
+    "demo-debug-indicator"
+  ],
+  "assessment": {
+    "admin": "CONFIRMED",
+    "debug": "CONFIRMED"
+  },
+  "templates_run": [
+    "demo-admin-indicator",
+    "demo-admin-validation",
+    "demo-debug-indicator",
+    "demo-debug-validation"
+  ],
+  "n_templates_run": 4,
+  "observations": [
+    {
+      "template_id": "demo-admin-indicator",
+      "kind": "indicator",
+      "issue": "admin",
+      "matched": true,
+      "matched_at": "http://127.0.0.1:8790/metadata",
+      "severity": "info",
+      "duration_s": 2.914890000130981,
+      "error": null
+    },
+    {
+      "template_id": "demo-debug-indicator",
+      "kind": "indicator",
+      "issue": "debug",
+      "matched": true,
+      "matched_at": "http://127.0.0.1:8790/debug/config",
+      "severity": "info",
+      "duration_s": 0.962298299651593,
+      "error": null
+    },
+    {
+      "template_id": "demo-debug-validation",
+      "kind": "validation",
+      "issue": "debug",
+      "matched": true,
+      "matched_at": "http://127.0.0.1:8790/debug/confirm",
+      "severity": "high",
+      "duration_s": 1.0942768999375403,
+      "error": null
+    },
+    {
+      "template_id": "demo-admin-validation",
+      "kind": "validation",
+      "issue": "admin",
+      "matched": true,
+      "matched_at": "http://127.0.0.1:8790/management/status",
+      "severity": "medium",
+      "duration_s": 0.9800291997380555,
+      "error": null
+    }
+  ],
+  "trace": [
+    {
+      "step": "discovery",
+      "detail": {
+        "template": "demo-admin-indicator",
+        "matched": true,
+        "evidence_at": "http://127.0.0.1:8790/metadata",
+        "error": null
+      }
+    },
+    {
+      "step": "discovery",
+      "detail": {
+        "template": "demo-debug-indicator",
+        "matched": true,
+        "evidence_at": "http://127.0.0.1:8790/debug/config",
+        "error": null
+      }
+    },
+    {
+      "step": "decision",
+      "detail": {
+        "planner": "llm",
+        "proposed": "demo-debug-validation",
+        "reason": "The debug interface has a higher severity and potential impact, making it more critical to confirm its exposure.",
+        "confidence": 0.85,
+        "stop_reason": null,
+        "evidence_referenced": [
+          "demo-debug-indicator"
+        ],
+        "raw": {
+          "parsed": {
+            "next_template": "demo-debug-validation",
+            "reason": "The debug interface has a higher severity and potential impact, making it more critical to confirm its exposure.",
+            "confidence": 0.85,
+            "evidence_referenced": [
+              "demo-debug-indicator"
+            ],
+            "stop_reason": null
+          },
+          "usage": {
+            "prompt_tokens": 423,
+            "completion_tokens": 52
+          },
+          "model": "openai/gpt-4o-mini"
+        }
+      }
+    },
+    {
+      "step": "policy",
+      "detail": {
+        "proposed": "demo-debug-validation",
+        "ok": true,
+        "reason": "approved: 'demo-debug-validation' is in the allowlist and eligible"
+      }
+    },
+    {
+      "step": "action",
+      "detail": {
+        "template": "demo-debug-validation",
+        "executed": true,
+        "matched": true,
+        "evidence_at": "http://127.0.0.1:8790/debug/confirm"
+      }
+    },
+    {
+      "step": "decision",
+      "detail": {
+        "planner": "llm",
+        "proposed": "demo-admin-validation",
+        "reason": "To confirm whether the management endpoint requires authentication, which directly addresses the identified admin issue and has medium severity.",
+        "confidence": 0.8,
+        "stop_reason": null,
+        "evidence_referenced": [
+          "demo-admin-indicator"
+        ],
+        "raw": {
+          "parsed": {
+            "next_template": "demo-admin-validation",
+            "reason": "To confirm whether the management endpoint requires authentication, which directly addresses the identified admin issue and has medium severity.",
+            "confidence": 0.8,
+            "evidence_referenced": [
+              "demo-admin-indicator"
+            ],
+            "stop_reason": null
+          },
+          "usage": {
+            "prompt_tokens": 371,
+            "completion_tokens": 53
+          },
+          "model": "openai/gpt-4o-mini"
+        }
+      }
+    },
+    {
+      "step": "policy",
+      "detail": {
+        "proposed": "demo-admin-validation",
+        "ok": true,
+        "reason": "approved: 'demo-admin-validation' is in the allowlist and eligible"
+      }
+    },
+    {
+      "step": "action",
+      "detail": {
+        "template": "demo-admin-validation",
+        "executed": true,
+        "matched": true,
+        "evidence_at": "http://127.0.0.1:8790/management/status"
+      }
+    },
+    {
+      "step": "reassess",
+      "detail": {
+        "assessment": {
+          "admin": "CONFIRMED",
+          "debug": "CONFIRMED"
+        }
+      }
+    }
+  ],
+  "elapsed_s": 9.537
+}

@@ -1,0 +1,150 @@
+{
+  "target": "http://127.0.0.1:8790",
+  "planner": "fixed",
+  "budget": 2,
+  "target_context": {},
+  "fired_indicators": [
+    "demo-debug-indicator"
+  ],
+  "assessment": {
+    "admin": "DISMISSED",
+    "debug": "DISMISSED"
+  },
+  "templates_run": [
+    "demo-admin-indicator",
+    "demo-admin-validation",
+    "demo-debug-indicator",
+    "demo-debug-validation"
+  ],
+  "n_templates_run": 4,
+  "observations": [
+    {
+      "template_id": "demo-admin-indicator",
+      "kind": "indicator",
+      "issue": "admin",
+      "matched": false,
+      "matched_at": null,
+      "severity": null,
+      "duration_s": 3.1942886002361774,
+      "error": null
+    },
+    {
+      "template_id": "demo-debug-indicator",
+      "kind": "indicator",
+      "issue": "debug",
+      "matched": true,
+      "matched_at": "http://127.0.0.1:8790/debug/config",
+      "severity": "info",
+      "duration_s": 1.146016100421548,
+      "error": null
+    },
+    {
+      "template_id": "demo-debug-validation",
+      "kind": "validation",
+      "issue": "debug",
+      "matched": false,
+      "matched_at": null,
+      "severity": null,
+      "duration_s": 1.3479906995780766,
+      "error": null
+    },
+    {
+      "template_id": "demo-admin-validation",
+      "kind": "validation",
+      "issue": "admin",
+      "matched": false,
+      "matched_at": null,
+      "severity": null,
+      "duration_s": 1.1349484999664128,
+      "error": null
+    }
+  ],
+  "trace": [
+    {
+      "step": "discovery",
+      "detail": {
+        "template": "demo-admin-indicator",
+        "matched": false,
+        "evidence_at": null,
+        "error": null
+      }
+    },
+    {
+      "step": "discovery",
+      "detail": {
+        "template": "demo-debug-indicator",
+        "matched": true,
+        "evidence_at": "http://127.0.0.1:8790/debug/config",
+        "error": null
+      }
+    },
+    {
+      "step": "decision",
+      "detail": {
+        "planner": "fixed",
+        "proposed": "demo-debug-validation",
+        "reason": "fixed/exhaustive: run every template regardless of evidence",
+        "confidence": null,
+        "stop_reason": null,
+        "evidence_referenced": [],
+        "raw": null
+      }
+    },
+    {
+      "step": "policy",
+      "detail": {
+        "proposed": "demo-debug-validation",
+        "ok": true,
+        "reason": "approved: 'demo-debug-validation' is in the allowlist and eligible"
+      }
+    },
+    {
+      "step": "action",
+      "detail": {
+        "template": "demo-debug-validation",
+        "executed": true,
+        "matched": false,
+        "evidence_at": null
+      }
+    },
+    {
+      "step": "decision",
+      "detail": {
+        "planner": "fixed",
+        "proposed": "demo-admin-validation",
+        "reason": "fixed/exhaustive: run every template regardless of evidence",
+        "confidence": null,
+        "stop_reason": null,
+        "evidence_referenced": [],
+        "raw": null
+      }
+    },
+    {
+      "step": "policy",
+      "detail": {
+        "proposed": "demo-admin-validation",
+        "ok": true,
+        "reason": "approved: 'demo-admin-validation' is in the allowlist and eligible"
+      }
+    },
+    {
+      "step": "action",
+      "detail": {
+        "template": "demo-admin-validation",
+        "executed": true,
+        "matched": false,
+        "evidence_at": null
+      }
+    },
+    {
+      "step": "reassess",
+      "detail": {
+        "assessment": {
+          "admin": "DISMISSED",
+          "debug": "DISMISSED"
+        }
+      }
+    }
+  ],
+  "elapsed_s": 6.9
+}

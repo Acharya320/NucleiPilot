@@ -1,0 +1,8 @@
+NucleiPilot experiment environment
+date         : 2026-10-27T18:34:28
+os           : Windows-11-10.0.26200-SP0
+python       : 3.14.7
+nuclei       : [INF] Nuclei Engine Version: v3.11.1
+model        : openai/gpt-4o-mini
+templates    : ['demo-admin-indicator', 'demo-admin-validation', 'demo-debug-indicator', 'demo-debug-validation']
+llm_repeat   : 3
