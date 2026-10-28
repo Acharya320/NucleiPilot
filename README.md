@@ -119,5 +119,6 @@ docs/             work_log · landscape_and_capability_map · enterprise_archite
 
 **Done:** [landscape & capability map](docs/landscape_and_capability_map.md) · real-CVE
 generalization demo (`results/final/vulhub_grafana_demo.json`) · [enterprise architecture &
-stakeholder map](docs/enterprise_architecture.md) · [experimental findings](results/final/summary.md).
-**In progress:** 2-person roadmap · build/no-build decision · ≤5-slide exec deck · ~5-minute demo video.
+stakeholder map](docs/enterprise_architecture.md) · [experimental findings](results/final/summary.md)
+· [2-person roadmap](docs/two_person_roadmap.md) · [build/no-build decision](docs/build_decision.md).
+**In progress:** ≤5-slide exec deck · ~5-minute demo video · GitHub push.
