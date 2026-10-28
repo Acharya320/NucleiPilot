@@ -71,10 +71,11 @@ correct" in Block B is defined as the business-impact-optimal choice given the s
 context. No claim of exploitation capability or production readiness. Perfect detection
 accuracy is expected in a controlled lab and is **not** the headline result.
 
-## Preliminary recommendation (full decision in Day 4 doc)
+## Preliminary recommendation (full decision in docs/build_decision.md)
 **Conditional.** Use rules for detection; use the LLM specifically as a **context-aware
 triage/prioritization layer**, which is the only place it demonstrably beat the baseline.
-Validate on a **real-CVE target (VulHub)** before any pilot.
+We validated the *mechanism* on a real CVE (Grafana 8.3.0 / VulHub); before any pilot, extend
+that to a broader real-world benchmark (multiple CVEs, messier targets, full metrics).
 
 **Decision-flipping fact:** if, on a real-CVE target with messier input, the LLM shows no
 prioritization advantage over rules *or* a materially higher invalid/blocked rate, the case

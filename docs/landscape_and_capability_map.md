@@ -72,12 +72,14 @@ Legend: **Y** present · **P** partial · **Ltd** limited · **?** unclear from 
 | Attack-path chaining | Y | ? | P | P | **Y** | Y | No |
 | Adaptive follow-up / test selection | Y | Y | Y | P | Y | P | **Y** |
 | Business-*context*-aware triage | ? | ? | ? | ? | P | ? | **Y** |
-| Human-in-the-loop / oversight | Ltd | Ltd | **Y** | **Y** | Ltd | Ltd | **Y** |
+| Human-in-the-loop / oversight | Ltd | Ltd | **Y** | **Y** | Ltd | Ltd | P* |
 | Transparent, auditable decision trace | P | P | P | P | P | P | **Y** |
 | Controlled vs non-AI baselines (published) | ? | ? | ? | ? | ? | ? | **Y** |
 | Continuous (vs point-in-time) | Y | Y | Y | Y | Y | Y | P |
 
 The right-most columns are where the field is **thin and where our PoC concentrates**: context-aware triage, transparent/auditable traces, and *published evidence against non-AI baselines*.
+
+**Read the matrix as capability *dimensions and design intent*, not maturity or scale.** NucleiPilot's cells reflect a **PoC** (toy lab + one real CVE, two issue classes), not a production platform like XBOW or Horizon3. `P*` on human-in-the-loop means the review gate is *specified in the architecture* (Part 3), not yet a built UI. And "transparent decision trace" separates *finding* transparency (XBOW ships the exploit + request/response) from *decision-process* transparency (NucleiPilot logs **why** it chose each action) — the latter is the thin spot across the field.
 
 ---
 
@@ -105,6 +107,14 @@ Grounded in the above, an offering is "agentic" (not just automated) when it has
 7. **Human-in-the-loop + oversight** — increasingly table-stakes for enterprise trust (Terra, Hadrian lead here).
 8. **Scope / safety controls** — customer-set scope, bounded actions.
 9. **Reporting, remediation, and re-test** — close the loop and confirm fixes.
+
+**Two senses of "validation" — and where NucleiPilot deliberately sits.** In the category above,
+*validation* means **proving exploitability with a working PoC** (traits 3 and 5). NucleiPilot does
+**not** do this. It occupies a narrower, complementary slice: an agentic **triage and
+follow-up-orchestration** layer that has the planning traits (1, 2, 4, 7, 8) but treats "validation"
+as *running an authorized follow-up template to confirm an indicator*, not as exploitation. So
+NucleiPilot is agentic in its **decision loop**, but is **not** a full agentic *exploitation* platform —
+and for a regulated buyer, that restraint is the selling point, not a gap.
 
 ---
 

@@ -66,7 +66,7 @@ The order below is the rough sequence you'd actually need to clear.
 
 | Stakeholder | What they care about | First objection you'd hear | Your response / what you bring |
 |---|---|---|---|
-| **NetSec / Security Operations (SOC)** | Signal quality; alert fatigue | *"This will flood us with unvalidated findings."* | Evidence-based validation (every finding has a trace); analyst-review gate; our measured **0 false positives** + fixed/rule/LLM benchmark |
+| **NetSec / Security Operations (SOC)** | Signal quality; alert fatigue | *"This will flood us with unvalidated findings."* | Evidence-based validation (every finding has a trace); analyst-review gate; our measured **0 false positives in controlled tests** + fixed/rule/LLM benchmark |
 | **Network / Infra Ops** | Uptime; scanner load | *"Your scans will degrade or break production."* | Rate limits, bounded budget, scope allowlist, scheduling/change windows, **staging-first**, no outbound OAST (`-ni`) |
 | **Infrastructure / Security Architecture** | Blast radius; where it runs; secret access | *"What can this reach, and where do its credentials live?"* | Isolated egress-controlled runners, least-privilege, secrets vault, network segmentation, immutable audit |
 | **Compliance / Legal / Privacy** | Authority to test; data handling (esp. LLM egress) | *"Are we authorized to test this, and does sending data to an LLM violate policy?"* | Written authorization workflow + approved-asset registry; **DLP so only sanitized data reaches the model** (prefer self-hosted); retention controls; full audit trail |

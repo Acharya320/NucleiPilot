@@ -11,7 +11,7 @@ approved templates). Every scanner action is independently authorized and logged
 > self-hosted synthetic sandbox on `127.0.0.1`. No real or third-party systems are
 > tested. This is an authorized security-research prototype.
 
-*Status: work in progress (Day 2 of 5 complete). This README grows as pieces land.*
+*Status: proof-of-concept complete and evaluated (see `results/final/` and `docs/`). Written brief, exec deck, and demo video in progress.*
 
 ---
 
@@ -104,18 +104,20 @@ templates/        4 local demo templates (indicator + validation × admin/debug)
 scripts/          runnable reproductions of every experiment
 tests/            unit tests (deterministic; no Nuclei/API needed)
 results/          evidence (scratch at top level; curated set in results/final/)
-docs/             work_log.md + (coming) market, architecture, findings, decision
+docs/             work_log · landscape_and_capability_map · enterprise_architecture · (coming) roadmap + decision
 ```
 
 ## Current limitations
 
-- Synthetic toy environment with two issue classes; small sample.
+- Controlled toy environment (two issue classes, small sample) plus one real-CVE scenario — not yet a broad real-world benchmark.
+- The LLM adds measurable value in **prioritization/triage**, not detection accuracy (rules already match it) — see `results/final/summary.md`.
 - The LLM planner's eligible actions are limited to signal-driven follow-ups (by design).
-- Single-run LLM results so far; repetition/metrics/failure-mode analysis is in progress.
-- Not a general autonomous exploitation tool, and not production-ready.
+- Single model (`gpt-4o-mini`) tested; a multi-model reliability comparison is future work.
+- An agentic triage/follow-up layer — **not** an autonomous exploitation tool, and not production-ready.
 
-## Coming (per assignment)
+## Assignment deliverables
 
-Market landscape & capability map · VulHub real-CVE generalization demo · enterprise
-architecture & stakeholder map · 2-person roadmap · one-page findings · 5-slide deck ·
-~5-minute demo video · build/no-build recommendation.
+**Done:** [landscape & capability map](docs/landscape_and_capability_map.md) · real-CVE
+generalization demo (`results/final/vulhub_grafana_demo.json`) · [enterprise architecture &
+stakeholder map](docs/enterprise_architecture.md) · [experimental findings](results/final/summary.md).
+**In progress:** 2-person roadmap · build/no-build decision · ≤5-slide exec deck · ~5-minute demo video.
