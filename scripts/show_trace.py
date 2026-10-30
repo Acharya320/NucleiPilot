@@ -1,10 +1,10 @@
 """Pretty-print the full audit trace of a saved NucleiPilot run.
 
-    python scripts/show_trace.py [results/day2_llm_both_budget1.json] [--run llm]
+    python scripts/show_trace.py [results/final/traces/e1_C_run0.json]
 
-ASCII-only so it renders cleanly in any console or screen recording. Handles both
-single-run files and files that bundle several runs (e.g. {"rule":..., "llm":...}).
-Scanner-only files (results/*_scan.json) have no agent trace and are reported as such.
+Reads a trace written by `engine.run` (step types: decision -> policy -> action,
+repeated per round, then a final reassess). ASCII-only so it renders cleanly in
+any console or screen recording.
 """
 import os, sys, json, argparse
 
@@ -13,7 +13,7 @@ BAR, SUB = "=" * 80, "-" * 80
 
 
 def find_runs(data):
-    """Return [(label, run_dict), ...] for every workflow run in the file."""
+    """Return [(label, run_dict), ...] for every run in the file."""
     if isinstance(data, dict) and "trace" in data:
         return [("", data)]
     out = []
@@ -28,30 +28,20 @@ def show(label, run):
     print(BAR)
     print("FULL AGENT TRACE" + (f"  [{label}]" if label else ""))
     print(BAR)
-    print(f"Target  : {run.get('target')}")
-    print(f"Planner : {run.get('planner')}      Budget: {run.get('budget')} follow-up(s)")
-    ctx = run.get("target_context") or {}
-    if ctx:
-        print("Target context:")
-        print("   " + json.dumps(ctx, indent=2).replace("\n", "\n   "))
+    print(f"Target  : {run.get('base_url')}  (asset: {run.get('asset_id')})")
+    print(f"Planner : {run.get('planner')}      Budget: {run.get('budget')} validation(s)")
     print(SUB)
     n = 0
     for e in run.get("trace", []):
         s, d = e.get("step"), e.get("detail", {})
-        if s == "discovery":
-            n += 1
-            hit = "MATCH" if d.get("matched") else "no match"
-            print(f"[{n}] OBSERVE   (discovery scan: {d.get('template')})")
-            print(f"        -> {hit}" + (f"   @ {d.get('evidence_at')}" if d.get("matched") else ""))
-            if d.get("error"):
-                print(f"        !! error: {d.get('error')}")
-        elif s == "decision":
+        if s == "decision":
             n += 1
             raw = d.get("raw") or {}
-            print(f"[{n}] REASON    ({d.get('planner')} planner decides)")
-            print(f"        proposes   : {d.get('proposed')}")
+            print(f"[{n}] REASON    ({d.get('planner')} planner proposes)")
+            print(f"        proposes   : {d.get('chosen')}")
             print(f"        reason     : {d.get('reason')}")
-            print(f"        confidence : {d.get('confidence')}")
+            if d.get("confidence") is not None:
+                print(f"        confidence : {d.get('confidence')}")
             if d.get("stop_reason"):
                 print(f"        stop_reason: {d.get('stop_reason')}")
             if raw.get("model"):
@@ -65,25 +55,33 @@ def show(label, run):
             n += 1
             if d.get("executed"):
                 hit = "MATCH" if d.get("matched") else "no match"
-                print(f"[{n}] ACT       (run approved template: {d.get('template')})")
-                print(f"        -> {hit}" + (f"   @ {d.get('evidence_at')}" if d.get("matched") else ""))
+                print(f"[{n}] ACT       (run approved template: {d.get('validation')})")
+                print(f"        -> {hit}   [verdict: {d.get('status')}]"
+                      + (f"   @ {d.get('matched_at')}" if d.get("matched") else ""))
+                if d.get("error"):
+                    print(f"        !! error: {d.get('error')}")
             else:
-                print(f"[{n}] ACT       -> BLOCKED; nothing executed ({d.get('blocked_reason')})")
+                print(f"[{n}] ACT       -> nothing executed ({d.get('reason') or d.get('status')})")
         elif s == "reassess":
             n += 1
-            print(f"[{n}] REASSESS  (final per-issue verdict)")
-            for issue, verdict in (d.get("assessment") or {}).items():
-                print(f"        {issue:8}: {verdict}")
+            print(f"[{n}] REASSESS  (final per-endpoint verdict)")
+            for f in (d.get("findings") or []):
+                extra = f"   ({f.get('validation')})" if f.get("validation") else ""
+                print(f"        {f.get('endpoint',''):12}: {f.get('status')}{extra}")
     print(SUB)
-    print(f"Templates run: {run.get('n_templates_run')}  ->  {', '.join(run.get('templates_run', []))}")
-    print(f"Wall-clock   : {run.get('elapsed_s')}s\n")
+    m = run.get("metrics", {})
+    print(f"Validations run: {m.get('n_validations_run')}  "
+          f"(budget used {m.get('validation_budget_used')}/{run.get('budget')}, "
+          f"policy rejections {m.get('policy_rejections')})")
+    print(f"Chosen order   : {' -> '.join(run.get('chosen_order', [])) or '(none)'}")
+    print(f"Decision loop  : {m.get('decision_loop_elapsed_s')}s\n")
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("path", nargs="?",
-                    default=os.path.join(REPO, "results", "day2_llm_both_budget1.json"))
-    ap.add_argument("--run", default=None, help="show only this run (e.g. llm) if the file bundles several")
+                    default=os.path.join(REPO, "results", "final", "traces", "e1_C_run0.json"))
+    ap.add_argument("--run", default=None, help="show only this run if the file bundles several")
     args = ap.parse_args()
     path = args.path if os.path.isabs(args.path) else os.path.join(REPO, args.path)
     with open(path, "r", encoding="utf-8") as fh:
@@ -91,7 +89,6 @@ def main():
     runs = find_runs(data)
     if not runs:
         print(f"No agent trace found in {path}")
-        print("(scanner-only files like *_scan.json have no workflow trace.)")
         return
     for label, run in runs:
         if args.run and label and label != args.run:
