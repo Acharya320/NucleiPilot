@@ -177,8 +177,8 @@ scripts/       smoke_toyapp · run_experiment · safety_checks · run_grafana ·
 tests/         37 deterministic unit tests (no Nuclei / no API)
 results/final/ comparison.csv · summary.md · findings.md · e3_trap.json · safety_checks.md ·
                grafana_demo.json · e6_generalization_note.md · traces/ · vulhub_grafana_demo.json
-docs/          poc_plan · toy_spec · implementation_roadmap · landscape_and_capability_map ·
-               enterprise_architecture · two_person_roadmap · build_decision · work_log
+docs/          tool_teardown · analysis · poc_plan · toy_spec · landscape_and_capability_map ·
+               enterprise_architecture · two_person_roadmap · build_decision
 presentation/  AXP_Executive_Deck.pptx
 ```
 
@@ -199,7 +199,7 @@ presentation/  AXP_Executive_Deck.pptx
 ## Assignment deliverables
 
 - **Part 1 — Landscape & capability map:** [docs/landscape_and_capability_map.md](docs/landscape_and_capability_map.md)
-- **Part 2 — The PoC:** this repo · [tool teardown](docs/tool_teardown.md) · [the 2-day plan](docs/poc_plan.md) · [toy design & honesty note](docs/toy_spec.md) · [build roadmap](docs/implementation_roadmap.md) · evidence in [results/final/](results/final/) (start with [findings.md](results/final/findings.md)) · [analysis (1-pager)](docs/analysis.md)
+- **Part 2 — The PoC:** this repo · [tool teardown](docs/tool_teardown.md) · [the 2-day plan](docs/poc_plan.md) · [toy design & honesty note](docs/toy_spec.md) · evidence in [results/final/](results/final/) (start with [findings.md](results/final/findings.md)) · [analysis (1-pager)](docs/analysis.md)
 - **Part 3 — Enterprise architecture & stakeholder map:** [docs/enterprise_architecture.md](docs/enterprise_architecture.md)
 - **Part 4 — 2-person, 90-day roadmap:** [docs/two_person_roadmap.md](docs/two_person_roadmap.md)
 - **Part 5 — Build / no-build decision:** [docs/build_decision.md](docs/build_decision.md)
