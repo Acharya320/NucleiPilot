@@ -34,16 +34,9 @@ narrow capabilities, under hard governance:
 
 ## How it works
 
-```mermaid
-flowchart LR
-    T["Toy app / Grafana<br/>127.0.0.1 only"] -->|"indicators (cost 0)"| P["Profiler<br/>per-endpoint context<br/>+ business importance"]
-    P --> PL["Planner<br/>A · B1 · B2 · C (LLM)"]
-    PL -->|"proposes a validation id"| G{"Policy gate<br/>scope + catalog<br/>+ eligible + budget"}
-    G -->|blocked| L["log &amp; skip"]
-    G -->|approved| S["Nuclei<br/>one template"]
-    S --> V["Verifier (in code)<br/>CONFIRMED / NOT_CONFIRMED / …"]
-    V -->|"reassess → next round"| PL
-```
+![NucleiPilot agent loop — profile, decide, authorize, scan, verify](docs/figures/architecture.png)
+
+<sub>**Amber** = the only step the model drives (it *proposes*). **Blue** = everything code authorizes, runs, and judges — the model never touches a scan or a verdict directly. Diagram source: [`docs/figures/architecture.mmd`](docs/figures/architecture.mmd).</sub>
 
 **Each box above is one small module** (none over ~180 lines):
 

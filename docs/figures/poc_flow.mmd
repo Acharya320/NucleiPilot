@@ -1,0 +1,18 @@
+flowchart TD
+    S1["1 · Authorized target + context<br/>toy app / Grafana 8.3.0 / budget"]:::ext --> S2
+    S2["2 · Context profiler<br/>Python gathers technology facts"]:::code --> S3
+    S3["3 · LLM planner<br/>picks approved template IDs + a reason"]:::model --> S4
+    S4{"4 · Policy gate — CODE<br/>in scope? allowed? in budget?"}:::code
+    S4 -->|blocked| BLK["Block + log"]:::code
+    S4 -->|approved| RUN["Nuclei CLI runs the template"]:::code
+    RUN --> S5["5 · Evidence parser + LLM review<br/>pick ONE follow-up, or stop"]:::model
+    S5 -->|"follow-up, max 1"| S4
+    S5 --> S6["6 · Evidence verifier + report<br/>rule-based status + business priority"]:::code
+    CAT[("Approved catalog<br/>reviewed templates + budget")]:::code --> S3
+    ENF["Enforced in Python<br/>allowlist · rate limit · no OAST · stop flag · JSONL log"]:::code -.-> S4
+    KILL[["Stop switch"]]:::stop -.-> RUN
+
+    classDef model fill:#fde68a,stroke:#b45309,stroke-width:2px,color:#111827
+    classDef code fill:#bfdbfe,stroke:#1e40af,color:#111827
+    classDef ext fill:#e5e7eb,stroke:#4b5563,color:#111827
+    classDef stop fill:#fecaca,stroke:#b91c1c,color:#111827

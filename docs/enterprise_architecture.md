@@ -13,36 +13,9 @@ identity/policy gateway), a **template allowlist + policy check** (→ the polic
 **bounded budget** (→ orchestration limits), and a **full decision trace** (→ the evidence/
 audit store). Production hardens and scales these; it does **not** change the trust model.
 
-```mermaid
-flowchart TD
-    A[Authorized test request + scope<br/>ticket-driven, time-boxed] --> B
+![Production security-stack architecture](figures/production_architecture.png)
 
-    subgraph Control plane
-      B[Identity & Policy Gateway<br/>SSO · RBAC · scope check vs approved-asset registry · change-window check]
-      C[Orchestrator / Bounded Agent Planner<br/>budget · policy guard · audit hooks]
-      M[Model Gateway<br/>approved or self-hosted LLM · DLP: only sanitized/synthetic data egress · prompt+response logging]
-    end
-
-    B -->|denied| X[Block + audit]
-    B -->|approved| C
-    C <--> M
-    C --> D{Allowed tool + target + action?}
-    D -->|no| X
-    D -->|yes| E
-
-    subgraph Data plane (isolated)
-      E[Isolated Scanner Runners<br/>sandboxed containers/VMs · egress-controlled · Nuclei + approved templates]
-    end
-
-    E --> F[(Evidence & Trace Store<br/>immutable, append-only audit log)]
-    F --> G[Human Analyst Review<br/>approval gate before any intrusive step]
-    G --> H[Ticketing / Remediation owner<br/>Jira / ServiceNow + SLA]
-    H --> I[Authorized Re-test]
-    I --> C
-    F --> J[SIEM / SOC observability]
-    K[[Kill switch / global stop]] -.-> C
-    K -.-> E
-```
+<sub>Blue = control plane · amber = isolated data plane · green = human review &amp; remediation · purple = evidence store &amp; observability · red = stop/deny. Diagram source: [`figures/production_architecture.mmd`](figures/production_architecture.mmd).</sub>
 
 ### Components
 - **Request intake** — every run starts from a ticket with an explicit, time-boxed scope. No standing "scan anything" authority.

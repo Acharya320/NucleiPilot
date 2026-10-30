@@ -74,23 +74,9 @@ follow-up round.
 > A template match is not automatically a confirmed vulnerability. And no match does **not** prove an
 > app is clean.
 
-```mermaid
-flowchart TD
-    S1[1 · Authorized target + context<br/>toy app / Grafana 8.3.0 / budget] --> S2
-    S2[2 · Context profiler<br/>Python gathers technology facts] --> S3
-    S3[3 · LLM planner<br/>picks approved template IDs + a reason] --> S4
+![PoC decision flow](figures/poc_flow.png)
 
-    S4{4 · Policy gate — CODE<br/>in scope? allowed? in budget?}
-    S4 -->|blocked| BLK[Block + log]
-    S4 -->|approved| RUN[Nuclei CLI runs the template]
-    RUN --> S5[5 · Evidence parser + LLM review<br/>pick ONE follow-up, or stop]
-    S5 -->|follow-up, max 1| S4
-    S5 --> S6[6 · Evidence verifier + report<br/>rule-based status + business priority]
-
-    CAT[(Approved catalog<br/>reviewed templates + budget)] --> S3
-    ENF[Enforced in Python<br/>allowlist · rate limit · no OAST · stop flag · JSONL log] -.-> S4
-    KILL[[Stop switch]] -.-> RUN
-```
+<sub>Amber = the LLM-driven steps · blue = enforced in code. Diagram source: [`figures/poc_flow.mmd`](figures/poc_flow.mmd).</sub>
 
 ### What each part does (in plain terms)
 

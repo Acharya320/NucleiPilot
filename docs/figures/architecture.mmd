@@ -1,0 +1,11 @@
+flowchart LR
+    T["Target<br/>127.0.0.1 only"]:::target -->|"indicators (free)"| P["Profiler<br/>per-endpoint context<br/>+ business importance"]:::code
+    P --> PL["Planner<br/>A · B1 · B2 · C (LLM)"]:::model
+    PL -->|"proposes a validation"| G{"Policy gate<br/>scope · catalog<br/>eligible · budget"}:::code
+    G -->|blocked| L["Blocked<br/>logged, skipped"]:::code
+    G -->|approved| S["Nuclei<br/>one template"]:::code
+    S --> V["Verifier — in code<br/>CONFIRMED / NOT_CONFIRMED / ..."]:::code
+    V -->|"reassess, next round"| PL
+    classDef model fill:#fde68a,stroke:#b45309,stroke-width:2px,color:#111827
+    classDef code fill:#bfdbfe,stroke:#1e40af,stroke-width:1px,color:#111827
+    classDef target fill:#e5e7eb,stroke:#4b5563,stroke-width:1px,color:#111827
