@@ -205,4 +205,3 @@ presentation/  AXP_Executive_Deck.pptx
 - **Part 5 — Build / no-build decision:** [docs/build_decision.md](docs/build_decision.md)
 - **Executive deck (5 slides):** [presentation/AXP_Executive_Deck.pptx](presentation/AXP_Executive_Deck.pptx)
 - **In progress:** ~5-minute demo video.
-```
