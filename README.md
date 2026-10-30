@@ -104,34 +104,46 @@ template id, malformed model output, an over-budget request) in
 
 **Prerequisites:** Python 3.10+ · [Nuclei v3](https://github.com/projectdiscovery/nuclei/releases)
 (on `PATH`, or set `NUCLEIPILOT_NUCLEI_BIN` to its full path) · an OpenRouter API key **only** for
-the LLM planner (method C and the Grafana demo) · Docker **only** for the Grafana demo. The
-unit tests, the smoke test, and the safety checks need none of these.
+the LLM planner (method C and the Grafana demo) · Docker **only** for the Grafana demo.
 
+**The five steps, and what each needs** (output always lands in `results/final/`):
+
+1. **Unit tests** (37, deterministic) — *Python only*
+2. **Toy-app smoke test** — *Python only*
+3. **Full A/B1/B2/C experiment** — E1 comparison + E2 context-flip + E3 trap; starts the toy itself; needs *Nuclei* (+ the *LLM key* for method C)
+4. **Safety / fail-safe demonstrations** (E5) — *Python only*
+5. **Real-app generalization** — E4/E6 on a local *Grafana 8.3.0*; starts the container itself; needs *Docker + Nuclei + the LLM key*
+
+Run the block for your OS from the repo root. Steps 3 (method C) and 5 read your OpenRouter key
+from `.env`; without it, A/B1/B2 and every deterministic step still run, and C's recorded evidence
+is already in `results/final/`.
+
+**Windows (PowerShell):**
 ```powershell
-# from the repo root (PowerShell on Windows; use the equivalent venv path on macOS/Linux)
 py -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+$env:NUCLEIPILOT_NUCLEI_BIN = "C:\path\to\nuclei.exe"   # only if Nuclei isn't on PATH
+copy .env.example .env                                   # then paste your OpenRouter key (steps 3C & 5)
 
-# if Nuclei is not on PATH, point to it (your own path):
-$env:NUCLEIPILOT_NUCLEI_BIN = "C:\path\to\nuclei.exe"
+.\.venv\Scripts\python.exe -m unittest discover -s tests   # 1
+.\.venv\Scripts\python.exe scripts\smoke_toyapp.py         # 2
+.\.venv\Scripts\python.exe scripts\run_experiment.py       # 3
+.\.venv\Scripts\python.exe scripts\safety_checks.py        # 4
+.\.venv\Scripts\python.exe scripts\run_grafana.py          # 5  (stop after: docker rm -f np-grafana)
+```
 
-# 1) unit tests — 37 deterministic tests, no Nuclei or API key needed
-.\.venv\Scripts\python.exe -m unittest discover -s tests
+**macOS / Linux (bash):**
+```bash
+python3 -m venv .venv
+./.venv/bin/python -m pip install -r requirements.txt
+export NUCLEIPILOT_NUCLEI_BIN=/path/to/nuclei            # only if Nuclei isn't on PATH
+cp .env.example .env                                     # then paste your OpenRouter key (steps 3C & 5)
 
-# 2) toy-app smoke test — confirms the toy serves the exact signatures (no Nuclei/API)
-.\.venv\Scripts\python.exe scripts\smoke_toyapp.py
-
-# 3) the full A/B1/B2/C experiment: comparison (E1) + context-flip (E2) + trap (E3).
-#    Starts the toy itself. Needs Nuclei; method C needs the LLM key:
-copy .env.example .env   # then paste your OpenRouter key into .env (only C uses it)
-.\.venv\Scripts\python.exe scripts\run_experiment.py
-
-# 4) safety / fail-safe demonstrations (E5) — no Nuclei or API key needed
-.\.venv\Scripts\python.exe scripts\safety_checks.py
-
-# 5) real-app generalization (E4/E6): local Grafana 8.3.0. Needs Docker + Nuclei + LLM key.
-#    Starts the container itself; stop it afterwards with: docker rm -f np-grafana
-.\.venv\Scripts\python.exe scripts\run_grafana.py
+./.venv/bin/python -m unittest discover -s tests          # 1
+./.venv/bin/python scripts/smoke_toyapp.py                # 2
+./.venv/bin/python scripts/run_experiment.py              # 3
+./.venv/bin/python scripts/safety_checks.py               # 4
+./.venv/bin/python scripts/run_grafana.py                 # 5  (stop after: docker rm -f np-grafana)
 ```
 
 **Where output lands.** Everything writes to [`results/final/`](results/final/):
