@@ -2,7 +2,7 @@
 
 *An honest evaluation of the PoC run against the localhost toy sandbox and the local Grafana 8.3.0
 container. Every claim maps to a file in [`../results/final/`](../results/final/); see
-[`findings.md`](../results/final/findings.md) for the claim-by-claim evidence and [`toy_spec.md`](toy_spec.md)
+[`results/final/README.md`](../results/final/README.md) for the full evidence index and claims, and [`toy_spec.md`](toy_spec.md)
 §7 for what the toy can and cannot prove. All testing was localhost-only and read-only.*
 
 ## What worked

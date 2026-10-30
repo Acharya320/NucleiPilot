@@ -19,7 +19,7 @@ evidence the pilot produces.
    (PentAGI, Strix). What's thin is a **transparent, governed, evidence-backed** agentic layer —
    exactly what a regulated buyer like AMEX values, and what the leaders under-serve.
 2. **The agentic layer earns its place — narrowly, and we are honest about where.** Our evaluation
-   ([summary](../results/final/summary.md), [findings](../results/final/findings.md)) is deliberately
+   ([summary](../results/final/summary.md), [test results](../results/final/README.md)) is deliberately
    honest. Under a tight budget, a **naive severity-only** rule (B1) missed the business-critical
    `/payments` + `/account` and wasted a scan on a benign trap, while a **context-aware** rule (B2) and
    the LLM (C) both confirmed the two business-important issues. The first pick **flips when business

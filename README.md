@@ -84,7 +84,7 @@ outcome** — the same confirmed findings on every one of 3 runs (the validation
 run-to-run, the expected LLM nondeterminism, but the outcome did not). So on this small,
 fully-labeled toy the LLM shows **no prioritization advantage over a well-tuned rule** — and we
 say so plainly. The durable value is the **governed, evidence-driven loop and its
-generalization**, not the model out-picking a rule. See [`results/final/findings.md`](results/final/findings.md)
+generalization**, not the model out-picking a rule. See [`results/final/README.md`](results/final/README.md)
 for the full claim-by-claim evidence, and [`docs/toy_spec.md`](docs/toy_spec.md) §7 for what this
 can and cannot prove.
 
@@ -147,8 +147,8 @@ cp .env.example .env                                     # then paste your OpenR
 ```
 
 **Where output lands.** Everything writes to [`results/final/`](results/final/):
-`comparison.csv`, `summary.md` (E1–E3, generated from the runs), `findings.md` (the claims page),
-`e3_trap.json`, `safety_checks.md` (E5), `grafana_demo.json` (E4), `e6_generalization_note.md` (E6),
+`README.md` (**start here** — the guided results index), `summary.md` (E1–E3, generated from the runs),
+`comparison.csv`, `e3_trap.json`, `safety_checks.md` (E5), `grafana_demo.json` (E4), `e6_generalization_note.md` (E6),
 and a per-run `traces/`. Inspect any trace with `scripts\show_trace.py`.
 
 ## Generalization — a real CVE on a real app (Grafana)
@@ -175,7 +175,7 @@ templates/     7 toy-*.yaml (indicator + validation per issue) · 3 grafana-cve-
 scripts/       smoke_toyapp · run_experiment · safety_checks · run_grafana · show_trace ·
                vulhub_demo (optional official-template corroboration)
 tests/         37 deterministic unit tests (no Nuclei / no API)
-results/final/ comparison.csv · summary.md · findings.md · e3_trap.json · safety_checks.md ·
+results/final/ README.md (start here) · summary.md · comparison.csv · e3_trap.json · safety_checks.md ·
                grafana_demo.json · e6_generalization_note.md · traces/ · vulhub_grafana_demo.json
 docs/          tool_teardown · analysis · poc_plan · toy_spec · landscape_and_capability_map ·
                enterprise_architecture · two_person_roadmap · build_decision
@@ -199,7 +199,7 @@ presentation/  AXP_Executive_Deck.pptx
 ## Assignment deliverables
 
 - **Part 1 — Landscape & capability map:** [docs/landscape_and_capability_map.md](docs/landscape_and_capability_map.md)
-- **Part 2 — The PoC:** this repo · [tool teardown](docs/tool_teardown.md) · [the 2-day plan](docs/poc_plan.md) · [toy design & honesty note](docs/toy_spec.md) · evidence in [results/final/](results/final/) (start with [findings.md](results/final/findings.md)) · [analysis (1-pager)](docs/analysis.md)
+- **Part 2 — The PoC:** this repo · [tool teardown](docs/tool_teardown.md) · [the 2-day plan](docs/poc_plan.md) · [toy design & honesty note](docs/toy_spec.md) · [test results](results/final/README.md) (start here — guided index of all evidence) · [analysis (1-pager)](docs/analysis.md)
 - **Part 3 — Enterprise architecture & stakeholder map:** [docs/enterprise_architecture.md](docs/enterprise_architecture.md)
 - **Part 4 — 2-person, 90-day roadmap:** [docs/two_person_roadmap.md](docs/two_person_roadmap.md)
 - **Part 5 — Build / no-build decision:** [docs/build_decision.md](docs/build_decision.md)
