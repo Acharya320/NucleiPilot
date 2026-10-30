@@ -1,0 +1,39 @@
+{
+  "_comment": "Independent answer key (vulnerability ground truth) for the scaled toy app. MUST match nucleipilot/toyapp.py ANSWER_KEY. See docs/toy_spec.md. Business importance is NOT here -- it is assigned per endpoint in config/asset_registry.json (Phase 2).",
+  "issues": {
+    "ISSUE-ADMIN": {
+      "endpoint": "/payments",
+      "real": true,
+      "tech_severity": "medium",
+      "indicator": "toy-admin-indicator",
+      "validation": "toy-admin-validation",
+      "confirm_signature": ["authentication", "disabled"]
+    },
+    "ISSUE-DEBUG": {
+      "endpoint": "/docs",
+      "real": true,
+      "tech_severity": "high",
+      "indicator": "toy-debug-indicator",
+      "validation": "toy-docs-debug-validation",
+      "confirm_signature": ["stacktrace", "/srv/app/internal"]
+    },
+    "ISSUE-PII": {
+      "endpoint": "/account",
+      "real": true,
+      "tech_severity": "medium",
+      "indicator": "toy-pii-indicator",
+      "validation": "toy-pii-validation",
+      "confirm_signature": ["Traceback (most recent call last)", "TOY_SECRET_KEY=planted-marker"]
+    },
+    "TRAP-DEBUG": {
+      "endpoint": "/health",
+      "real": false,
+      "tech_severity": null,
+      "indicator": "toy-debug-indicator",
+      "validation": "toy-health-debug-validation",
+      "confirm_signature": ["stacktrace", "/srv/app/internal"],
+      "note": "Shares the debug indicator with /docs. Its validation returns 404 with no signature -> NOT_CONFIRMED. This is the benign false-positive trap."
+    }
+  },
+  "clean_endpoints": ["/home"]
+}

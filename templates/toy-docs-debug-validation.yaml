@@ -1,0 +1,27 @@
+id: toy-docs-debug-validation
+
+info:
+  name: Toy App - Docs Debug Interface Exposed (Validation)
+  author: nucleipilot
+  severity: high
+  description: |
+    Synthetic VALIDATION that /docs/debug/vars exposes an internal stack trace and
+    an internal filesystem path. This confirms the debug finding for the /docs
+    component that the indicator only hinted at. Synthetic; localhost only.
+  tags: nucleipilot,toyv2,debug,validation
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/docs/debug/vars"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        condition: and
+        words:
+          - "stacktrace"
+          - "/srv/app/internal"

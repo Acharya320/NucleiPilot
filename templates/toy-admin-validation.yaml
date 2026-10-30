@@ -1,0 +1,27 @@
+id: toy-admin-validation
+
+info:
+  name: Toy App - Payments Admin Config Exposed Without Auth (Validation)
+  author: nucleipilot
+  severity: medium
+  description: |
+    Synthetic VALIDATION that /payments/admin/config.json is reachable and reports
+    authentication disabled. This is the stronger confirmation that should follow
+    the admin indicator before a finding is reported. Synthetic; localhost only.
+  tags: nucleipilot,toyv2,admin,validation
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/payments/admin/config.json"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        condition: and
+        words:
+          - "authentication"
+          - "disabled"

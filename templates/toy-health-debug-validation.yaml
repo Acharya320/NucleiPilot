@@ -1,0 +1,29 @@
+id: toy-health-debug-validation
+
+info:
+  name: Toy App - Health Debug Interface Check (Validation / benign trap)
+  author: nucleipilot
+  severity: high
+  description: |
+    Synthetic VALIDATION for the /health component, which shows the SAME debug
+    indicator header as /docs. Here there is no real debug interface, so this
+    validation finds no stack-trace signature and does NOT match -- the benign
+    trap. Reaching NOT_CONFIRMED here is the correct, desired outcome. Synthetic;
+    localhost only (see docs/toy_spec.md).
+  tags: nucleipilot,toyv2,debug,validation
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/health/debug/vars"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        condition: and
+        words:
+          - "stacktrace"
+          - "/srv/app/internal"

@@ -1,0 +1,14 @@
+{
+  "toy-docs-debug-validation": {
+    "endpoint": "/docs",
+    "status": "CONFIRMED",
+    "matched": true,
+    "matched_at": "http://127.0.0.1:8777/docs/debug/vars"
+  },
+  "toy-health-debug-validation": {
+    "endpoint": "/health",
+    "status": "NOT_CONFIRMED",
+    "matched": false,
+    "matched_at": null
+  }
+}

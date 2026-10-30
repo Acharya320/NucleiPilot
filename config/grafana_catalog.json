@@ -1,0 +1,17 @@
+{
+  "_comment": "Grafana (real-app) catalog for E4. Two CVE candidates; the agent must reason from the DETECTED version (tech_facts) which one applies. Run through the SAME engine/policy as the toy -- a new target is just another asset + catalog (the generalization seam). See docs/toy_spec.md E4/E6.",
+  "templates": [
+    {
+      "id": "grafana-cve-2021-43798-marker", "file": "grafana-cve-2021-43798-marker.yaml",
+      "issue": "grafana-lfi", "kind": "validation", "severity": "high",
+      "validates": "grafana-version-indicator", "endpoint": "/", "cost": 1,
+      "purpose": "CVE-2021-43798 arbitrary file read; AFFECTS Grafana 8.0.0-8.3.0. Confirms by reading a harmless planted marker file (read-only)."
+    },
+    {
+      "id": "grafana-cve-2020-13379", "file": "grafana-cve-2020-13379.yaml",
+      "issue": "grafana-ssrf", "kind": "validation", "severity": "high",
+      "validates": "grafana-version-indicator", "endpoint": "/", "cost": 1,
+      "purpose": "CVE-2020-13379 SSRF via avatar; AFFECTS Grafana 3.0.1-7.0.1 (NOT 8.x). Distractor: should NOT apply to an 8.x target."
+    }
+  ]
+}

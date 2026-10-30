@@ -1,0 +1,29 @@
+{
+  "_comment": "Authorized assets: the scope + per-endpoint business-context seam. The scope guard only scans what is listed here (and only localhost). Business importance is set PER ENDPOINT. 'budget' = validation units per target. Each asset names its own 'catalog'. Adding a future authorized target = one more entry (the generalization seam) -- Grafana is a second asset here. See docs/toy_spec.md and docs/poc_plan.md.",
+  "assets": [
+    {
+      "id": "toy-app",
+      "base_url": "http://127.0.0.1:8777",
+      "description": "Scaled toy payments app (localhost measurement bench)",
+      "budget": 2,
+      "catalog": "catalog.json",
+      "endpoints": {
+        "/payments": {"business_importance": "critical", "note": "cardholder / transaction data"},
+        "/account":  {"business_importance": "high",     "note": "customer PII"},
+        "/docs":     {"business_importance": "low",      "note": "public documentation"},
+        "/health":   {"business_importance": "low",      "note": "ops/monitoring probe"},
+        "/home":     {"business_importance": "low",      "note": "public landing page"}
+      }
+    },
+    {
+      "id": "grafana-local",
+      "base_url": "http://127.0.0.1:3000",
+      "description": "Local Grafana 8.3.0 container (real-app generalization demo, E4)",
+      "budget": 1,
+      "catalog": "grafana_catalog.json",
+      "endpoints": {
+        "/": {"business_importance": "high", "note": "real application under authorized local test"}
+      }
+    }
+  ]
+}

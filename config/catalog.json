@@ -1,0 +1,51 @@
+{
+  "_comment": "Approved catalog for the scaled toy app -- the ONLY templates any planner may choose. Each entry: id, file, issue, kind, severity (must match the YAML), validates (validations only), endpoint (null = shared, e.g. the debug indicator), cost (indicator=0 discovery, validation=1). Growing coverage = adding an entry here plus the YAML, NOT changing code. See docs/toy_spec.md.",
+  "templates": [
+    {
+      "id": "toy-admin-indicator", "file": "toy-admin-indicator.yaml",
+      "issue": "admin", "kind": "indicator", "severity": "info",
+      "endpoint": "/payments", "cost": 0,
+      "purpose": "Signals an admin console may be linked from /payments (weak signal only)."
+    },
+    {
+      "id": "toy-admin-validation", "file": "toy-admin-validation.yaml",
+      "issue": "admin", "kind": "validation", "severity": "medium",
+      "validates": "toy-admin-indicator", "endpoint": "/payments", "cost": 1,
+      "purpose": "Confirms /payments/admin/config.json is reachable and reports authentication disabled.",
+      "possible_false_positive": "A management surface can exist yet still require auth."
+    },
+    {
+      "id": "toy-debug-indicator", "file": "toy-debug-indicator.yaml",
+      "issue": "debug", "kind": "indicator", "severity": "info",
+      "endpoint": null, "cost": 0,
+      "purpose": "Signals debug mode may be enabled (X-Debug-Mode header); fires on BOTH /docs and /health."
+    },
+    {
+      "id": "toy-docs-debug-validation", "file": "toy-docs-debug-validation.yaml",
+      "issue": "debug", "kind": "validation", "severity": "high",
+      "validates": "toy-debug-indicator", "endpoint": "/docs", "cost": 1,
+      "purpose": "Confirms /docs/debug/vars leaks an internal stack trace and path.",
+      "possible_false_positive": "A debug flag can be set WITHOUT exposing an interface (the benign trap)."
+    },
+    {
+      "id": "toy-health-debug-validation", "file": "toy-health-debug-validation.yaml",
+      "issue": "debug", "kind": "validation", "severity": "high",
+      "validates": "toy-debug-indicator", "endpoint": "/health", "cost": 1,
+      "purpose": "Checks /health/debug/vars; on the toy this is the benign trap and should NOT confirm.",
+      "possible_false_positive": "Same debug indicator as /docs, but /health has no real interface -> NOT_CONFIRMED."
+    },
+    {
+      "id": "toy-pii-indicator", "file": "toy-pii-indicator.yaml",
+      "issue": "pii", "kind": "indicator", "severity": "info",
+      "endpoint": "/account", "cost": 0,
+      "purpose": "Signals the /account export surface returns a verbose error naming its framework (weak signal only)."
+    },
+    {
+      "id": "toy-pii-validation", "file": "toy-pii-validation.yaml",
+      "issue": "pii", "kind": "validation", "severity": "medium",
+      "validates": "toy-pii-indicator", "endpoint": "/account", "cost": 1,
+      "purpose": "Confirms /account/export?id=../ discloses an internal stack trace and a planted secret.",
+      "possible_false_positive": "A verbose error can reveal a framework without disclosing sensitive data."
+    }
+  ]
+}

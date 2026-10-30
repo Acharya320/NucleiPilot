@@ -1,0 +1,25 @@
+id: toy-pii-indicator
+
+info:
+  name: Toy App - Account Export Verbose Error Indicator
+  author: nucleipilot
+  severity: info
+  description: |
+    Synthetic INDICATOR (weak signal) that the /account export surface returns a
+    verbose error that names its template engine (Jinja2). A match is NOT proof of
+    a disclosure; it only warrants a follow-up validation. Localhost sandbox only.
+  tags: nucleipilot,toyv2,pii,indicator
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/account/export"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "Jinja2"

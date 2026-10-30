@@ -1,0 +1,27 @@
+id: toy-pii-validation
+
+info:
+  name: Toy App - Account Export Info Disclosure (Validation)
+  author: nucleipilot
+  severity: medium
+  description: |
+    Synthetic VALIDATION that /account/export?id=../ discloses an internal stack
+    trace and a planted secret marker. This confirms the PII indicator for the
+    /account component. Synthetic; localhost only.
+  tags: nucleipilot,toyv2,pii,validation
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/account/export?id=../"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        condition: and
+        words:
+          - "Traceback (most recent call last)"
+          - "TOY_SECRET_KEY=planted-marker"

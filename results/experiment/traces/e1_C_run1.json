@@ -1,0 +1,294 @@
+{
+  "planner": "llm",
+  "asset_id": "toy-app",
+  "base_url": "http://127.0.0.1:8777",
+  "budget": 2,
+  "exhaustive": false,
+  "profile": {
+    "asset_id": "toy-app",
+    "base_url": "http://127.0.0.1:8777",
+    "budget": 2,
+    "tech_facts": {},
+    "endpoints": {
+      "/payments": {
+        "business_importance": "critical",
+        "fired_indicators": [
+          "toy-admin-indicator"
+        ],
+        "candidate_validations": [
+          "toy-admin-validation"
+        ]
+      },
+      "/account": {
+        "business_importance": "high",
+        "fired_indicators": [
+          "toy-pii-indicator"
+        ],
+        "candidate_validations": [
+          "toy-pii-validation"
+        ]
+      },
+      "/docs": {
+        "business_importance": "low",
+        "fired_indicators": [
+          "toy-debug-indicator"
+        ],
+        "candidate_validations": [
+          "toy-docs-debug-validation"
+        ]
+      },
+      "/health": {
+        "business_importance": "low",
+        "fired_indicators": [
+          "toy-debug-indicator"
+        ],
+        "candidate_validations": [
+          "toy-health-debug-validation"
+        ]
+      },
+      "/home": {
+        "business_importance": "low",
+        "fired_indicators": [],
+        "candidate_validations": []
+      }
+    }
+  },
+  "findings": [
+    {
+      "endpoint": "/payments",
+      "issue": "admin",
+      "indicator": "toy-admin-indicator",
+      "indicator_fired": true,
+      "validation": "toy-admin-validation",
+      "status": "CONFIRMED",
+      "tech_severity": "medium",
+      "business_importance": "critical",
+      "evidence": {
+        "matched": true,
+        "matched_at": "http://127.0.0.1:8777/payments/admin/config.json",
+        "matcher": null,
+        "error": null
+      }
+    },
+    {
+      "endpoint": "/account",
+      "issue": "pii",
+      "indicator": "toy-pii-indicator",
+      "indicator_fired": true,
+      "validation": "toy-pii-validation",
+      "status": "CONFIRMED",
+      "tech_severity": "medium",
+      "business_importance": "high",
+      "evidence": {
+        "matched": true,
+        "matched_at": "http://127.0.0.1:8777/account/export?id=../",
+        "matcher": null,
+        "error": null
+      }
+    },
+    {
+      "endpoint": "/docs",
+      "issue": "debug",
+      "indicator": "toy-debug-indicator",
+      "indicator_fired": true,
+      "validation": "toy-docs-debug-validation",
+      "status": "UNVERIFIED",
+      "tech_severity": "high",
+      "business_importance": "low",
+      "evidence": {}
+    },
+    {
+      "endpoint": "/health",
+      "issue": "debug",
+      "indicator": "toy-debug-indicator",
+      "indicator_fired": true,
+      "validation": "toy-health-debug-validation",
+      "status": "UNVERIFIED",
+      "tech_severity": "high",
+      "business_importance": "low",
+      "evidence": {}
+    },
+    {
+      "endpoint": "/home",
+      "issue": null,
+      "indicator": null,
+      "indicator_fired": false,
+      "validation": null,
+      "status": "NO_INDICATOR",
+      "tech_severity": null,
+      "business_importance": "low",
+      "evidence": {}
+    }
+  ],
+  "chosen_order": [
+    "toy-pii-validation",
+    "toy-admin-validation"
+  ],
+  "metrics": {
+    "n_indicators_run": 3,
+    "n_validations_run": 2,
+    "validation_budget_used": 2,
+    "policy_rejections": 0,
+    "decision_loop_elapsed_s": 3.335
+  },
+  "trace": [
+    {
+      "step": "decision",
+      "detail": {
+        "planner": "llm",
+        "chosen": "toy-pii-validation",
+        "reason": "This validation targets a high business importance endpoint that could disclose sensitive information, which is critical for the asset's security.",
+        "confidence": 0.9,
+        "stop_reason": null,
+        "raw": {
+          "parsed": {
+            "chosen": "toy-pii-validation",
+            "reason": "This validation targets a high business importance endpoint that could disclose sensitive information, which is critical for the asset's security.",
+            "confidence": 0.9,
+            "stop_reason": null
+          },
+          "usage": {
+            "prompt_tokens": 544,
+            "completion_tokens": 44
+          },
+          "model": "openai/gpt-4o-mini"
+        }
+      }
+    },
+    {
+      "step": "policy",
+      "detail": {
+        "chosen": "toy-pii-validation",
+        "ok": true,
+        "reason": "approved: 'toy-pii-validation' is in the allowlist and eligible"
+      }
+    },
+    {
+      "step": "action",
+      "detail": {
+        "validation": "toy-pii-validation",
+        "endpoint": "/account",
+        "executed": true,
+        "status": "CONFIRMED",
+        "matched": true,
+        "matched_at": "http://127.0.0.1:8777/account/export?id=../",
+        "error": null
+      }
+    },
+    {
+      "step": "decision",
+      "detail": {
+        "planner": "llm",
+        "chosen": "toy-admin-validation",
+        "reason": "The /payments endpoint has critical business importance and could expose sensitive configuration if authentication is disabled, which directly impacts the asset that matters most to the business.",
+        "confidence": 0.9,
+        "stop_reason": null,
+        "raw": {
+          "parsed": {
+            "chosen": "toy-admin-validation",
+            "reason": "The /payments endpoint has critical business importance and could expose sensitive configuration if authentication is disabled, which directly impacts the asset that matters most to the business.",
+            "confidence": 0.9,
+            "stop_reason": null
+          },
+          "usage": {
+            "prompt_tokens": 485,
+            "completion_tokens": 50
+          },
+          "model": "openai/gpt-4o-mini"
+        }
+      }
+    },
+    {
+      "step": "policy",
+      "detail": {
+        "chosen": "toy-admin-validation",
+        "ok": true,
+        "reason": "approved: 'toy-admin-validation' is in the allowlist and eligible"
+      }
+    },
+    {
+      "step": "action",
+      "detail": {
+        "validation": "toy-admin-validation",
+        "endpoint": "/payments",
+        "executed": true,
+        "status": "CONFIRMED",
+        "matched": true,
+        "matched_at": "http://127.0.0.1:8777/payments/admin/config.json",
+        "error": null
+      }
+    },
+    {
+      "step": "reassess",
+      "detail": {
+        "findings": [
+          {
+            "endpoint": "/payments",
+            "issue": "admin",
+            "indicator": "toy-admin-indicator",
+            "indicator_fired": true,
+            "validation": "toy-admin-validation",
+            "status": "CONFIRMED",
+            "tech_severity": "medium",
+            "business_importance": "critical",
+            "evidence": {
+              "matched": true,
+              "matched_at": "http://127.0.0.1:8777/payments/admin/config.json",
+              "matcher": null,
+              "error": null
+            }
+          },
+          {
+            "endpoint": "/account",
+            "issue": "pii",
+            "indicator": "toy-pii-indicator",
+            "indicator_fired": true,
+            "validation": "toy-pii-validation",
+            "status": "CONFIRMED",
+            "tech_severity": "medium",
+            "business_importance": "high",
+            "evidence": {
+              "matched": true,
+              "matched_at": "http://127.0.0.1:8777/account/export?id=../",
+              "matcher": null,
+              "error": null
+            }
+          },
+          {
+            "endpoint": "/docs",
+            "issue": "debug",
+            "indicator": "toy-debug-indicator",
+            "indicator_fired": true,
+            "validation": "toy-docs-debug-validation",
+            "status": "UNVERIFIED",
+            "tech_severity": "high",
+            "business_importance": "low",
+            "evidence": {}
+          },
+          {
+            "endpoint": "/health",
+            "issue": "debug",
+            "indicator": "toy-debug-indicator",
+            "indicator_fired": true,
+            "validation": "toy-health-debug-validation",
+            "status": "UNVERIFIED",
+            "tech_severity": "high",
+            "business_importance": "low",
+            "evidence": {}
+          },
+          {
+            "endpoint": "/home",
+            "issue": null,
+            "indicator": null,
+            "indicator_fired": false,
+            "validation": null,
+            "status": "NO_INDICATOR",
+            "tech_severity": null,
+            "business_importance": "low",
+            "evidence": {}
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+id: toy-debug-indicator
+
+info:
+  name: Toy App - Debug Mode Header Indicator
+  author: nucleipilot
+  severity: info
+  description: |
+    Synthetic INDICATOR (weak signal) that debug mode may be enabled, seen as an
+    X-Debug-Mode response header. It fires on BOTH /docs and /health, which look
+    identical from this header alone -- only a validation can tell the real debug
+    leak from the benign flag. Localhost sandbox only (see docs/toy_spec.md).
+  tags: nucleipilot,toyv2,debug,indicator
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/docs"
+      - "{{BaseURL}}/health"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: header
+        case-insensitive: true
+        condition: and
+        words:
+          - "x-debug-mode"
+          - "enabled"

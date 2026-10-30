@@ -1,0 +1,25 @@
+id: toy-admin-indicator
+
+info:
+  name: Toy App - Payments Admin Console Indicator
+  author: nucleipilot
+  severity: info
+  description: |
+    Synthetic INDICATOR (weak signal) that an admin console may be linked from the
+    toy app's /payments component. A match is NOT proof of a vulnerability; it only
+    warrants a follow-up validation. Localhost sandbox only (see docs/toy_spec.md).
+  tags: nucleipilot,toyv2,admin,indicator
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/payments"
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+      - type: word
+        part: body
+        words:
+          - "Admin Console"
