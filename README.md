@@ -45,6 +45,20 @@ flowchart LR
     V -->|"reassess → next round"| PL
 ```
 
+**Each box above is one small module** (none over ~180 lines):
+
+| In the diagram | Module | What it does |
+|---|---|---|
+| Target | `toyapp.py` (or a real app) | the localhost-only sandbox under test |
+| Profiler | `profiler.py` | runs the free indicators, builds per-endpoint context (business importance + fired signals + candidate validations) |
+| Planner | `planners.py` | *proposes* the next validation — A (exhaustive) · B1 (severity) · B2 (business context) · C (LLM) |
+| Policy gate | `policy.py` | *authorizes in code*: in scope? in the catalog? eligible now? within budget? — else blocked + logged |
+| Nuclei | `scanner.py` | runs the one approved template, scope-guarded, with a fixed command line |
+| Verifier | `verifier.py` | assigns the verdict **in code** (never the LLM) |
+| *(the loop itself)* | `engine.py` | orchestrates the rounds, enforces the budget, writes the full trace |
+
+*(Supporting: `registry.py` supplies each endpoint's business importance; `llm_client.py` backs planner C.)*
+
 The loop is **profile → decide → authorize → scan → verify → reassess**. Verdicts are assigned
 **in code**, never by the LLM, from one of five labels:
 `CONFIRMED` · `NOT_CONFIRMED` · `UNVERIFIED` · `NO_INDICATOR` · `TEST_ERROR`
