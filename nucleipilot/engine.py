@@ -1,4 +1,4 @@
-"""The v2 agent loop: profile -> decide -> authorize -> scan -> verify.
+"""The agent loop: profile -> decide -> authorize -> scan -> verify.
 
 Wires the Phase-2 components (profiler, policy gate, scanner, verifier) under one
 planner. Every proposal is independently authorized in code before anything runs,

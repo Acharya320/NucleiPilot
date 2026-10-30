@@ -26,7 +26,7 @@ BASE = f"http://127.0.0.1:{PORT}"
 NAME = "np-grafana"
 MARKER_PATH = "/tmp/np-marker.txt"
 MARKER = "NUCLEIPILOT-MARKER-7f3a-harmless-planted"
-OUT = os.path.join(REPO, "results", "experiment")
+OUT = os.path.join(REPO, "results", "final")
 
 
 def _health_version(timeout=2):

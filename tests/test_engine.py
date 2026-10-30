@@ -1,4 +1,4 @@
-"""The v2 engine end to end, with a deterministic FAKE scanner (no Nuclei, no LLM).
+"""The engine end to end, with a deterministic FAKE scanner (no Nuclei, no LLM).
 
 Proves the full E1 story for the non-LLM methods: under budget 2, B2 confirms the
 business-important issues while B1 chases severity (and wastes a slot on the trap),

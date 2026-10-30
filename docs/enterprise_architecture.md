@@ -47,7 +47,7 @@ flowchart TD
 ### Components
 - **Request intake** — every run starts from a ticket with an explicit, time-boxed scope. No standing "scan anything" authority.
 - **Identity & Policy Gateway** — SSO + role-based access; validates the target against an **approved-asset registry**; enforces change windows. (Production form of the PoC's `assert_in_scope`.)
-- **Orchestrator / Bounded Planner** — the agent loop with a **hard budget**, the **policy guard**, and audit hooks on every decision. (Production form of `workflow.py` + `policy.py`.)
+- **Orchestrator / Bounded Planner** — the agent loop with a **hard budget**, the **policy guard**, and audit hooks on every decision. (Production form of the PoC's `engine.py` + `policy.py`.)
 - **Model Gateway** — routes to an **approved or self-hosted** LLM; applies **data-loss-prevention** so only sanitized/synthetic signals reach the model; logs every prompt/response. (Governs what the PoC's `llm_client.py` sends.)
 - **Isolated Scanner Runners** — sandboxed, egress-controlled workers that run Nuclei against **in-scope targets only**. Non-production first.
 - **Evidence & Trace Store** — immutable, append-only record of every observation, decision, policy verdict, and action. (Production form of the PoC's JSON traces.)

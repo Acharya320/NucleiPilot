@@ -32,7 +32,9 @@ the Grafana/VulHub demo — just on sanctioned internal assets, with the governa
 > findings — and beat a *well-tuned rules baseline* by a margin that justifies its latency,
 > token cost, and governance burden?**
 
-Our toy + single-CVE evidence is promising (3/3 vs 0/1, context-driven 6/6, fails safe), but a
+Our scaled-toy + single-CVE evidence is promising — business-aware prioritization beats a naive
+severity baseline, the first pick follows business context, and the loop fails safe — but on this
+small, fully-labeled toy the LLM only **ties** the well-tuned context-aware rule (B2), and a
 controlled lab makes the LLM look better than messy reality will. Everything else (scope guards,
 isolation, auditability) is ordinary engineering; **this** is the question the pilot exists to answer.
 

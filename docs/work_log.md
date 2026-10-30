@@ -19,8 +19,15 @@ and README are grounded in what actually happened. Newest entries at the bottom.
 | 27 Oct | — (fakes) | none | safety | `scripts/safety_checks.py` → `results/final/safety_checks.md` | 4/4 pass: out-of-scope reject, invented-id block, malformed-JSON safe stop, STOP on clean. Test suite now 23 tests. | — |
 | 27 Oct | 'both' flipped ctx (Block C) | real Nuclei | rule vs llm×3 | `scripts/run_experiment.py` | Context flip: LLM 3/3 picked debug when debug=critical (B→admin, C→debug); context-sensitivity verified (6/6), not biased | — |
 | 27 Oct | **Grafana 8.3.0 (real app)** | real Nuclei (OFFICIAL templates) | llm | `scripts/vulhub_demo.py` → `results/final/vulhub_grafana_demo.json` | **Generalization:** agent read version 8.3.0, chose applicable CVE-2021-43798 over distractor CVE-2020-13379, confirmed real /etc/passwd read. Same framework, real app we didn't write. | Written brief + deck + video |
+| 30 Oct | **scaled toy (5 endpoints)** | real Nuclei | A/B1/B2/C×3 | `scripts/run_experiment.py` → `results/final/` (E1/E2/E3) | Scaled to the severity-vs-business divergence + a benign trap. Budget 2: **B1** (severity) missed business-critical /payments+/account and hit the trap; **B2** (context rule) and **C** (LLM) both confirmed /payments+/account. **C ties B2 on outcome** (same findings all 3 runs; pick-order varies — LLM nondeterminism). | Grafana on same engine |
+| 30 Oct | **Grafana 8.3.0 (real app)** | real Nuclei (our local CVE templates) | llm | `scripts/run_grafana.py` → `results/final/grafana_demo.json` | Same engine, new asset: fingerprinted 8.3.0, chose applicable CVE-2021-43798 over distractor (0 CVE-specific code); confirmed read-only via planted marker + /etc/passwd. Official-template run kept as corroboration. | Phase 7 cleanup |
+| 30 Oct | — | — | — | **Phase 7:** committed the pre-cleanup tree to git, then retired the v1 2-issue demo (sandbox/planner/workflow/evaluate, demo-* templates, old scripts/tests); reconciled all evidence into `results/final/`; rewrote README to the scaled flow; dropped `_v2` suffixes. Suite now **37 tests** (v1 tests removed). | Demo video + GitHub push |
 
 ## Notes / decisions
+- **v1 → scaled toy (30 Oct):** the 27 Oct entries above describe the original 2-issue demo
+  (admin + debug). Phase 7 scaled the bench to 5 endpoints with the severity-vs-business divergence
+  and retired the v1 code; `results/final/` now holds the scaled-toy evidence. The earlier v1 numbers
+  (e.g. "llm 3/3", "6/6") belong to that superseded demo and remain in git history.
 - **Target strategy:** toy sandbox = measurement bench (controllable ground truth);
   a VulHub real-CVE environment (lead: Apache CVE-2021-41773) = realism/generalization
   demo on Day 4–5. Juice Shop dropped — Nuclei (signature scanner) pairs poorly with its

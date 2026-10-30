@@ -1,4 +1,4 @@
-"""The four v2 planners (the decision layer of the A/B/C comparison).
+"""The four planners (the decision layer of the A/B/C comparison).
 
 All share one interface so the engine and the policy guard treat them identically:
 

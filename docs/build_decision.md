@@ -18,12 +18,22 @@ evidence the pilot produces.
    is crowded with *autonomy* (XBOW, RunSybil, NodeZero) and OSS *maximal-autonomy* tools
    (PentAGI, Strix). What's thin is a **transparent, governed, evidence-backed** agentic layer —
    exactly what a regulated buyer like AMEX values, and what the leaders under-serve.
-2. **The agentic layer earns its place — narrowly.** Our evaluation ([summary](../results/final/summary.md))
-   is deliberately honest: at full budget the LLM adds **no** detection value over simple rules.
-   But under a budget it delivered **context-aware prioritization** (3/3 vs rules 0/1), the choice
-   **flips with context (6/6)** so it's reasoning not bias, and it **fails safe** on bad input.
-3. **It generalizes.** The same agent chose the applicable CVE on a **real app** (Grafana 8.3.0 /
-   CVE-2021-43798) using Nuclei's official templates — so this isn't a toy-only effect.
+2. **The agentic layer earns its place — narrowly, and we are honest about where.** Our evaluation
+   ([summary](../results/final/summary.md), [findings](../results/final/findings.md)) is deliberately
+   honest. Under a tight budget, a **naive severity-only** rule (B1) missed the business-critical
+   `/payments` + `/account` and wasted a scan on a benign trap, while a **context-aware** rule (B2) and
+   the LLM (C) both confirmed the two business-important issues. The first pick **flips when business
+   context is swapped** (B2 and C both move) — reasoning, not a fixed favourite — and the loop **fails
+   safe** on an out-of-scope target, an invented template, malformed model output, and an over-budget
+   request. The honest headline: on this small, fully-labeled toy the LLM **ties** the well-tuned
+   context-aware rule (B2); it does not beat it. The durable value is the governed, evidence-driven loop
+   and its generalization — not the model out-picking a rule (see [toy_spec](toy_spec.md) §7).
+3. **It generalizes without hand-written per-CVE logic.** Pointed at a **real app** (local Grafana
+   8.3.0), the same engine fingerprinted the version and reasoned to the **applicable** CVE-2021-43798
+   over an inapplicable distractor (CVE-2020-13379) with **zero CVE-specific decision code** — a new
+   target is just one more registry + catalog entry. The arbitrary-file read was confirmed read-only via
+   a harmless planted marker, and corroborated with ProjectDiscovery's **official** community template
+   (`../results/final/vulhub_grafana_demo.json`) — so this isn't a toy-only effect.
 4. **It's governable.** Scope allowlist, template allowlist, bounded budget, full audit trace, and
    fail-safe behavior are already demonstrated — the controls a bank's stakeholders ask for first
    ([architecture](enterprise_architecture.md)).

@@ -39,6 +39,6 @@
     "n_validations_run": 1,
     "validation_budget_used": 1,
     "policy_rejections": 0,
-    "decision_loop_elapsed_s": 3.318
+    "decision_loop_elapsed_s": 2.862
   }
 }

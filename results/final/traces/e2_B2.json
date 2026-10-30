@@ -1,5 +1,5 @@
 {
-  "planner": "rule-severity",
+  "planner": "rule-context",
   "asset_id": "toy-app",
   "base_url": "http://127.0.0.1:8777",
   "budget": 2,
@@ -11,7 +11,7 @@
     "tech_facts": {},
     "endpoints": {
       "/payments": {
-        "business_importance": "critical",
+        "business_importance": "low",
         "fired_indicators": [
           "toy-admin-indicator"
         ],
@@ -29,7 +29,7 @@
         ]
       },
       "/docs": {
-        "business_importance": "low",
+        "business_importance": "critical",
         "fired_indicators": [
           "toy-debug-indicator"
         ],
@@ -62,7 +62,7 @@
       "validation": "toy-admin-validation",
       "status": "UNVERIFIED",
       "tech_severity": "medium",
-      "business_importance": "critical",
+      "business_importance": "low",
       "evidence": {}
     },
     {
@@ -71,10 +71,15 @@
       "indicator": "toy-pii-indicator",
       "indicator_fired": true,
       "validation": "toy-pii-validation",
-      "status": "UNVERIFIED",
+      "status": "CONFIRMED",
       "tech_severity": "medium",
       "business_importance": "high",
-      "evidence": {}
+      "evidence": {
+        "matched": true,
+        "matched_at": "http://127.0.0.1:8777/account/export?id=../",
+        "matcher": null,
+        "error": null
+      }
     },
     {
       "endpoint": "/docs",
@@ -84,7 +89,7 @@
       "validation": "toy-docs-debug-validation",
       "status": "CONFIRMED",
       "tech_severity": "high",
-      "business_importance": "low",
+      "business_importance": "critical",
       "evidence": {
         "matched": true,
         "matched_at": "http://127.0.0.1:8777/docs/debug/vars",
@@ -98,15 +103,10 @@
       "indicator": "toy-debug-indicator",
       "indicator_fired": true,
       "validation": "toy-health-debug-validation",
-      "status": "NOT_CONFIRMED",
+      "status": "UNVERIFIED",
       "tech_severity": "high",
       "business_importance": "low",
-      "evidence": {
-        "matched": false,
-        "matched_at": null,
-        "matcher": null,
-        "error": null
-      }
+      "evidence": {}
     },
     {
       "endpoint": "/home",
@@ -122,22 +122,22 @@
   ],
   "chosen_order": [
     "toy-docs-debug-validation",
-    "toy-health-debug-validation"
+    "toy-pii-validation"
   ],
   "metrics": {
     "n_indicators_run": 3,
     "n_validations_run": 2,
     "validation_budget_used": 2,
     "policy_rejections": 0,
-    "decision_loop_elapsed_s": 0.823
+    "decision_loop_elapsed_s": 1.779
   },
   "trace": [
     {
       "step": "decision",
       "detail": {
-        "planner": "rule-severity",
+        "planner": "rule-context",
         "chosen": "toy-docs-debug-validation",
-        "reason": "severity rule: validate the highest-severity signal first (high on /docs)",
+        "reason": "context rule: validate the most business-critical signal first (critical business on /docs)",
         "confidence": null,
         "stop_reason": null,
         "raw": null
@@ -166,9 +166,9 @@
     {
       "step": "decision",
       "detail": {
-        "planner": "rule-severity",
-        "chosen": "toy-health-debug-validation",
-        "reason": "severity rule: validate the highest-severity signal first (high on /health)",
+        "planner": "rule-context",
+        "chosen": "toy-pii-validation",
+        "reason": "context rule: validate the most business-critical signal first (high business on /account)",
         "confidence": null,
         "stop_reason": null,
         "raw": null
@@ -177,20 +177,20 @@
     {
       "step": "policy",
       "detail": {
-        "chosen": "toy-health-debug-validation",
+        "chosen": "toy-pii-validation",
         "ok": true,
-        "reason": "approved: 'toy-health-debug-validation' is in the allowlist and eligible"
+        "reason": "approved: 'toy-pii-validation' is in the allowlist and eligible"
       }
     },
     {
       "step": "action",
       "detail": {
-        "validation": "toy-health-debug-validation",
-        "endpoint": "/health",
+        "validation": "toy-pii-validation",
+        "endpoint": "/account",
         "executed": true,
-        "status": "NOT_CONFIRMED",
-        "matched": false,
-        "matched_at": null,
+        "status": "CONFIRMED",
+        "matched": true,
+        "matched_at": "http://127.0.0.1:8777/account/export?id=../",
         "error": null
       }
     },
@@ -206,7 +206,7 @@
             "validation": "toy-admin-validation",
             "status": "UNVERIFIED",
             "tech_severity": "medium",
-            "business_importance": "critical",
+            "business_importance": "low",
             "evidence": {}
           },
           {
@@ -215,10 +215,15 @@
             "indicator": "toy-pii-indicator",
             "indicator_fired": true,
             "validation": "toy-pii-validation",
-            "status": "UNVERIFIED",
+            "status": "CONFIRMED",
             "tech_severity": "medium",
             "business_importance": "high",
-            "evidence": {}
+            "evidence": {
+              "matched": true,
+              "matched_at": "http://127.0.0.1:8777/account/export?id=../",
+              "matcher": null,
+              "error": null
+            }
           },
           {
             "endpoint": "/docs",
@@ -228,7 +233,7 @@
             "validation": "toy-docs-debug-validation",
             "status": "CONFIRMED",
             "tech_severity": "high",
-            "business_importance": "low",
+            "business_importance": "critical",
             "evidence": {
               "matched": true,
               "matched_at": "http://127.0.0.1:8777/docs/debug/vars",
@@ -242,15 +247,10 @@
             "indicator": "toy-debug-indicator",
             "indicator_fired": true,
             "validation": "toy-health-debug-validation",
-            "status": "NOT_CONFIRMED",
+            "status": "UNVERIFIED",
             "tech_severity": "high",
             "business_importance": "low",
-            "evidence": {
-              "matched": false,
-              "matched_at": null,
-              "matcher": null,
-              "error": null
-            }
+            "evidence": {}
           },
           {
             "endpoint": "/home",

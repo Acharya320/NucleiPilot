@@ -1,4 +1,4 @@
-"""NucleiPilot scaled toy app (v2 measurement bench).
+"""NucleiPilot scaled toy app (the measurement bench).
 
 A single small web app on 127.0.0.1 with FIVE components, each carrying its own
 *synthetic* condition. Unlike the v1 profile sandbox (nucleipilot/sandbox.py),
@@ -130,7 +130,7 @@ def dispatch(path: str, query: dict) -> tuple[int, bytes, str, dict]:
 
 def make_handler():
     class Handler(BaseHTTPRequestHandler):
-        server_version = "NucleiPilotToyV2/0.1"
+        server_version = "NucleiPilotToy/0.1"
 
         def do_GET(self):  # noqa: N802 (http.server API)
             parts = urlsplit(self.path)

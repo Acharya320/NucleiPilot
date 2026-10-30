@@ -34,34 +34,9 @@ class TemplateSpec:
     endpoint: str | None = None            # app component this maps to (None = shared, e.g. the debug indicator)
 
 
-# The ONLY templates any planner is allowed to run. Add here deliberately.
-ALLOWLIST: dict[str, TemplateSpec] = {
-    t.id: t
-    for t in [
-        TemplateSpec(
-            "demo-admin-indicator", "demo-admin-indicator.yaml", "admin", "indicator",
-            "Signals that a management/admin surface may exist (weak signal only).",
-            "info",
-        ),
-        TemplateSpec(
-            "demo-admin-validation", "demo-admin-validation.yaml", "admin", "validation",
-            "Confirms the management endpoint does not require authentication.",
-            "medium", validates="demo-admin-indicator",
-            possible_false_positive="A management surface can exist yet still require auth.",
-        ),
-        TemplateSpec(
-            "demo-debug-indicator", "demo-debug-indicator.yaml", "debug", "indicator",
-            "Signals that debug mode may be enabled (weak signal only).",
-            "info",
-        ),
-        TemplateSpec(
-            "demo-debug-validation", "demo-debug-validation.yaml", "debug", "validation",
-            "Confirms a debug interface is actually exposed (returns a synthetic token).",
-            "high", validates="demo-debug-indicator",
-            possible_false_positive="A debug flag can be set WITHOUT exposing an interface (the benign trap).",
-        ),
-    ]
-}
+# The approved template catalog lives in config/catalog.json and is loaded on
+# demand (see toy_catalog / load_catalog below). The allowlist rule still holds:
+# a planner may only run a template that appears in the active catalog.
 
 
 @dataclass
@@ -70,9 +45,20 @@ class PolicyResult:
     reason: str
 
 
+_DEFAULT_CATALOG: dict[str, TemplateSpec] | None = None
+
+
+def _default_catalog() -> dict[str, TemplateSpec]:
+    """The built-in default catalog (the scaled toy's config/catalog.json), loaded once."""
+    global _DEFAULT_CATALOG
+    if _DEFAULT_CATALOG is None:
+        _DEFAULT_CATALOG = toy_catalog()
+    return _DEFAULT_CATALOG
+
+
 def _cat(catalog):
-    """The catalog to use: the caller's, else the built-in v1 ALLOWLIST."""
-    return catalog if catalog is not None else ALLOWLIST
+    """The catalog to use: the caller's, else the built-in default (config/catalog.json)."""
+    return catalog if catalog is not None else _default_catalog()
 
 
 def load_catalog(path: str) -> dict[str, TemplateSpec]:
@@ -145,7 +131,7 @@ def validation_for_endpoint(indicator_id: str, endpoint: str | None, catalog=Non
 def validate_choice(chosen_id: str | None, eligible_ids, catalog=None) -> PolicyResult:
     """The independent guard. `chosen_id=None` means 'stop', always permitted.
 
-    `catalog` defaults to the built-in v1 ALLOWLIST; the v2 engine passes its own.
+    `catalog` defaults to the built-in catalog (config/catalog.json); the engine passes its own.
     """
     cat = _cat(catalog)
     if chosen_id is None:

@@ -50,10 +50,9 @@ All four planners in `nucleipilot/planners.py`; the v2 workflow in `nucleipilot/
 - [x] All planners return only catalog template IDs; a hallucinated id is rejected by the gate (tested: `test_hallucinated_id_is_blocked_by_the_gate`)
 
 ## Phase 4 — Experiment harness + metrics  ✅ (2026-10-30)
-One reproducible script: `scripts/run_experiment_v2.py` (starts the toy, profiles once for a fair shared
-discovery, runs everything, writes a **data-driven** summary). Outputs in `results/experiment/`
-(traces/, comparison.csv, summary.md, e3_trap.json) — kept separate from the v1 `results/final/` until
-Phase 7 reconciles them. *(E4 Grafana = Phase 5; E5 safety = Phase 6.)*
+One reproducible script: `scripts/run_experiment.py` (starts the toy, profiles once for a fair shared
+discovery, runs everything, writes a **data-driven** summary). Outputs in `results/final/`
+(traces/, comparison.csv, summary.md, e3_trap.json). *(E4 Grafana = Phase 5; E5 safety = Phase 6.)*
 - [x] **E1** — A / B1 / B2 / C on the same target, catalog, shared discovery, budget 2. Live result: B1 misses both business-critical issues + hits the trap; B2 and C both confirm /payments + /account
 - [x] Metrics logged per run: validation-budget units, validations run, policy rejections, decision-loop elapsed, chosen order, LLM tokens (in each trace's `raw.usage`); HTTP request counts deliberately NOT fabricated (honest — toy_spec §5)
 - [x] **E2 · Context-flip** (swap `/docs`↔`/payments` importance, responses unchanged) → B2 and C both shift their first pick to `/docs`
@@ -62,32 +61,38 @@ Phase 7 reconciles them. *(E4 Grafana = Phase 5; E5 safety = Phase 6.)*
 - [x] Saved all traces + comparison table; `summary.md` is generated from the actual runs and states the honest headline: **C ties B2** (no "LLM wins" claim)
 
 ## Phase 5 — Grafana generalization (real app, non-destructive) · E4  ✅ (2026-10-30)
-Run through the **same `engine.py`** as the toy: Grafana is just another asset + catalog (`scripts/run_grafana.py`). Evidence: `results/experiment/grafana_demo.json`. 55 tests still pass.
+Run through the **same `engine.py`** as the toy: Grafana is just another asset + catalog (`scripts/run_grafana.py`). Evidence: `results/final/grafana_demo.json`.
 - [x] *(reuse)* Local **Grafana 8.3.0** container, version pinned, isolated (script starts it if down; fingerprint via `/api/health`)
 - [x] Planted a **harmless marker file** (`/tmp/np-marker.txt`); the agent retrieved that exact marker → CONFIRMED (primary, read-only proof)
 - [x] `/etc/passwd` read as the secondary proof via a **local template implementing the real CVE-2021-43798 traversal** (`grafana-cve-2021-43798-passwd.yaml`) → CONFIRMED. *(Note: this is our own template, not ProjectDiscovery's official one; the v1 run in `results/final/vulhub_grafana_demo.json` used the official community template — kept as corroboration.)*
 - [x] Saved evidence JSON; reported only what we observed (no answer key assumed for Grafana)
-- [x] **E6** — `results/experiment/e6_generalization_note.md`: the LLM reasoned version→CVE from catalog descriptions with **0 CVE-specific decision code** (picked CVE-2021-43798 over the 2020-13379 distractor); a rule needs explicit per-CVE version-range logic. Honest taste of maintenance cost, not a scale claim.
+- [x] **E6** — `results/final/e6_generalization_note.md`: the LLM reasoned version→CVE from catalog descriptions with **0 CVE-specific decision code** (picked CVE-2021-43798 over the 2020-13379 distractor); a rule needs explicit per-CVE version-range logic. Honest taste of maintenance cost, not a scale claim.
 
 ## Phase 6 — Safety checks (show them failing safe) · E5  ✅ (2026-10-30)
-`scripts/safety_checks_v2.py` (deterministic, no Nuclei/API) → `results/experiment/safety_checks.md`; 3 matching unit tests in `tests/test_engine.py`. All PASS (55 tests total).
+`scripts/safety_checks.py` (deterministic, no Nuclei/API) → `results/final/safety_checks.md`; 3 matching unit tests in `tests/test_engine.py`. All PASS.
 - [x] Out-of-scope target → rejected before any scan (scope guard + engine refuses the asset)
 - [x] Template not on the allowlist → blocked by the gate (rejection logged, nothing executed)
 - [x] Malformed JSON from the LLM → safe stop (0 validations run, 0 confirmed)
 - [x] Over-budget → prevented in code (4 eligible, budget 2, exactly 2 run; rest stay UNVERIFIED)
 
-## Phase 7 — Results, docs & the examiner-runnable README
-- [ ] Regenerate `results/final/` from the scaled toy (replaces the old 2-issue numbers, **in place**)
-- [ ] Write a short results note (what we found, honestly)
-- [ ] Final architecture figure matching the built code
-- [ ] **README the examiner can follow start-to-finish:**
-  - [ ] Prerequisites (Python version, venv, Nuclei v3 path, OpenRouter key for the LLM planner only)
-  - [ ] One-command setup (create venv, install requirements)
-  - [ ] Exact commands to: run unit tests · start the toy · run A/B/C · run safety checks · run Grafana demo
-  - [ ] What output each command produces and **where** it lands (`results/final/…`)
-  - [ ] A note that all testing is localhost-only and read-only
-  - [ ] Index linking every deliverable (plan, toy spec, landscape, architecture, roadmap, decision, deck)
-- [ ] Update `README.md`'s "How it works" + reproduce sections to the built flow (**in place**)
+## Phase 7 — Results, docs & the examiner-runnable README  ✅ (2026-10-30)
+Committed the pre-cleanup tree to git first (v1 preserved in history), then retired the v1 2-issue
+demo (sandbox/planner/workflow/evaluate, demo-* templates, old v1 scripts/tests), reconciled all
+evidence into **one** `results/final/`, and dropped the `_v2` script suffixes. Suite is now 37 tests
+(the 4 v1 test files were removed). `policy.py`'s default catalog is now the real `config/catalog.json`
+(the dangling demo-* allowlist is gone).
+- [x] Regenerate `results/final/` from the scaled toy (replaces the old 2-issue numbers, **in place**); `results/experiment/` merged in and removed
+- [x] Short, honest results note → `results/final/findings.md` (claim-by-claim with evidence pointers)
+- [x] Architecture figure matching the built code → the `README.md` flowchart (profile → decide → authorize → scan → verify)
+- [x] **README the examiner can follow start-to-finish:**
+  - [x] Prerequisites (Python 3.10+, venv, Nuclei v3 path, OpenRouter key for the LLM planner only, Docker for Grafana only)
+  - [x] One-command setup (create venv, install requirements)
+  - [x] Exact commands to: run unit tests · smoke the toy · run A/B1/B2/C · run safety checks · run Grafana demo
+  - [x] What output each command produces and **where** it lands (`results/final/…`)
+  - [x] A note that all testing is localhost-only and read-only
+  - [x] Index linking every deliverable (landscape, PoC, architecture, roadmap, decision, deck)
+- [x] Rewrote `README.md`'s "How it works" + reproduce sections to the built flow (**in place**)
+- [x] Honest update to `docs/build_decision.md` §2–§3 (v1 "3/3 vs 0/1" → the scaled result: C ties B2) and `docs/toy_spec.md` §6
 
 ## Phase 8 — Submission
 - [ ] ~5-minute demo video (you record; I write the script)

@@ -124,7 +124,7 @@ The market splits into **closed full-stack autonomous platforms** (XBOW, RunSybi
 1. **A transparent, policy-constrained agentic *layer* on a trusted open-source scanner** — not a new black-box exploitation engine. Most offerings are either closed-commercial or maximally-autonomous OSS; few sit in between with explicit, inspectable action controls.
 2. **Published, controlled evidence** that the agent beats non-AI baselines. Vendors *claim* value (e.g., "90% fewer false positives" [V]); almost none publish a fixed-vs-rule-vs-LLM comparison with independent ground truth. **We do.**
 3. **Governance for regulated orgs (e.g., a bank):** target allowlists, template allowlists, human approval, deterministic safety rails, full audit trace. Autonomous-Metasploit-in-Docker cannot offer this; commercial platforms vary and are opaque.
-4. **Business-*context*-aware prioritization under budget** — most tools prioritize by CVSS/severity; our flip-test shows context-driven choice (6/6).
+4. **Business-*context*-aware prioritization under budget** — most tools prioritize by CVSS/severity; our flip-test shows context-driven choice (swap the business importance and the first pick follows it, not a fixed favourite).
 
 **NucleiPilot's honest niche:** *a lightweight, transparent, auditable agentic triage/follow-up layer on top of a trusted open-source scanner (Nuclei), with independent action controls and explicit benchmark comparisons, for approved internal sandboxes.* We do **not** claim to out-autonomy XBOW; we claim **transparency + evidence + governance** — the dimensions the leaders under-serve, and the ones a bank's security function cares about most.
 
