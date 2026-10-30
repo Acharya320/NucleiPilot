@@ -121,78 +121,35 @@
     }
   ],
   "chosen_order": [
-    "toy-pii-validation",
-    "toy-admin-validation"
+    "toy-admin-validation",
+    "toy-pii-validation"
   ],
   "metrics": {
     "n_indicators_run": 3,
     "n_validations_run": 2,
     "validation_budget_used": 2,
     "policy_rejections": 0,
-    "decision_loop_elapsed_s": 4.332
+    "decision_loop_elapsed_s": 7.161
   },
   "trace": [
     {
       "step": "decision",
       "detail": {
         "planner": "llm",
-        "chosen": "toy-pii-validation",
-        "reason": "This validation targets a high business importance endpoint that could disclose sensitive information, making it the most valuable choice given the budget.",
-        "confidence": 0.9,
-        "stop_reason": null,
-        "raw": {
-          "parsed": {
-            "chosen": "toy-pii-validation",
-            "reason": "This validation targets a high business importance endpoint that could disclose sensitive information, making it the most valuable choice given the budget.",
-            "confidence": 0.9,
-            "stop_reason": null
-          },
-          "usage": {
-            "prompt_tokens": 544,
-            "completion_tokens": 45
-          },
-          "model": "openai/gpt-4o-mini"
-        }
-      }
-    },
-    {
-      "step": "policy",
-      "detail": {
-        "chosen": "toy-pii-validation",
-        "ok": true,
-        "reason": "approved: 'toy-pii-validation' is in the allowlist and eligible"
-      }
-    },
-    {
-      "step": "action",
-      "detail": {
-        "validation": "toy-pii-validation",
-        "endpoint": "/account",
-        "executed": true,
-        "status": "CONFIRMED",
-        "matched": true,
-        "matched_at": "http://127.0.0.1:8777/account/export?id=../",
-        "error": null
-      }
-    },
-    {
-      "step": "decision",
-      "detail": {
-        "planner": "llm",
         "chosen": "toy-admin-validation",
-        "reason": "The /payments endpoint is critical for business operations, and confirming that authentication is disabled poses a significant risk if exploited.",
+        "reason": "The /payments endpoint is critical for business operations, and confirming whether authentication is disabled could expose significant security risks.",
         "confidence": 0.8,
         "stop_reason": null,
         "raw": {
           "parsed": {
             "chosen": "toy-admin-validation",
-            "reason": "The /payments endpoint is critical for business operations, and confirming that authentication is disabled poses a significant risk if exploited.",
+            "reason": "The /payments endpoint is critical for business operations, and confirming whether authentication is disabled could expose significant security risks.",
             "confidence": 0.8,
             "stop_reason": null
           },
           "usage": {
-            "prompt_tokens": 485,
-            "completion_tokens": 43
+            "prompt_tokens": 544,
+            "completion_tokens": 42
           },
           "model": "openai/gpt-4o-mini"
         }
@@ -215,6 +172,49 @@
         "status": "CONFIRMED",
         "matched": true,
         "matched_at": "http://127.0.0.1:8777/payments/admin/config.json",
+        "error": null
+      }
+    },
+    {
+      "step": "decision",
+      "detail": {
+        "planner": "llm",
+        "chosen": "toy-pii-validation",
+        "reason": "The /account endpoint has high business importance and could potentially expose sensitive information, making it the most valuable validation to run given the confirmed finding on /payments.",
+        "confidence": 0.9,
+        "stop_reason": null,
+        "raw": {
+          "parsed": {
+            "chosen": "toy-pii-validation",
+            "reason": "The /account endpoint has high business importance and could potentially expose sensitive information, making it the most valuable validation to run given the confirmed finding on /payments.",
+            "confidence": 0.9,
+            "stop_reason": null
+          },
+          "usage": {
+            "prompt_tokens": 494,
+            "completion_tokens": 52
+          },
+          "model": "openai/gpt-4o-mini"
+        }
+      }
+    },
+    {
+      "step": "policy",
+      "detail": {
+        "chosen": "toy-pii-validation",
+        "ok": true,
+        "reason": "approved: 'toy-pii-validation' is in the allowlist and eligible"
+      }
+    },
+    {
+      "step": "action",
+      "detail": {
+        "validation": "toy-pii-validation",
+        "endpoint": "/account",
+        "executed": true,
+        "status": "CONFIRMED",
+        "matched": true,
+        "matched_at": "http://127.0.0.1:8777/account/export?id=../",
         "error": null
       }
     },

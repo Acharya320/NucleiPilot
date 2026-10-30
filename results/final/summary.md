@@ -9,9 +9,9 @@
 | A (fixed, ceiling) | docs-debug -> health-debug -> admin -> pii | CONFIRMED | CONFIRMED | CONFIRMED | NOT_CONFIRMED |
 | B1 (severity rule) | docs-debug -> health-debug | UNVERIFIED | UNVERIFIED | CONFIRMED | NOT_CONFIRMED |
 | B2 (context rule) | admin -> pii | CONFIRMED | CONFIRMED | UNVERIFIED | UNVERIFIED |
-| C (LLM) run 1 | admin -> pii | CONFIRMED | CONFIRMED | UNVERIFIED | UNVERIFIED |
-| C (LLM) run 2 | pii -> admin | CONFIRMED | CONFIRMED | UNVERIFIED | UNVERIFIED |
-| C (LLM) run 3 | admin -> pii | CONFIRMED | CONFIRMED | UNVERIFIED | UNVERIFIED |
+| C (LLM) run 1 | pii -> admin | CONFIRMED | CONFIRMED | UNVERIFIED | UNVERIFIED |
+| C (LLM) run 2 | admin -> pii | CONFIRMED | CONFIRMED | UNVERIFIED | UNVERIFIED |
+| C (LLM) run 3 | pii -> admin | CONFIRMED | CONFIRMED | UNVERIFIED | UNVERIFIED |
 
 ## What the data shows
 

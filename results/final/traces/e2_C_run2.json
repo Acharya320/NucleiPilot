@@ -129,7 +129,7 @@
     "n_validations_run": 2,
     "validation_budget_used": 2,
     "policy_rejections": 0,
-    "decision_loop_elapsed_s": 4.848
+    "decision_loop_elapsed_s": 4.476
   },
   "trace": [
     {
@@ -180,19 +180,19 @@
       "detail": {
         "planner": "llm",
         "chosen": "toy-pii-validation",
-        "reason": "Confirms potential exposure of sensitive data through the /account endpoint, which is of high business importance.",
+        "reason": "The /account endpoint has high business importance and could expose sensitive information if vulnerable, making it the most valuable validation given the remaining budget.",
         "confidence": 0.9,
         "stop_reason": null,
         "raw": {
           "parsed": {
             "chosen": "toy-pii-validation",
-            "reason": "Confirms potential exposure of sensitive data through the /account endpoint, which is of high business importance.",
+            "reason": "The /account endpoint has high business importance and could expose sensitive information if vulnerable, making it the most valuable validation given the remaining budget.",
             "confidence": 0.9,
             "stop_reason": null
           },
           "usage": {
             "prompt_tokens": 488,
-            "completion_tokens": 41
+            "completion_tokens": 48
           },
           "model": "openai/gpt-4o-mini"
         }

@@ -129,7 +129,7 @@
     "n_validations_run": 2,
     "validation_budget_used": 2,
     "policy_rejections": 0,
-    "decision_loop_elapsed_s": 4.059
+    "decision_loop_elapsed_s": 6.056
   },
   "trace": [
     {
@@ -137,19 +137,19 @@
       "detail": {
         "planner": "llm",
         "chosen": "toy-docs-debug-validation",
-        "reason": "This validation targets a critical business importance endpoint that could leak sensitive internal information, thus significantly reducing risk to the asset.",
+        "reason": "This validation targets a critical business importance endpoint that could expose sensitive internal information, significantly reducing risk if a vulnerability is found.",
         "confidence": 0.9,
         "stop_reason": null,
         "raw": {
           "parsed": {
             "chosen": "toy-docs-debug-validation",
-            "reason": "This validation targets a critical business importance endpoint that could leak sensitive internal information, thus significantly reducing risk to the asset.",
+            "reason": "This validation targets a critical business importance endpoint that could expose sensitive internal information, significantly reducing risk if a vulnerability is found.",
             "confidence": 0.9,
             "stop_reason": null
           },
           "usage": {
             "prompt_tokens": 544,
-            "completion_tokens": 45
+            "completion_tokens": 46
           },
           "model": "openai/gpt-4o-mini"
         }
@@ -180,19 +180,19 @@
       "detail": {
         "planner": "llm",
         "chosen": "toy-pii-validation",
-        "reason": "The /account endpoint has high business importance and could expose sensitive information if misconfigured, making it the most valuable validation to run given the remaining budget.",
+        "reason": "The /account endpoint has high business importance and could expose sensitive information if vulnerable, making it the most critical validation to run given the remaining budget.",
         "confidence": 0.9,
         "stop_reason": null,
         "raw": {
           "parsed": {
             "chosen": "toy-pii-validation",
-            "reason": "The /account endpoint has high business importance and could expose sensitive information if misconfigured, making it the most valuable validation to run given the remaining budget.",
+            "reason": "The /account endpoint has high business importance and could expose sensitive information if vulnerable, making it the most critical validation to run given the remaining budget.",
             "confidence": 0.9,
             "stop_reason": null
           },
           "usage": {
             "prompt_tokens": 488,
-            "completion_tokens": 51
+            "completion_tokens": 50
           },
           "model": "openai/gpt-4o-mini"
         }

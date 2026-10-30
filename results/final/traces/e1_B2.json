@@ -129,7 +129,7 @@
     "n_validations_run": 2,
     "validation_budget_used": 2,
     "policy_rejections": 0,
-    "decision_loop_elapsed_s": 2.191
+    "decision_loop_elapsed_s": 3.728
   },
   "trace": [
     {
