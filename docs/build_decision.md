@@ -1,7 +1,7 @@
 # The Call: Should We Build This?
 
-*AMEX / Atos take-home, Part 5. A decisive recommendation, grounded in the evidence from
-Parts 1–4, plus the one fact that would flip it.*
+*AMEX / Atos take-home, Part 4 (the call). A decisive recommendation, grounded in the evidence from
+Parts 1–3, plus the one fact that would flip it.*
 
 ---
 
