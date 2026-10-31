@@ -76,7 +76,7 @@ follow-up round.
 
 ![PoC decision flow](figures/poc_flow.png)
 
-<sub>Amber = the LLM-driven steps · blue = enforced in code. Diagram source: [`figures/poc_flow.mmd`](figures/poc_flow.mmd).</sub>
+<sub>Amber = the single LLM-driven step (the planner) · blue = enforced in code. Diagram source: [`figures/poc_flow.mmd`](figures/poc_flow.mmd).</sub>
 
 ### What each part does (in plain terms)
 
@@ -103,8 +103,10 @@ follow-up round.
   logged. The LLM cannot reach a new target, run an unapproved template, or go over budget.
 - **Scanner runner (Nuclei)** — runs one approved template at a time, with a fixed command line (no
   flag injection), no outbound callbacks (`-ni`), rate limits, and JSON output saved to disk.
-- **Evidence parser + LLM review** — reads the Nuclei results. If the evidence is not yet clear, the
-  LLM may ask for **one** follow-up validation check. That follow-up goes through the same policy gate.
+- **Evidence parser (code)** — turns each Nuclei result into a structured verdict and appends it to the
+  running evidence. There is **no separate LLM "review" step**: the loop simply calls the **same planner
+  again** with this updated evidence, and for planner C that is how the LLM makes an **evidence-aware
+  follow-up** choice. That follow-up goes through the same policy gate.
 - **Evidence verifier + report (code decides)** — code sets the status. A finding is **CONFIRMED**
   only when the validation finds the **specific evidence for that finding** (for example, real file
   contents in the response, or the exact "authentication: not-required" signal) — **not** just because
