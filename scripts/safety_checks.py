@@ -6,7 +6,8 @@ Shows the harness does the safe thing when the model or the caller misbehaves:
   3. Malformed model JSON -> the planner stops safely (no random action).
   4. The validation budget is enforced in code -> no over-budget execution.
 
-Writes results/final/safety_checks.md. Run:  python scripts/safety_checks.py
+Writes results/reproduced/safety_checks.md by default (results/final holds the committed
+reference; regenerate it with --out results/final). Run:  python scripts/safety_checks.py
 """
 import os, sys, copy
 from types import SimpleNamespace
@@ -15,6 +16,14 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, REPO)
 from nucleipilot import policy, registry, profiler, engine, planners        # noqa: E402
 from nucleipilot.scanner import ScanResult, assert_in_scope, ScopeError     # noqa: E402
+
+import argparse                                                             # noqa: E402
+_ap = argparse.ArgumentParser(description="E5 deterministic safety/failure checks (no Nuclei, no API).")
+_ap.add_argument("--out", default=os.path.join("results", "reproduced"),
+                 help="output dir for safety_checks.md (default: results/reproduced; "
+                      "results/final holds the committed reference evidence).")
+_args = _ap.parse_args()
+OUT_DIR = _args.out if os.path.isabs(_args.out) else os.path.join(REPO, _args.out)
 
 cat = policy.toy_catalog()
 asset = registry.get_asset(registry.load_registry(), "toy-app")
@@ -109,7 +118,7 @@ check("Budget enforced (no over-budget execution)", n_pool > prof.budget and n_r
 
 # --- summary ---
 all_pass = all(p for _, p, _ in results)
-out_dir = os.path.join(REPO, "results", "final")
+out_dir = OUT_DIR
 os.makedirs(out_dir, exist_ok=True)
 md = os.path.join(out_dir, "safety_checks.md")
 with open(md, "w", encoding="utf-8") as fh:
