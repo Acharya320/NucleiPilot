@@ -39,6 +39,6 @@ live: **many assets, a constant stream of new templates/CVEs**.
 - This is **one case**, not a benchmark. A rule *can* do version-range matching; the claim
   is about **maintenance burden**, which only pays off at scale.
 - Reliability of LLM reasoning across many real CVEs/targets is **not** established here -
-  that is exactly what the 90-day pilot in `docs/build_decision.md` is designed to measure.
+  that is exactly what the 90-day pilot in Part 4 is designed to measure.
 - All testing was against our **own local, authorized** Grafana container (localhost only),
   read-only.

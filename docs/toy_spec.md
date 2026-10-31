@@ -133,7 +133,7 @@ them is the "the LLM out-picks a rule" claim that this toy cannot settle:
 4. **Generalization without hand-written rules.** The LLM extends 1–3 to targets, technologies, and
    evidence patterns nobody pre-coded. This is where rules get expensive and the agent earns its cost.
    Demonstrable as a *taste* here (the Grafana version→CVE reasoning used **zero CVE-specific decision
-   code** — E4/E6); its *reliability at scale* is the 90-day pilot's job (`build_decision.md`).
+   code** — E4/E6); its *reliability at scale* is the 90-day pilot's job (the Part 4 decision brief).
 
 **The point that keeps us honest without underselling:** *a rule like B2 is the LLM's decision policy,
 frozen into code.* You can only write that rule once you already know the right policy. On a 5-endpoint

@@ -147,7 +147,7 @@ the honest head-to-head is **C vs the stronger B2**. A runs everything with no b
 
 > **Honesty note:** this toy is small and fully labeled, so a good decision the LLM makes, B2 can also
 > encode. The toy therefore **cannot prove the LLM beats a well-tuned rule** — that question is the
-> 90-day pilot's job (`build_decision.md`). If C only ties B2, we report that; the POC still
+> 90-day pilot's job (the Part 4 decision brief). If C only ties B2, we report that; the POC still
 > demonstrates a bounded, auditable, evidence-driven agent. (Details: `toy_spec.md` §6–§7.)
 
 **What we measure:**
