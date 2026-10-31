@@ -44,11 +44,11 @@ def ensure_grafana():
     else:
         print("Starting Grafana 8.3.0 container...")
         subprocess.run(["docker", "rm", "-f", NAME], capture_output=True)
-        rc = subprocess.run(["docker", "run", "-d", "--name", NAME, "-p", f"{PORT}:3000",
+        rc = subprocess.run(["docker", "run", "-d", "--name", NAME, "-p", f"127.0.0.1:{PORT}:3000",
                              "grafana/grafana:8.3.0"], capture_output=True, text=True)
         if rc.returncode != 0:
             print("Could not start Grafana via Docker:\n" + (rc.stderr or ""))
-            print(f"Start it manually: docker run -d --name {NAME} -p {PORT}:3000 grafana/grafana:8.3.0")
+            print(f"Start it manually: docker run -d --name {NAME} -p 127.0.0.1:{PORT}:3000 grafana/grafana:8.3.0")
             sys.exit(2)
         for _ in range(40):
             v = _health_version()

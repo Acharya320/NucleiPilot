@@ -1,213 +1,102 @@
-# NucleiPilot — A Governed, Evidence-Driven Agent for Nuclei
+# NucleiPilot — Evidence-Guided Follow-Up Testing with Nuclei
 
-NucleiPilot is a thin **agentic layer** on top of the open-source
-[Nuclei](https://github.com/projectdiscovery/nuclei) scanner. A planner (a rule, or an LLM)
-only ever **proposes** which check to run next; **code** then decides — in scope, on the
-approved catalog, eligible at this step, and within a fixed test budget — whether it runs.
-Every weak signal is treated as a *hint*, every finding is confirmed **on evidence**, and
-every observation, decision, policy verdict, and action is written to a full trace.
+**Part 2 | ATOS / American Express take-home assignment**
 
-> **The one invariant:** *the model proposes, the code authorizes.* The planner cannot invent
-> a template, reach a new host, raise the budget, or run a raw command — those paths do not exist.
+NucleiPilot extends the open-source [Nuclei scanner](https://github.com/projectdiscovery/nuclei) with a small decision layer. After collecting initial signals, it selects **which approved check to run next** based on business importance, available evidence, and a limited testing budget. Nuclei performs the scan; deterministic Python code checks permissions and interprets the result.
 
-> **Testing scope — read first.** All active scanning is performed **only** against a self-hosted
-> synthetic toy app on `127.0.0.1` and a throwaway local Grafana container. **No real or
-> third-party systems are ever scanned.** This is an authorized security-research prototype — a
-> triage/follow-up layer, **not** an autonomous exploitation tool.
+**Operating rule: the model proposes; code authorizes.** This is a controlled testing prototype, not a fully autonomous penetration-testing product.
 
-*Status: proof-of-concept complete and evaluated end-to-end with real Nuclei and a real LLM
-(see [`results/final/`](results/final/) and [`docs/`](docs/)). Executive deck done; ~5-min demo video to record.*
+## 1. Why build it?
 
----
+Nuclei already supports thousands of security checks and template filtering. The question is what to do **after an initial scan reveals several potential issues** but there is only enough time or budget to investigate some of them. Should we investigate the technically severe issue first, or one affecting a business-critical service?
 
-## Why
+NucleiPilot tests two capabilities:
 
-A conventional scan runs a fixed template set regardless of what it finds, and offers no
-prioritization when the budget is tight and several signals compete. NucleiPilot adds two
-narrow capabilities, under hard governance:
+1. **Evidence-based follow-up:** treat a preliminary signal as unverified until a separate check provides stronger evidence.
+2. **Context-aware selection:** choose the next permitted validation using business importance and technical information, subject to a fixed budget.
 
-- **Evidence-based triage** — an *indicator* (a weak signal) is not a finding; a *validation*
-  confirms it by matching a content signature. A fired template that fails its validation is
-  rejected as a false positive.
-- **Budget-aware, business-aware follow-up** — pick the most valuable next validation given the
-  evidence, the target's business context, and the remaining budget; then reassess.
+## 2. What runs in the POC?
 
-## How it works
+```text
+Approved local target -> Nuclei indicator checks -> target profile
+                                                 |
+                                                 v
+                                  Rule-based OR LLM planner
+                                        proposes a template
+                                                 |
+                                                 v
+                          Python guard: scope + catalog + budget
+                                                 |
+                                                 v
+                               Nuclei validation -> code verdict
+                                                 |
+                                                 v
+                                   Next decision or final trace
+```
 
-![NucleiPilot agent loop — profile, decide, authorize, scan, verify](docs/figures/architecture.png)
+The components are in `nucleipilot/`: `profiler.py` (initial observations), `planners.py` (four planning methods), `policy.py` (allowed choices), `scanner.py` (Nuclei command execution), `verifier.py` (evidence status), and `engine.py` (the loop). The input assets and approved templates are in `config/` and `templates/`.
 
-<sub>**Amber** = the only step the model drives (it *proposes*). **Blue** = everything code authorizes, runs, and judges — the model never touches a scan or a verdict directly. Diagram source: [`docs/figures/architecture.mmd`](docs/figures/architecture.mmd).</sub>
+**Testing boundary:** the project records tests on a self-hosted five-endpoint toy app and a local Grafana 8.3.0 container. Both are deliberately controlled lab targets. The code restricts submitted target hostnames to localhost, but does **not** provide enterprise-grade network isolation or a full redirect/egress policy. Do not use it against production or third-party systems.
 
-**Each box above is one small module** (none over ~180 lines):
+## 3. Evidence and results
 
-| In the diagram | Module | What it does |
-|---|---|---|
-| Target | `toyapp.py` (or a real app) | the localhost-only sandbox under test |
-| Profiler | `profiler.py` | runs the free indicators, builds per-endpoint context (business importance + fired signals + candidate validations) |
-| Planner | `planners.py` | *proposes* the next validation — A (exhaustive) · B1 (severity) · B2 (business context) · C (LLM) |
-| Policy gate | `policy.py` | *authorizes in code*: in scope? in the catalog? eligible now? within budget? — else blocked + logged |
-| Nuclei | `scanner.py` | runs the one approved template, scope-guarded, with a fixed command line |
-| Verifier | `verifier.py` | assigns the verdict **in code** (never the LLM) |
-| *(the loop itself)* | `engine.py` | orchestrates the rounds, enforces the budget, writes the full trace |
+The toy app presents three real issues and one deliberately misleading debug signal. `/payments` and `/account` have higher *business importance* than `/docs`, even though `/docs` has higher *technical severity*.
 
-*(Supporting: `registry.py` supplies each endpoint's business importance; `llm_client.py` backs planner C.)*
+| Method | Validation budget | Results | Interpretation |
+|---|---:|---|---|
+| **A — exhaustive reference** | 4 | Confirms `/payments`, `/account`, `/docs`; excludes `/health` | Coverage ceiling; **not** a same-budget comparator |
+| **B1 — severity rule** | 2 | Confirms `/docs`; checks benign `/health`; misses two important issues | Technical severity alone can misallocate this budget |
+| **B2 — context rule** | 2 | Confirms `/payments` and `/account` | Strong non-LLM baseline |
+| **C — LLM planner** | 2 | Same two findings in all 3 recorded runs | **Matches B2; does not beat it** |
 
-The loop is **profile → decide → authorize → scan → verify → reassess**. Verdicts are assigned
-**in code**, never by the LLM, from one of five labels:
-`CONFIRMED` · `NOT_CONFIRMED` · `UNVERIFIED` · `NO_INDICATOR` · `TEST_ERROR`
-(a scan error is checked *before* a match, so a failed scan is never mistaken for a clean result).
+Other focused checks:
 
-**The budget.** Indicators are free (cost 0); each validation costs 1 unit; the budget is 2.
-One validation runs per round, with a reserve rule (the first commit leaves room to react), so
-the planner must *choose* — which is exactly what makes the comparison below meaningful.
+- **E2 — context change:** when `/docs` becomes the most business-important target, B2 and C both select its validation first.
+- **E3 — independent false-positive test:** a weak debug signal appears at `/docs` and `/health`. A targeted check confirms the `/docs` issue and does **not confirm** `/health`. This is a **separate** check, not proof that the budget-2 LLM run tested `/health`.
+- **E4 — Grafana:** against a local 8.3.0 container, the LLM selected an applicable CVE-2021-43798 check from two catalog candidates; saved results report a successful, read-only file test. This is **one transfer example**, not measured performance across real deployments.
+- **E5 — four deterministic safety tests:** scope rejection, unknown-template rejection, malformed-output stop, and budget enforcement passed without requiring an LLM or live scanner.
 
-## The experiment, in one table
+**Takeaway:** the main implementation result is an inspectable, bounded follow-up workflow. The evidence does **not** show an LLM advantage over a well-designed context rule on this small toy dataset.
 
-The toy app serves five endpoints whose **technical severity diverges from business importance** —
-the choice the whole PoC turns on:
+Open [`results/final/README.md`](results/final/README.md) for the evidence index, [`results/final/summary.md`](results/final/summary.md) for recorded comparisons, and [`docs/analysis.md`](docs/analysis.md) for the short evaluation.
 
-| Endpoint | Business importance | Real issue | Severity |
-|---|---|---|---|
-| `/payments` | **critical** | admin console, no auth | medium |
-| `/account` | **high** | PII / secret leak | medium |
-| `/docs` | low | debug interface exposed | **high** |
-| `/health` | low | debug flag set, **but nothing exposed** (benign trap) | — |
-| `/home` | low | none | — |
+## 4. How to reproduce
 
-Four planners compete at the same budget of 2, on the same discovered signals:
+**Requirements:** Python 3.10+, Nuclei v3, an API key for the LLM planner only, and Docker for the Grafana demo. Install Nuclei separately and put it on `PATH` or set `NUCLEIPILOT_NUCLEI_BIN`. Keep any `.env` with real credentials **outside shared ZIP files and Git**.
 
-| | Planner | How it decides |
-|---|---|---|
-| **A** | Fixed (reference) | runs every validation — the ceiling, not a same-budget competitor |
-| **B1** | Severity-only rule | orders by technical severity (the naive baseline) |
-| **B2** | Context-aware rule | business importance → severity (the **strong** non-LLM bar to clear) |
-| **C** | LLM | proposes from structured context + evidence + budget; code enforces every choice |
+From the repository root — **Windows (PowerShell):**
 
-**The honest result** (computed by the harness into [`results/final/summary.md`](results/final/summary.md),
-nothing hard-coded): under budget 2, **B1** chose the high-severity `/docs` debug check and
-could not tell it from the `/health` trap, so it **missed** the business-critical `/payments`
-and `/account`. **B2** and **C** both confirmed `/payments` + `/account`. **C ties B2 on
-outcome** — the same confirmed findings on every one of 3 runs (the validation *order* varied
-run-to-run, the expected LLM nondeterminism, but the outcome did not). So on this small,
-fully-labeled toy the LLM shows **no prioritization advantage over a well-tuned rule** — and we
-say so plainly. The durable value is the **governed, evidence-driven loop and its
-generalization**, not the model out-picking a rule. See [`results/final/README.md`](results/final/README.md)
-for the full claim-by-claim evidence, and [`docs/toy_spec.md`](docs/toy_spec.md) §7 for what this
-can and cannot prove.
-
-## Safety model
-
-- **Scope guard** — `scanner.assert_in_scope` rejects anything but `127.0.0.1` / `localhost`.
-- **Approved catalog** — planners may only choose templates in the active catalog (`config/catalog.json`); an unknown id is blocked.
-- **Eligibility + budget** — a template must be eligible at this step, and the loop never exceeds the validation budget.
-- **Fixed command line** — the Nuclei invocation is built in code (`-ni` no interactsh/OAST, `-duc` no update check); callers cannot inject flags or reach the network.
-- **Full trace** — every observation, decision, policy verdict, and action is recorded per run under `results/final/traces/`.
-
-All four failure modes are demonstrated failing safe (an out-of-scope target, an invented
-template id, malformed model output, an over-budget request) in
-[`results/final/safety_checks.md`](results/final/safety_checks.md).
-
-## Reproduce — every result, from the repo root
-
-**Prerequisites:** Python 3.10+ · [Nuclei v3](https://github.com/projectdiscovery/nuclei/releases)
-(on `PATH`, or set `NUCLEIPILOT_NUCLEI_BIN` to its full path) · an OpenRouter API key **only** for
-the LLM planner (method C and the Grafana demo) · Docker **only** for the Grafana demo.
-
-**The five steps, and what each needs** (output always lands in `results/final/`):
-
-1. **Unit tests** (37, deterministic) — *Python only*
-2. **Toy-app smoke test** — *Python only*
-3. **Full A/B1/B2/C experiment** — E1 comparison + E2 context-flip + E3 trap; starts the toy itself; needs *Nuclei* (+ the *LLM key* for method C)
-4. **Safety / fail-safe demonstrations** (E5) — *Python only*
-5. **Real-app generalization** — E4/E6 on a local *Grafana 8.3.0*; starts the container itself; needs *Docker + Nuclei + the LLM key*
-
-Run the block for your OS from the repo root. Steps 3 (method C) and 5 read your OpenRouter key
-from `.env`; without it, A/B1/B2 and every deterministic step still run, and C's recorded evidence
-is already in `results/final/`.
-
-**Windows (PowerShell):**
 ```powershell
 py -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-$env:NUCLEIPILOT_NUCLEI_BIN = "C:\path\to\nuclei.exe"   # only if Nuclei isn't on PATH
-copy .env.example .env                                   # then paste your OpenRouter key (steps 3C & 5)
-
-.\.venv\Scripts\python.exe -m unittest discover -s tests   # 1
-.\.venv\Scripts\python.exe scripts\smoke_toyapp.py         # 2
-.\.venv\Scripts\python.exe scripts\run_experiment.py       # 3
-.\.venv\Scripts\python.exe scripts\safety_checks.py        # 4
-.\.venv\Scripts\python.exe scripts\run_grafana.py          # 5  (stop after: docker rm -f np-grafana)
+.\.venv\Scripts\python.exe -m unittest discover -s tests
+.\.venv\Scripts\python.exe scripts\smoke_toyapp.py
+.\.venv\Scripts\python.exe scripts\run_experiment.py
+.\.venv\Scripts\python.exe scripts\safety_checks.py
 ```
 
 **macOS / Linux (bash):**
+
 ```bash
 python3 -m venv .venv
 ./.venv/bin/python -m pip install -r requirements.txt
-export NUCLEIPILOT_NUCLEI_BIN=/path/to/nuclei            # only if Nuclei isn't on PATH
-cp .env.example .env                                     # then paste your OpenRouter key (steps 3C & 5)
-
-./.venv/bin/python -m unittest discover -s tests          # 1
-./.venv/bin/python scripts/smoke_toyapp.py                # 2
-./.venv/bin/python scripts/run_experiment.py              # 3
-./.venv/bin/python scripts/safety_checks.py               # 4
-./.venv/bin/python scripts/run_grafana.py                 # 5  (stop after: docker rm -f np-grafana)
+./.venv/bin/python -m unittest discover -s tests
+./.venv/bin/python scripts/smoke_toyapp.py
+./.venv/bin/python scripts/run_experiment.py
+./.venv/bin/python scripts/safety_checks.py
 ```
 
-**Where output lands.** Everything writes to [`results/final/`](results/final/):
-`README.md` (**start here** — the guided results index), `summary.md` (E1–E3, generated from the runs),
-`comparison.csv`, `e3_trap.json`, `safety_checks.md` (E5), `grafana_demo.json` (E4), `e6_generalization_note.md` (E6),
-and a per-run `traces/`. Inspect any trace with `scripts\show_trace.py`.
+For the LLM experiment, copy `.env.example` to `.env` locally and fill in the API settings. `scripts/run_grafana.py` additionally requires Docker; it binds the container to **`127.0.0.1` only**, so the lab Grafana is not exposed on the network. Shut down the lab container after the demonstration (`docker rm -f np-grafana`).
 
-## Generalization — a real CVE on a real app (Grafana)
+The deterministic tests can run without Nuclei or an LLM. The end-to-end experiments need the dependencies noted above. Detailed recorded evidence is in `results/final/`; individual decisions can be displayed with `python scripts/show_trace.py results/final/traces/e1_C_run0.json`.
 
-The **same engine** runs against an app we did not write — Grafana is just another entry in the
-asset registry + catalog. Against a local **Grafana 8.3.0** container, the agent fingerprints the
-version via `/api/health`, then — given two candidate CVEs and a budget of 1 — reasons from the
-detected version to pick the **applicable** `CVE-2021-43798` (affects 8.0.0–8.3.0) over an
-inapplicable distractor `CVE-2020-13379` (3.0.1–7.0.1), with **zero CVE-specific decision code**.
-It then confirms the arbitrary-file read **read-only**: first a harmless planted marker file
-(`/tmp/np-marker.txt` → `CONFIRMED`), then `/etc/passwd` as a secondary proof (`CONFIRMED`).
-Evidence: [`results/final/grafana_demo.json`](results/final/grafana_demo.json). The finding is
-corroborated independently with ProjectDiscovery's **official** community template
-([`results/final/vulhub_grafana_demo.json`](results/final/vulhub_grafana_demo.json), reproducible
-with `scripts\vulhub_demo.py` after `nuclei -update-templates`).
+## 5. Deliverables and limits
 
-## Repo layout
+- **Implementation:** `nucleipilot/`, `scripts/`, `config/`, `templates/`, `tests/`.
+- **POC evidence:** `results/final/README.md`, `summary.md`, `comparison.csv`, `traces/`, `grafana_demo.json`, `safety_checks.md`.
+- **One-page evaluation:** [`docs/analysis.md`](docs/analysis.md).
+- **Tool overview:** [`docs/tool_teardown.md`](docs/tool_teardown.md).
+- **Executive slides:** [`presentation/AXP_Executive_Deck.pptx`](presentation/AXP_Executive_Deck.pptx).
+- **Demo video:** must be recorded and linked before submission.
 
-```
-nucleipilot/   toyapp · registry · profiler · policy (catalog + gate) · scanner (scope guard) ·
-               planners (A/B1/B2/C) · engine (the loop) · verifier · llm_client
-config/        asset_registry.json · catalog.json · grafana_catalog.json · toy_answer_key.json
-templates/     7 toy-*.yaml (indicator + validation per issue) · 3 grafana-cve-*.yaml
-scripts/       smoke_toyapp · run_experiment · safety_checks · run_grafana · show_trace ·
-               vulhub_demo (optional official-template corroboration)
-tests/         37 deterministic unit tests (no Nuclei / no API)
-results/final/ README.md (start here) · summary.md · comparison.csv · e3_trap.json · safety_checks.md ·
-               grafana_demo.json · e6_generalization_note.md · traces/ · vulhub_grafana_demo.json
-docs/          tool_teardown · analysis · poc_plan · toy_spec · landscape_and_capability_map ·
-               enterprise_architecture · two_person_roadmap · build_decision
-presentation/  AXP_Executive_Deck.pptx
-```
-
-## Current limitations (stated plainly)
-
-- A controlled, fully-labeled toy (5 endpoints) plus one real-CVE scenario — **not** a broad
-  real-world benchmark.
-- On this small toy the LLM (C) **ties** the well-tuned context-aware rule (B2); it does not beat
-  it. The value here is governance, evidence discipline, and generalization — not out-picking a
-  rule. Whether LLM reasoning beats a rule on messy, unlabeled real targets is exactly what the
-  90-day pilot in [`docs/build_decision.md`](docs/build_decision.md) is designed to measure.
-- The LLM's pick *order* is nondeterministic run-to-run (same confirmed set, different sequence);
-  under the budget this does not change the outcome, and the harness reports it rather than hiding it.
-- Single model (`gpt-4o-mini`) tested; a multi-model reliability comparison is future work.
-- The agent helps *choose and triage* — Nuclei already does the detecting. It is not a replacement
-  for human pentesters or for the scanner, and is not production-ready.
-
-## Assignment deliverables
-
-- **Part 1 — Landscape & capability map:** [docs/landscape_and_capability_map.md](docs/landscape_and_capability_map.md)
-- **Part 2 — The PoC:** this repo · [tool teardown](docs/tool_teardown.md) · [the 2-day plan](docs/poc_plan.md) · [toy design & honesty note](docs/toy_spec.md) · [test results](results/final/README.md) (start here — guided index of all evidence) · [analysis (1-pager)](docs/analysis.md)
-- **Part 3 — Enterprise architecture & stakeholder map:** [docs/enterprise_architecture.md](docs/enterprise_architecture.md)
-- **Part 4 — Project plan + the call (build/no-build):** [two_person_roadmap.md](docs/two_person_roadmap.md) · [build_decision.md](docs/build_decision.md)
-- **Executive deck (5 slides):** [presentation/AXP_Executive_Deck.pptx](presentation/AXP_Executive_Deck.pptx)
-- **In progress:** ~5-minute demo video.
+**Limitations:** one LLM model, small controlled test data, three repeated LLM runs in E1, no proven real-world accuracy or scaling advantage, and lab-level rather than enterprise-grade network restrictions. A larger pilot should compare the LLM with tuned rules on real authorized systems before committing to an AI decision layer.
