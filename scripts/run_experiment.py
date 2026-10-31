@@ -11,7 +11,10 @@ Starts the toy app itself on 127.0.0.1:8777, so one command reproduces everythin
 
 Needs: Nuclei v3 (PATH or NUCLEIPILOT_NUCLEI_BIN) and -- for method C only -- an
 OpenRouter key in .env. If no key is present, C is skipped and the summary says so.
-Outputs land in results/final/ (traces/, comparison.csv, summary.md, e3_trap.json).
+
+Outputs land in results/reproduced/ by default (traces/, comparison.csv, summary.md,
+e3_trap.json). results/final/ holds the committed REFERENCE evidence and is left
+untouched; regenerate it deliberately with `--out results/final`.
 """
 import sys, os, json, time, threading, copy
 
@@ -21,8 +24,11 @@ from http.server import ThreadingHTTPServer                               # noqa
 from nucleipilot.toyapp import make_handler                               # noqa: E402
 from nucleipilot import policy, registry, profiler, engine, planners, scanner, verifier  # noqa: E402
 
-OUT = os.path.join(REPO, "results", "final")
-TRACES = os.path.join(OUT, "traces")
+# Default output dir keeps a reviewer's reproduction OUT of the committed reference
+# evidence (results/final). Override with --out (e.g. --out results/final to refresh it).
+DEFAULT_OUT = os.path.join("results", "reproduced")
+OUT = None      # set in main() from --out
+TRACES = None   # set in main() from --out
 PORT = 8777
 N_REPEATS = 3
 EPS = ["/payments", "/account", "/docs", "/health", "/home"]
@@ -46,7 +52,17 @@ def save(name, obj):
         json.dump(obj, fh, indent=2)
 
 
-def main():
+def main(argv=None):
+    import argparse
+    global OUT, TRACES
+    ap = argparse.ArgumentParser(description="Run the scaled-toy A/B1/B2/C experiment (E1-E3).")
+    ap.add_argument("--out", default=DEFAULT_OUT,
+                    help="output directory for traces/summary/comparison "
+                         "(default: results/reproduced). results/final holds the committed "
+                         "reference evidence; pass --out results/final only to regenerate it.")
+    args = ap.parse_args(argv)
+    OUT = args.out if os.path.isabs(args.out) else os.path.join(REPO, args.out)
+    TRACES = os.path.join(OUT, "traces")
     os.makedirs(TRACES, exist_ok=True)
     httpd = ThreadingHTTPServer(("127.0.0.1", PORT), make_handler())
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
@@ -148,7 +164,7 @@ def _write_summary(runs, e3, have_c):
     lines.append("")
 
     # E1 table
-    lines.append("## E1 - fair comparison at budget 2")
+    lines.append("## E1 - A = exhaustive reference (4 checks); B1/B2/C at equal budget (2 each)")
     lines.append("")
     lines.append("| method | chose | /payments (crit) | /account (high) | /docs (low) | /health (trap) |")
     lines.append("|---|---|---|---|---|---|")

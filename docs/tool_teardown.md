@@ -28,17 +28,18 @@ automated security pipelines — CI/CD security gates and attack-surface-managem
 run Nuclei at scale across large asset inventories.
 
 ## Where the current workflow falls short
-1. **No prioritization under a budget.** Nuclei runs whatever template set you give it, in no business
-   order. When scan time/budget is tight and many signals compete, it has no notion of *which* check
-   matters most.
+1. **No business prioritization under a budget.** Nuclei can filter by tags and technical severity, but
+   it runs whatever template set you give it in no *business* order. When scan time/budget is tight and
+   many signals compete, it has no notion of which check matters most to the organization.
 2. **A match is a signal, not a verdict.** A template fires on an indicator (a header, a banner);
    turning that into a confirmed, de-duplicated, false-positive-free finding is manual triage.
 3. **Technical severity ≠ business impact.** Ranking is by severity (CVSS-style), not by what the
    asset is worth to the organization. A medium-severity flaw on a payments service can matter far
    more than a high-severity one on a docs page — Nuclei cannot know that.
-4. **No governance around *which* checks run and why.** It executes what it is told; there is no
-   built-in scope allowlist, approved-template list, budget, or audit trail — the controls a regulated
-   buyer (e.g. a bank) asks for first.
+4. **No decision-governance layer.** Nuclei supports template filtering, workflows and scan options, but
+   it executes the checks and targets it is given. It has no notion of an organization-approved
+   scope/template allowlist enforced as policy, a validation budget, or a per-decision audit trail — the
+   controls a regulated enterprise buyer asks for first.
 
 ## Why the agentic capability is useful (what NucleiPilot adds)
 NucleiPilot keeps Nuclei as the detection engine and adds a thin layer that:

@@ -132,7 +132,11 @@ def run(asset, catalog, planner, *, profile=None, nuclei_bin=None, scan_fn=None,
         "planner": planner.name,
         "asset_id": asset.get("id"),
         "base_url": base_url,
-        "budget": profile.budget,
+        # The validation budget this run actually operated under: the asset's
+        # configured budget normally, or the full-pool ceiling when exhaustive
+        # (so this never contradicts validation_budget_used). The asset's
+        # configured budget is still visible under "profile".
+        "budget": budget,
         "exhaustive": exhaustive,
         "profile": profile.to_dict(),
         "findings": [f.to_dict() for f in findings],

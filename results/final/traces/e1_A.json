@@ -2,7 +2,7 @@
   "planner": "fixed",
   "asset_id": "toy-app",
   "base_url": "http://127.0.0.1:8777",
-  "budget": 2,
+  "budget": 4,
   "exhaustive": true,
   "profile": {
     "asset_id": "toy-app",

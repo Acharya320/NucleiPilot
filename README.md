@@ -62,7 +62,7 @@ Open [`results/final/README.md`](results/final/README.md) for the evidence index
 
 ## 4. How to reproduce
 
-**Requirements:** Python 3.10+, Nuclei v3, an API key for the LLM planner only, and Docker for the Grafana demo. Install Nuclei separately and put it on `PATH` or set `NUCLEIPILOT_NUCLEI_BIN`. Keep any `.env` with real credentials **outside shared ZIP files and Git**.
+**Requirements:** Python 3.10+, Nuclei v3 (tested with v3.11.1), an API key for the LLM planner only, and Docker for the Grafana demo. Install Nuclei separately and put it on `PATH` or set `NUCLEIPILOT_NUCLEI_BIN`. Keep any `.env` with real credentials **outside shared ZIP files and Git**.
 
 From the repository root — **Windows (PowerShell):**
 
@@ -88,7 +88,7 @@ python3 -m venv .venv
 
 For the LLM experiment, copy `.env.example` to `.env` locally and fill in the API settings. `scripts/run_grafana.py` additionally requires Docker; it binds the container to **`127.0.0.1` only**, so the lab Grafana is not exposed on the network. Shut down the lab container after the demonstration (`docker rm -f np-grafana`).
 
-The deterministic tests can run without Nuclei or an LLM. The end-to-end experiments need the dependencies noted above. Detailed recorded evidence is in `results/final/`; individual decisions can be displayed with `python scripts/show_trace.py results/final/traces/e1_C_run0.json`.
+The deterministic tests can run without Nuclei or an LLM. The end-to-end experiments need the dependencies noted above; **without an API key, method C (the LLM planner) is skipped automatically** and the summary records that. Reproduction runs write to `results/reproduced/` by default, so the committed reference evidence in `results/final/` is never overwritten (regenerate the reference deliberately with `--out results/final`). Individual decisions can be displayed with `python scripts/show_trace.py results/final/traces/e1_C_run0.json`.
 
 ## 5. Deliverables and limits
 

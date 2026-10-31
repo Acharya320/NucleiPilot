@@ -25,9 +25,6 @@ import yaml
 # --- Scope allowlist: localhost only --------------------------------------
 ALLOWED_HOSTS = {"127.0.0.1", "localhost"}
 
-# Where `go install` placed the binary on this machine; overridable.
-DEFAULT_NUCLEI_BIN = r"C:\Users\SUDIPTA\go\bin\nuclei.exe"
-
 
 class ScopeError(Exception):
     """Raised when a target is outside the approved scope."""
@@ -43,16 +40,16 @@ def assert_in_scope(target: str) -> None:
 
 
 def _resolve_bin(explicit: str | None = None) -> str:
+    """Locate the nuclei binary: explicit arg, then the documented env override,
+    then PATH. No machine-specific path is baked in, so this is portable."""
     if explicit:
         return explicit
-    found = shutil.which("nuclei")
-    if found:
-        return found
     env = os.getenv("NUCLEIPILOT_NUCLEI_BIN")
     if env and os.path.exists(env):
         return env
-    if os.path.exists(DEFAULT_NUCLEI_BIN):
-        return DEFAULT_NUCLEI_BIN
+    found = shutil.which("nuclei")
+    if found:
+        return found
     raise FileNotFoundError(
         "nuclei binary not found. Put it on PATH, set NUCLEIPILOT_NUCLEI_BIN, "
         "or pass --bin / nuclei_bin=..."

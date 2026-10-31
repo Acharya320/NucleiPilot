@@ -26,7 +26,8 @@ BASE = f"http://127.0.0.1:{PORT}"
 NAME = "np-grafana"
 MARKER_PATH = "/tmp/np-marker.txt"
 MARKER = "NUCLEIPILOT-MARKER-7f3a-harmless-planted"
-OUT = os.path.join(REPO, "results", "final")
+DEFAULT_OUT = os.path.join("results", "reproduced")   # keep reviewer runs out of results/final
+OUT = None   # set in main() from --out
 
 
 def _health_version(timeout=2):
@@ -64,7 +65,15 @@ def ensure_grafana():
     return v
 
 
-def main():
+def main(argv=None):
+    import argparse
+    global OUT
+    ap = argparse.ArgumentParser(description="E4 Grafana generalization demo (localhost only).")
+    ap.add_argument("--out", default=DEFAULT_OUT,
+                    help="output dir for grafana_demo.json (default: results/reproduced; "
+                         "results/final holds the committed reference evidence).")
+    args = ap.parse_args(argv)
+    OUT = args.out if os.path.isabs(args.out) else os.path.join(REPO, args.out)
     os.makedirs(OUT, exist_ok=True)
     version = ensure_grafana()
 
