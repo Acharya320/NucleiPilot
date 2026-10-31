@@ -38,6 +38,12 @@ real and useful. Whether that saves meaningful maintenance versus a well-built r
 **unproven** and only starts to matter where real estates live: **many assets, a constant stream
 of new templates/CVEs**.
 
+> **Now measured (E7).** `e7_curation_note.md` tests exactly this on the real 14,104-template corpus:
+> picking the version-applicable Grafana CVE for 8.3.0. Because the affected-version data is
+> inconsistent free-text prose (not machine-readable), the LLM selects it at **F1 1.00** vs a tag rule
+> **0.15** and a naive version parser **0.29**. One product/version, but a *measured* case where the
+> LLM clearly beats the rules - the complement to the toy's honest tie.
+
 ## Honest caveats
 
 - This is **one case**, not a benchmark. A rule *can* do version-range matching; the

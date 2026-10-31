@@ -1,0 +1,206 @@
+{
+  "_comment": "Grafana-tagged CVE templates, mechanically extracted from a real nuclei-templates corpus by scripts/build_curation_fixture.py. This is the candidate pool a fair `-tags grafana` rule returns (CVEs only). Metadata only -- the experiment is about SELECTION, not scanning.",
+  "target": "Grafana 8.3.0",
+  "count": 12,
+  "templates": [
+    {
+      "id": "CVE-2019-15043",
+      "file": "http/cves/2019/CVE-2019-15043.yaml",
+      "cve_id": "CVE-2019-15043",
+      "name": "Grafana - Improper Access Control",
+      "severity": "high",
+      "tags": [
+        "cve",
+        "cve2019",
+        "grafana",
+        "dos",
+        "intrusive",
+        "vuln"
+      ],
+      "description": "Grafana 2.x through 6.x before 6.3.4 is susceptible to improper access control. An attacker can delete and create arbitrary snapshots, leading to denial of service."
+    },
+    {
+      "id": "CVE-2020-11110",
+      "file": "http/cves/2020/CVE-2020-11110.yaml",
+      "cve_id": "CVE-2020-11110",
+      "name": "Grafana <= 6.7.1 - Cross-Site Scripting",
+      "severity": "medium",
+      "tags": [
+        "cve2020",
+        "cve",
+        "xss",
+        "grafana",
+        "hackerone",
+        "vuln"
+      ],
+      "description": "Grafana through 6.7.1 contains an unauthenticated stored cross-site scripting vulnerability due to insufficient input protection in the originalUrl field, which allows an attacker to inject JavaScript code that will be executed after clicking on Open Original Dashboard after visiting the snapshot."
+    },
+    {
+      "id": "CVE-2020-13379",
+      "file": "http/cves/2020/CVE-2020-13379.yaml",
+      "cve_id": "CVE-2020-13379",
+      "name": "Grafana 3.0.1-7.0.1 - Server-Side Request Forgery",
+      "severity": "high",
+      "tags": [
+        "cve2020",
+        "cve",
+        "grafana",
+        "ssrf",
+        "vkev",
+        "vuln"
+      ],
+      "description": "Grafana 3.0.1 through 7.0.1 is susceptible to server-side request forgery via the avatar feature, which can lead to remote code execution. Any unauthenticated user/client can make Grafana send HTTP requests to any URL and return its result. This can be used to gain information about the network Grafana is running on, thereby potentially enabling an attacker to obtain sensitive information, modify data, and/or execute unauthorized administrative operations in the context of the affected site."
+    },
+    {
+      "id": "CVE-2021-27358",
+      "file": "http/cves/2021/CVE-2021-27358.yaml",
+      "cve_id": "CVE-2021-27358",
+      "name": "Grafana Unauthenticated Snapshot Creation",
+      "severity": "high",
+      "tags": [
+        "cve2021",
+        "cve",
+        "grafana",
+        "unauth",
+        "vuln",
+        "vkev"
+      ],
+      "description": "Grafana 6.7.3 through 7.4.1 snapshot functionality can allow an unauthenticated remote attacker to trigger a Denial of Service via a remote API call if a commonly used configuration is set."
+    },
+    {
+      "id": "CVE-2021-39226",
+      "file": "http/cves/2021/CVE-2021-39226.yaml",
+      "cve_id": "CVE-2021-39226",
+      "name": "Grafana Snapshot - Authentication Bypass",
+      "severity": "high",
+      "tags": [
+        "cve2021",
+        "cve",
+        "grafana",
+        "kev",
+        "vkev",
+        "vuln"
+      ],
+      "description": "Grafana instances up to 7.5.11 and 8.1.5 allow remote unauthenticated users to view the snapshot associated with the lowest database key by accessing the literal paths /api/snapshot/:key or /dashboard/snapshot/:key. If the snapshot is in public mode, unauthenticated users can delete snapshots by accessing the endpoint /api/snapshots-delete/:deleteKey. Authenticated users can also delete snapshots by accessing the endpoints /api/snapshots-delete/:deleteKey, or sending a delete request to /api/snapshot/:key, regardless of whether or not the snapshot is set to public mode (disabled by default)."
+    },
+    {
+      "id": "CVE-2021-41174",
+      "file": "http/cves/2021/CVE-2021-41174.yaml",
+      "cve_id": "CVE-2021-41174",
+      "name": "Grafana 8.0.0 <= v.8.2.2 - Angularjs Rendering Cross-Site Scripting",
+      "severity": "medium",
+      "tags": [
+        "cve2021",
+        "cve",
+        "grafana",
+        "xss",
+        "vkev",
+        "vuln"
+      ],
+      "description": "Grafana is an open-source platform for monitoring and observability. In affected versions if an attacker is able to convince a victim to visit a URL referencing a vulnerable page, arbitrary JavaScript content may be executed within the context of the victim's browser. The user visiting the malicious link must be unauthenticated and the link must be for a page that contains the login button in the menu bar. The url has to be crafted to exploit AngularJS rendering and contain the interpolation binding for AngularJS expressions."
+    },
+    {
+      "id": "CVE-2021-43798",
+      "file": "http/cves/2021/CVE-2021-43798.yaml",
+      "cve_id": "CVE-2021-43798",
+      "name": "Grafana v8.x - Arbitrary File Read",
+      "severity": "high",
+      "tags": [
+        "cve2021",
+        "cve",
+        "packetstorm",
+        "grafana",
+        "lfi",
+        "vkev",
+        "kev",
+        "vuln"
+      ],
+      "description": "Grafana versions 8.0.0-beta1 through 8.3.0 are vulnerable to a local directory traversal, allowing access to local files. The vulnerable URL path is `<grafana_host_url>/public/plugins/NAME/`, where NAME is the plugin ID for any installed plugin."
+    },
+    {
+      "id": "CVE-2022-26148",
+      "file": "http/cves/2022/CVE-2022-26148.yaml",
+      "cve_id": "CVE-2022-26148",
+      "name": "Grafana & Zabbix Integration - Credentials Disclosure",
+      "severity": "critical",
+      "tags": [
+        "cve",
+        "cve2022",
+        "grafana",
+        "zabbix",
+        "exposure",
+        "vuln"
+      ],
+      "description": "Grafana through 7.3.4, when integrated with Zabbix, contains a credential disclosure vulnerability. The Zabbix password can be found in the api_jsonrpc.php HTML source code. When the user logs in and allows the user to register, one can right click to view the source code and use Ctrl-F to search for password in api_jsonrpc.php to discover the Zabbix account password and URL address."
+    },
+    {
+      "id": "CVE-2024-9264",
+      "file": "http/cves/2024/CVE-2024-9264.yaml",
+      "cve_id": "CVE-2024-9264",
+      "name": "Grafana Post-Auth DuckDB - SQL Injection To File Read",
+      "severity": "critical",
+      "tags": [
+        "cve",
+        "cve2024",
+        "grafana",
+        "sqli",
+        "lfr",
+        "authenticated",
+        "vuln"
+      ],
+      "description": "The SQL Expressions experimental feature of Grafana allows for the evaluation of `duckdb` queries containing user input. These queries are insufficiently sanitized before being passed to `duckdb`, leading to a command injection and local file inclusion vulnerability. Any user with the VIEWER or higher permission is capable of executing this attack. The `duckdb` binary must be present in Grafana's $PATH for this attack to function; by default, this binary is not installed in Grafana distributions."
+    },
+    {
+      "id": "CVE-2025-3415",
+      "file": "http/cves/2025/CVE-2025-3415.yaml",
+      "cve_id": "CVE-2025-3415",
+      "name": "Grafana - Exposes DingDing API Keys",
+      "severity": "medium",
+      "tags": [
+        "cve",
+        "cve2025",
+        "grafana",
+        "dingding",
+        "dingtalk",
+        "apikey",
+        "vkev",
+        "vuln"
+      ],
+      "description": "An incident occurred where the DingDing alerting integration URL was inadvertently exposed to viewers due to a setting oversight in versions below or equals to 12.0.1."
+    },
+    {
+      "id": "CVE-2025-4123",
+      "file": "http/cves/2025/CVE-2025-4123.yaml",
+      "cve_id": "CVE-2025-4123",
+      "name": "Grafana - XSS / Open Redirect / SSRF via Client Path Traversal",
+      "severity": "high",
+      "tags": [
+        "cve",
+        "cve2025",
+        "grafana",
+        "redirect",
+        "unauth",
+        "oss",
+        "vkev",
+        "vuln"
+      ],
+      "description": "An open redirect vulnerability in Grafana can be chained with other issues, such as XSS or SSRF, to increase impact. An attacker may exploit the redirect to target internal services or deliver malicious JavaScript, potentially leading to internal data exposure or account takeover."
+    },
+    {
+      "id": "CVE-2025-6197",
+      "file": "http/cves/2025/CVE-2025-6197.yaml",
+      "cve_id": "CVE-2025-6197",
+      "name": "Open Redirect via Organization Switching",
+      "severity": "medium",
+      "tags": [
+        "cve",
+        "cve2025",
+        "redirect",
+        "grafana",
+        "open-redirect",
+        "vuln"
+      ],
+      "description": "An open redirect vulnerability has been identified in Grafana OSS organization switching functionality. Prerequisites for exploitation Multiple organizations must exist in the Grafana instance - Victim must be on a different organization than the one specified in the URL"
+    }
+  ]
+}

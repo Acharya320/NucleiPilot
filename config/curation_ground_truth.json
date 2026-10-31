@@ -1,0 +1,19 @@
+{
+  "_comment": "Hand-verified applicability of each Grafana-tagged CVE to a STOCK, UNAUTHENTICATED Grafana 8.3.0, read from each template's own description. Only CVE-2021-43798 genuinely applies -- and it is empirically confirmed on the live 8.3.0 container (results/final/grafana_demo.json). Used only to SCORE the experiment; the contestants never see this file.",
+  "target": "Grafana 8.3.0",
+  "applies": ["CVE-2021-43798"],
+  "rationale": {
+    "CVE-2019-15043": "Affects 2.x through 6.x before 6.3.4; 8.3.0 is newer. NOT applicable.",
+    "CVE-2020-11110": "Affects through 6.7.1; 8.3.0 newer. NOT applicable.",
+    "CVE-2020-13379": "Affects 3.0.1-7.0.1; 8.3.0 newer. NOT applicable.",
+    "CVE-2021-27358": "Affects 6.7.3 through 7.4.1; 8.3.0 newer. NOT applicable.",
+    "CVE-2021-39226": "Affects up to 7.5.11 AND 8.1.5 (dual-branch); 8.3.0 > 8.1.5. NOT applicable.",
+    "CVE-2021-41174": "Affects 8.0.0 through 8.2.2; 8.3.0 > 8.2.2. NOT applicable.",
+    "CVE-2021-43798": "Affects 8.0.0-beta1 through 8.3.0; 8.3.0 is the upper bound, included. APPLIES (confirmed live).",
+    "CVE-2022-26148": "Affects through 7.3.4 (Zabbix integration); 8.3.0 newer. NOT applicable.",
+    "CVE-2024-9264": "SQL Expressions experimental feature (Grafana 11.x era), authenticated + duckdb-dependent; feature absent in 8.3.0. NOT applicable.",
+    "CVE-2025-3415": "Text says 'below or equals to 12.0.1', which LITERALLY includes 8.3.0 -- but the DingDing alerting contact-point exposure concerns a later alerting feature not relevant to a 2021-era 8.3.0 build. NOT applicable. This is the deliberately hard case: the stated range is misleading.",
+    "CVE-2025-4123": "2025 open-redirect/XSS/SSRF via modern client path traversal; concerns recent versions. NOT applicable to 8.3.0.",
+    "CVE-2025-6197": "2025 open-redirect via organization switching (a modern feature). NOT applicable to 8.3.0."
+  }
+}

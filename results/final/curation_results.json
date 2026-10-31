@@ -1,0 +1,304 @@
+{
+  "target": "Grafana 8.3.0",
+  "candidates": [
+    "CVE-2019-15043",
+    "CVE-2020-11110",
+    "CVE-2020-13379",
+    "CVE-2021-27358",
+    "CVE-2021-39226",
+    "CVE-2021-41174",
+    "CVE-2021-43798",
+    "CVE-2022-26148",
+    "CVE-2024-9264",
+    "CVE-2025-3415",
+    "CVE-2025-4123",
+    "CVE-2025-6197"
+  ],
+  "ground_truth_applies": [
+    "CVE-2021-43798"
+  ],
+  "TAG": {
+    "selected": [
+      "CVE-2019-15043",
+      "CVE-2020-11110",
+      "CVE-2020-13379",
+      "CVE-2021-27358",
+      "CVE-2021-39226",
+      "CVE-2021-41174",
+      "CVE-2021-43798",
+      "CVE-2022-26148",
+      "CVE-2024-9264",
+      "CVE-2025-3415",
+      "CVE-2025-4123",
+      "CVE-2025-6197"
+    ],
+    "tp": 1,
+    "fp": 11,
+    "tn": 0,
+    "fn": 0,
+    "precision": 0.083,
+    "recall": 1.0,
+    "f1": 0.154
+  },
+  "VERSION": {
+    "selected": [
+      "CVE-2021-41174",
+      "CVE-2021-43798",
+      "CVE-2024-9264",
+      "CVE-2025-3415",
+      "CVE-2025-4123",
+      "CVE-2025-6197"
+    ],
+    "tp": 1,
+    "fp": 5,
+    "tn": 6,
+    "fn": 0,
+    "precision": 0.167,
+    "recall": 1.0,
+    "f1": 0.286
+  },
+  "LLM_runs": [
+    {
+      "selected": [
+        "CVE-2021-43798"
+      ],
+      "tp": 1,
+      "fp": 0,
+      "tn": 11,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "selected": [
+        "CVE-2021-43798"
+      ],
+      "tp": 1,
+      "fp": 0,
+      "tn": 11,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "selected": [
+        "CVE-2021-43798"
+      ],
+      "tp": 1,
+      "fp": 0,
+      "tn": 11,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    }
+  ],
+  "LLM_detail": [
+    {
+      "decisions": [
+        {
+          "id": "CVE-2019-15043",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2020-11110",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2020-13379",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2021-27358",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2021-39226",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2021-41174",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2021-43798",
+          "applies": true,
+          "reason": "Target version is within the affected range."
+        },
+        {
+          "id": "CVE-2022-26148",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2024-9264",
+          "applies": false,
+          "reason": "Target version is lower than affected range."
+        },
+        {
+          "id": "CVE-2025-3415",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2025-4123",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2025-6197",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 1350,
+        "completion_tokens": 330
+      }
+    },
+    {
+      "decisions": [
+        {
+          "id": "CVE-2019-15043",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2020-11110",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2020-13379",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2021-27358",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2021-39226",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2021-41174",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2021-43798",
+          "applies": true,
+          "reason": "Target version is within the affected range."
+        },
+        {
+          "id": "CVE-2022-26148",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2024-9264",
+          "applies": false,
+          "reason": "Target version is lower than affected range."
+        },
+        {
+          "id": "CVE-2025-3415",
+          "applies": false,
+          "reason": "Target version is lower than affected range."
+        },
+        {
+          "id": "CVE-2025-4123",
+          "applies": false,
+          "reason": "Target version is lower than affected range."
+        },
+        {
+          "id": "CVE-2025-6197",
+          "applies": false,
+          "reason": "Target version is lower than affected range."
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 1350,
+        "completion_tokens": 330
+      }
+    },
+    {
+      "decisions": [
+        {
+          "id": "CVE-2019-15043",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2020-11110",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2020-13379",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2021-27358",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2021-39226",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2021-41174",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2021-43798",
+          "applies": true,
+          "reason": "Target version is within the affected range."
+        },
+        {
+          "id": "CVE-2022-26148",
+          "applies": false,
+          "reason": "Target version is higher than affected range."
+        },
+        {
+          "id": "CVE-2024-9264",
+          "applies": false,
+          "reason": "Target version is lower than affected range."
+        },
+        {
+          "id": "CVE-2025-3415",
+          "applies": false,
+          "reason": "Target version is lower than affected range."
+        },
+        {
+          "id": "CVE-2025-4123",
+          "applies": false,
+          "reason": "Target version is lower than affected range."
+        },
+        {
+          "id": "CVE-2025-6197",
+          "applies": false,
+          "reason": "Target version is lower than affected range."
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 1350,
+        "completion_tokens": 330
+      }
+    }
+  ]
+}

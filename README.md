@@ -55,8 +55,9 @@ Other focused checks:
 - **E3 — independent false-positive test:** a weak debug signal appears at `/docs` and `/health`. A targeted check confirms the `/docs` issue and does **not confirm** `/health`. This is a **separate** check, not proof that the budget-2 LLM run tested `/health`.
 - **E4 — Grafana:** against a local 8.3.0 container, the LLM selected an applicable CVE-2021-43798 check from two catalog candidates; saved results report a successful, read-only file test. This is **one transfer example**, not measured performance across real deployments.
 - **E5 — four deterministic safety tests:** scope rejection, unknown-template rejection, malformed-output stop, and budget enforcement passed without requiring an LLM or live scanner.
+- **E7 — curation over the real 14k corpus (the LLM's clear win):** selecting the Grafana CVE that actually applies to version 8.3.0 from the real template library (where affected versions are inconsistent free-text), the LLM scored **F1 1.00** vs a tag rule **0.15** and a naive version parser **0.29**, stable over three runs. This is the one task — reading messy real metadata — where the LLM clearly beats keyword/parse rules. See [`results/final/e7_curation_note.md`](results/final/e7_curation_note.md).
 
-**Takeaway:** the main implementation result is an inspectable, bounded follow-up workflow. The evidence does **not** show an LLM advantage over a well-designed context rule on this small toy dataset.
+**Takeaway:** the main implementation result is an inspectable, bounded follow-up workflow. On the small toy, the LLM only **ties** a well-designed context rule (it is not needed there); but on **curation over the large, messy real corpus (E7)** it **clearly wins**. The agent's value scales with the size and messiness of the template space.
 
 Open [`results/final/README.md`](results/final/README.md) for the evidence index, [`results/final/summary.md`](results/final/summary.md) for recorded comparisons, and [`docs/analysis.md`](docs/analysis.md) for the short evaluation.
 
@@ -73,6 +74,7 @@ py -m venv .venv
 .\.venv\Scripts\python.exe scripts\smoke_toyapp.py
 .\.venv\Scripts\python.exe scripts\run_experiment.py
 .\.venv\Scripts\python.exe scripts\safety_checks.py
+.\.venv\Scripts\python.exe scripts\run_curation.py
 ```
 
 **macOS / Linux (bash):**
@@ -84,6 +86,7 @@ python3 -m venv .venv
 ./.venv/bin/python scripts/smoke_toyapp.py
 ./.venv/bin/python scripts/run_experiment.py
 ./.venv/bin/python scripts/safety_checks.py
+./.venv/bin/python scripts/run_curation.py
 ```
 
 For the LLM experiment, copy `.env.example` to `.env` locally and fill in the API settings. `scripts/run_grafana.py` additionally requires Docker; it binds the container to **`127.0.0.1` only**, so the lab Grafana is not exposed on the network. Shut down the lab container after the demonstration (`docker rm -f np-grafana`).
@@ -93,7 +96,7 @@ The deterministic tests can run without Nuclei or an LLM. The end-to-end experim
 ## 5. Deliverables and limits
 
 - **Implementation:** `nucleipilot/`, `scripts/`, `config/`, `templates/`, `tests/`.
-- **POC evidence:** `results/final/README.md`, `summary.md`, `comparison.csv`, `traces/`, `grafana_demo.json`, `safety_checks.md`.
+- **POC evidence:** `results/final/README.md`, `summary.md`, `comparison.csv`, `traces/`, `grafana_demo.json`, `safety_checks.md`, `curation_summary.md` + `e7_curation_note.md` (E7).
 - **One-page evaluation:** [`docs/analysis.md`](docs/analysis.md).
 - **Tool overview:** [`docs/tool_teardown.md`](docs/tool_teardown.md).
 - **Executive slides:** [`presentation/AXP_Executive_Deck.pptx`](presentation/AXP_Executive_Deck.pptx).
