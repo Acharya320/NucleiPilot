@@ -1,7 +1,6 @@
 # Runtime dependencies for NucleiPilot.
-# The toy sandbox uses only the standard library; these are for the scanner
-# wrapper and the LLM planner (added as we build them).
-requests>=2.32
+# The toy sandbox and web calls use only the standard library; these three are
+# for the scanner wrapper (YAML templates) and the LLM planner.
 PyYAML>=6.0
 python-dotenv>=1.0
 openai>=1.40        # OpenAI-compatible client; also talks to Anthropic/Ollama endpoints
