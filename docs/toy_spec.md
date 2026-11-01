@@ -141,7 +141,7 @@ them is the "the LLM out-picks a rule" claim that this toy cannot settle:
 frozen into code.* You can only write that rule once you already know the right policy. On a 5-endpoint
 labeled board the policy is trivial to know and freeze, so B2 ties C - of course it does. The agent's
 value is producing a good policy on the inputs you *haven't* enumerated and *can't* cheaply pre-write:
-new assets, new CVEs, messy unlabeled context. AMEX's real world is thousands of assets and a constant
+new assets, new CVEs, messy unlabeled context. a regulated enterprise's real world is thousands of assets and a constant
 stream of new templates - exactly the regime where maintaining rules by hand breaks down and a governed,
 generalizing agent pays off.
 

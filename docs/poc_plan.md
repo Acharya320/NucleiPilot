@@ -236,5 +236,5 @@ Grafana running in isolation.
 > safely controlled follow-up, a full evidence trace, and an honest comparison against the non-AI
 > baselines.
 
-*(The wider AMEX package - market scan, stakeholder/deployment view, two-person roadmap, build/no-build
+*(The wider take-home package - market scan, stakeholder/deployment view, two-person roadmap, build/no-build
 recommendation, and the executive deck - is kept in separate documents.)*

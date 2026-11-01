@@ -1,6 +1,6 @@
 # NucleiPilot - Evidence-Guided Follow-Up Testing with Nuclei
 
-**Part 2 | ATOS / American Express take-home assignment**
+**Agentic AI for Offensive Security - take-home PoC (Part 2: implementation)**
 
 NucleiPilot is a small, **governed AI agent** - an agentic decision layer - on top of the open-source [Nuclei scanner](https://github.com/projectdiscovery/nuclei). After collecting initial signals, the agent selects **which approved check to run next** based on business importance, available evidence, and a limited testing budget. Nuclei performs the scan; deterministic Python code checks permissions and interprets the result.
 
@@ -18,7 +18,7 @@ A reviewer with a single link lands here. The assignment's Part-2 deliverables a
 | **4. ~5-minute demo video** | **▶ ‹DEMO VIDEO URL - add before submission›** |
 | **5. Test results** | [`results/final/`](results/final/) + its [`README`](results/final/README.md) - comparison, traces (decisions/actions), E3 Grafana run, safety |
 | **6. Analysis (1 page)** | [`docs/analysis.md`](docs/analysis.md) |
-| **7. Executive deck (≤5 slides)** | [`presentation/AXP_Executive_Deck.pptx`](presentation/AXP_Executive_Deck.pptx) |
+| **7. Executive deck (≤5 slides)** | [`presentation/NucleiPilot_Executive_Deck.pptx`](presentation/NucleiPilot_Executive_Deck.pptx) |
 
 **Supporting design docs:** [`docs/poc_plan.md`](docs/poc_plan.md) (design + build plan) · [`docs/toy_spec.md`](docs/toy_spec.md) (toy spec + experiment matrix E1-E4) · [`docs/figures/architecture.png`](docs/figures/architecture.png) (architecture & decision-flow diagram).
 
