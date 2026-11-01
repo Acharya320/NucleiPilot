@@ -1,7 +1,9 @@
 {
-  "_comment": "Hand-verified applicability of each Grafana-tagged CVE to a STOCK, UNAUTHENTICATED Grafana 8.3.0, read from each template's own description. Only CVE-2021-43798 genuinely applies -- and it is empirically confirmed on the live 8.3.0 container (results/final/grafana_demo.json). Used only to SCORE the experiment; the contestants never see this file.",
+  "_comment": "Hand-verified applicability of each Grafana-tagged CVE to a STOCK, UNAUTHENTICATED Grafana 8.3.0, read from each template's own description. Only CVE-2021-43798 genuinely applies -- confirmed live in results/final/e4_grafana_run.json. 'read_only_safe' is the separate, hand-vetted allowlist of templates safe to actually EXECUTE against the live container (read-only, non-destructive); the policy gate refuses to run anything not on it, so an intrusive pick (e.g. the snapshot-DoS CVEs) is blocked even if proposed. Used only to SCORE/gate the experiment; the selection contestants never see this file.",
   "target": "Grafana 8.3.0",
   "applies": ["CVE-2021-43798"],
+  "read_only_safe": ["CVE-2021-43798"],
+  "read_only_safe_rationale": "CVE-2021-43798 is a read-only arbitrary-file-read (directory traversal) -- the official community template reads /etc/passwd, harmless on a throwaway localhost container. The other Grafana CVEs here include denial-of-service / snapshot-creation / auth-bypass checks that can change state, so they are NOT on the executable allowlist even though they are valid selection candidates.",
   "rationale": {
     "CVE-2019-15043": "Affects 2.x through 6.x before 6.3.4; 8.3.0 is newer. NOT applicable.",
     "CVE-2020-11110": "Affects through 6.7.1; 8.3.0 newer. NOT applicable.",

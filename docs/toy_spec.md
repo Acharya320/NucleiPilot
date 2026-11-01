@@ -132,8 +132,9 @@ them is the "the LLM out-picks a rule" claim that this toy cannot settle:
    the agent (see below).
 4. **Generalization without hand-written rules.** The LLM extends 1–3 to targets, technologies, and
    evidence patterns nobody pre-coded. This is where rules get expensive and the agent earns its cost.
-   Demonstrable as a *taste* here (the Grafana version→CVE reasoning used **zero CVE-specific decision
-   code** — E4/E6); its *reliability at scale* is the 90-day pilot's job (the Part 4 decision brief).
+   Demonstrated and **measured** here (E4: on the real ~14k corpus the LLM picks the version-applicable
+   Grafana CVE at F1 1.00 vs rules 0.15/0.29, with **zero CVE-specific decision code**); its *reliability
+   at scale* is the 90-day pilot's job (the Part 4 decision brief).
 
 **The point that keeps us honest without underselling:** *a rule like B2 is the LLM's decision policy,
 frozen into code.* You can only write that rule once you already know the right policy. On a 5-endpoint
@@ -209,9 +210,8 @@ The LLM **may not assign or overwrite** these labels. It only explains relevance
 | **E1** | Five-endpoint toy, budget 2 | A vs B1 vs B2 vs C, with the actual chosen templates + confirmed issues | Reproducible, fair; **no assumed LLM win** |
 | **E2** | Swap `/payments` ↔ `/docs` importance; responses unchanged | Repeat B2 and C | Choices/reasons track context; report both |
 | **E3** | `/docs` vs `/health`, both validated | Identical indicator → different validation results | Evidence-based `CONFIRMED` vs `NOT_CONFIRMED` |
-| **E4** | Isolated local Grafana 8.3.0, non-destructive templates | Nuclei JSON → guard → status → report | Real end-to-end trace; no unsupported Grafana claims |
+| **E4** | Live local Grafana 8.3.0 + the real ~14k corpus | Curate grafana-tagged CVEs → select (tag vs version vs LLM, F1) → same engine runs the applicable **real community template** live → verdict | Measured LLM win (reading beats rules, F1 1.00 vs 0.15/0.29) + a real end-to-end `CONFIRMED`; read-only gate; one product/version |
 | **E5** | Local config only | Invalid template, off-scope target, over-budget proposal, malformed LLM JSON | Each blocked/rejected; **zero** off-scope executions |
-| **E6** | The already-built Grafana case | Decision-code each path needs: LLM reasons version→CVE from the catalog (**0 CVE-specific lines**) vs an equal rule (explicit version-range logic per CVE pair) | An honest *taste* of generalization / rule-maintenance cost — **not** a scale claim |
 
 Run the LLM cases ≥ 3× with fixed settings. Keep the full Nuclei output, the model's proposed IDs +
 reasons, and the deterministic verifier's final decision for every run.

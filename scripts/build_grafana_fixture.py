@@ -1,10 +1,10 @@
-"""Build the E7 curation fixture by MECHANICALLY extracting metadata for every
+"""Build the E4 Grafana fixture by MECHANICALLY extracting metadata for every
 Grafana-tagged CVE template from a real nuclei-templates corpus.
 
 This exists so the fixture is auditable and reproducible: it is not hand-picked.
-Point it at a local nuclei-templates checkout; it writes config/curation_corpus.json.
+Point it at a local nuclei-templates checkout; it writes config/grafana_corpus.json.
 
-    python scripts/build_curation_fixture.py --corpus "C:/Users/you/nuclei-templates"
+    python scripts/build_grafana_fixture.py --corpus "C:/Users/you/nuclei-templates"
 
 Selection rule (deliberately simple and stated): a template is included iff its
 info.tags contains "grafana" AND it has a CVE id (info.classification.cve-id or a
@@ -27,7 +27,7 @@ def main():
     default_corpus = os.path.join(os.path.expanduser("~"), "nuclei-templates")
     ap.add_argument("--corpus", default=os.environ.get("NUCLEIPILOT_TEMPLATES_DIR", default_corpus),
                     help="path to a nuclei-templates checkout (default: ~/nuclei-templates)")
-    ap.add_argument("--out", default=None, help="output JSON (default: config/curation_corpus.json)")
+    ap.add_argument("--out", default=None, help="output JSON (default: config/grafana_corpus.json)")
     args = ap.parse_args()
 
     try:
@@ -40,7 +40,7 @@ def main():
         print(f"corpus not found: {corpus}\nPass --corpus <path-to-nuclei-templates>."); sys.exit(2)
 
     repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    out = args.out or os.path.join(repo, "config", "curation_corpus.json")
+    out = args.out or os.path.join(repo, "config", "grafana_corpus.json")
 
     rows = []
     for root, _dirs, files in os.walk(corpus):
@@ -84,15 +84,15 @@ def main():
     rows.sort(key=lambda r: r["cve_id"])
     doc = {
         "_comment": ("Grafana-tagged CVE templates, mechanically extracted by "
-                     "scripts/build_curation_fixture.py (not hand-picked). Candidate pool a fair "
-                     "`-tags grafana` rule returns (CVEs only); metadata only -- E7 is about "
+                     "scripts/build_grafana_fixture.py (not hand-picked). Candidate pool a fair "
+                     "`-tags grafana` rule returns (CVEs only); metadata only -- E4 is about "
                      "SELECTION, not scanning."),
         "source": ("ProjectDiscovery nuclei-templates (public, ~89 MB -- NOT bundled in this repo). "
                    "Fetch: `nuclei -update-templates`, or "
                    "`git clone --branch <version> https://github.com/projectdiscovery/nuclei-templates`. "
-                   "Regenerate this fixture: `python scripts/build_curation_fixture.py --corpus <path>`. "
+                   "Regenerate this fixture: `python scripts/build_grafana_fixture.py --corpus <path>`. "
                    "The pinned version used for the committed fixture is recorded in "
-                   "results/final/e7_curation_note.md."),
+                   "results/final/e4_grafana_note.md."),
         "target": "Grafana 8.3.0",
         "count": len(rows),
         "templates": rows,

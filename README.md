@@ -53,11 +53,10 @@ Other focused checks:
 
 - **E2 — context change:** when `/docs` becomes the most business-important target, B2 and C both select its validation first.
 - **E3 — independent false-positive test:** a weak debug signal appears at `/docs` and `/health`. A targeted check confirms the `/docs` issue and does **not confirm** `/health`. This is a **separate** check, not proof that the budget-2 LLM run tested `/health`.
-- **E4 — Grafana:** against a local 8.3.0 container, the LLM selected an applicable CVE-2021-43798 check from two catalog candidates; saved results report a successful, read-only file test. This is **one transfer example**, not measured performance across real deployments.
+- **E4 — Grafana on the real 14k corpus (the LLM's clear win):** against a **live** Grafana 8.3.0 container, from the 12 grafana-tagged CVEs a `-tags grafana` rule gathers out of the real ~14k-template corpus, the LLM selects the one applicable to 8.3.0 — **F1 1.00** vs a tag rule **0.15** and a naive version parser **0.29** (stable over 3 runs) — then the **same engine runs that real community template live and the code verdict is CONFIRMED** (file read). Affected versions are inconsistent free-text, so this is the task where reading beats keyword/parse rules. A read-only safety gate refuses intrusive picks. The corpus is **referenced, not bundled** (ProjectDiscovery nuclei-templates **v10.5.1**, public, ~89 MB); the committed fixture (`config/grafana_corpus.json`) reproduces the selection with no external files. See [`results/final/e4_grafana_note.md`](results/final/e4_grafana_note.md).
 - **E5 — four deterministic safety tests:** scope rejection, unknown-template rejection, malformed-output stop, and budget enforcement passed without requiring an LLM or live scanner.
-- **E7 — curation over the real 14k corpus (the LLM's clear win):** selecting the Grafana CVE that actually applies to version 8.3.0 from the real template library (where affected versions are inconsistent free-text), the LLM scored **F1 1.00** vs a tag rule **0.15** and a naive version parser **0.29**, stable over three runs. This is the one task — reading messy real metadata — where the LLM clearly beats keyword/parse rules. The corpus (ProjectDiscovery nuclei-templates **v10.5.1**, public, ~89 MB) is **referenced, not bundled**; the committed fixture (`config/curation_corpus.json`) reproduces E7 with no external files, and [`results/final/e7_curation_note.md`](results/final/e7_curation_note.md) shows how to regenerate it from the full corpus.
 
-**Takeaway:** the main implementation result is an inspectable, bounded follow-up workflow. On the small toy, the LLM only **ties** a well-designed context rule (it is not needed there); but on **curation over the large, messy real corpus (E7)** it **clearly wins**. The agent's value scales with the size and messiness of the template space.
+**Takeaway:** the main implementation result is an inspectable, bounded follow-up workflow. On the small toy, the LLM only **ties** a well-designed context rule (it is not needed there); but on **Grafana + the large, messy real corpus (E4)** it **clearly wins**. The agent's value scales with the size and messiness of the template space.
 
 Open [`results/final/README.md`](results/final/README.md) for the evidence index, [`results/final/summary.md`](results/final/summary.md) for recorded comparisons, and [`docs/analysis.md`](docs/analysis.md) for the short evaluation.
 
@@ -74,7 +73,7 @@ py -m venv .venv
 .\.venv\Scripts\python.exe scripts\smoke_toyapp.py
 .\.venv\Scripts\python.exe scripts\run_experiment.py
 .\.venv\Scripts\python.exe scripts\safety_checks.py
-.\.venv\Scripts\python.exe scripts\run_curation.py
+.\.venv\Scripts\python.exe scripts\run_grafana.py   # E4: needs Docker + the nuclei-templates corpus
 ```
 
 **macOS / Linux (bash):**
@@ -86,7 +85,7 @@ python3 -m venv .venv
 ./.venv/bin/python scripts/smoke_toyapp.py
 ./.venv/bin/python scripts/run_experiment.py
 ./.venv/bin/python scripts/safety_checks.py
-./.venv/bin/python scripts/run_curation.py
+./.venv/bin/python scripts/run_grafana.py   # E4: needs Docker + the nuclei-templates corpus
 ```
 
 For the LLM experiment, copy `.env.example` to `.env` locally and fill in the API settings. `scripts/run_grafana.py` additionally requires Docker; it binds the container to **`127.0.0.1` only**, so the lab Grafana is not exposed on the network. Shut down the lab container after the demonstration (`docker rm -f np-grafana`).
@@ -96,7 +95,7 @@ The deterministic tests can run without Nuclei or an LLM. The end-to-end experim
 ## 5. Deliverables and limits
 
 - **Implementation:** `nucleipilot/`, `scripts/`, `config/`, `templates/`, `tests/`.
-- **POC evidence:** `results/final/README.md`, `summary.md`, `comparison.csv`, `traces/`, `grafana_demo.json`, `safety_checks.md`, `curation_summary.md` + `e7_curation_note.md` (E7).
+- **POC evidence:** `results/final/README.md`, `summary.md`, `comparison.csv`, `traces/` (E1–E3), `safety_checks.md` (E5), `e4_grafana_summary.md` + `e4_grafana_run.json` + `e4_grafana_note.md` (E4).
 - **One-page evaluation:** [`docs/analysis.md`](docs/analysis.md).
 - **Tool overview:** [`docs/tool_teardown.md`](docs/tool_teardown.md).
 - **Executive slides:** [`presentation/AXP_Executive_Deck.pptx`](presentation/AXP_Executive_Deck.pptx).

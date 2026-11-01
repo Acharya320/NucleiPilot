@@ -1,0 +1,187 @@
+{
+  "target": "Grafana 8.3.0",
+  "detected_version": "8.3.0",
+  "candidates": [
+    "CVE-2019-15043",
+    "CVE-2020-11110",
+    "CVE-2020-13379",
+    "CVE-2021-27358",
+    "CVE-2021-39226",
+    "CVE-2021-41174",
+    "CVE-2021-43798",
+    "CVE-2022-26148",
+    "CVE-2024-9264",
+    "CVE-2025-3415",
+    "CVE-2025-4123",
+    "CVE-2025-6197"
+  ],
+  "ground_truth_applies": [
+    "CVE-2021-43798"
+  ],
+  "read_only_safe": [
+    "CVE-2021-43798"
+  ],
+  "selection": {
+    "TAG": {
+      "selected": [
+        "CVE-2019-15043",
+        "CVE-2020-11110",
+        "CVE-2020-13379",
+        "CVE-2021-27358",
+        "CVE-2021-39226",
+        "CVE-2021-41174",
+        "CVE-2021-43798",
+        "CVE-2022-26148",
+        "CVE-2024-9264",
+        "CVE-2025-3415",
+        "CVE-2025-4123",
+        "CVE-2025-6197"
+      ],
+      "tp": 1,
+      "fp": 11,
+      "tn": 0,
+      "fn": 0,
+      "precision": 0.083,
+      "recall": 1.0,
+      "f1": 0.154
+    },
+    "VERSION": {
+      "selected": [
+        "CVE-2021-41174",
+        "CVE-2021-43798",
+        "CVE-2024-9264",
+        "CVE-2025-3415",
+        "CVE-2025-4123",
+        "CVE-2025-6197"
+      ],
+      "tp": 1,
+      "fp": 5,
+      "tn": 6,
+      "fn": 0,
+      "precision": 0.167,
+      "recall": 1.0,
+      "f1": 0.286
+    },
+    "LLM_runs": [
+      {
+        "selected": [
+          "CVE-2021-43798"
+        ],
+        "tp": 1,
+        "fp": 0,
+        "tn": 11,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      {
+        "selected": [
+          "CVE-2021-43798"
+        ],
+        "tp": 1,
+        "fp": 0,
+        "tn": 11,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      {
+        "selected": [
+          "CVE-2021-43798"
+        ],
+        "tp": 1,
+        "fp": 0,
+        "tn": 11,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      }
+    ],
+    "LLM_pick": [
+      "CVE-2021-43798"
+    ]
+  },
+  "live_validation": {
+    "executed": [
+      "CVE-2021-43798"
+    ],
+    "refused_by_gate": [],
+    "findings": [
+      {
+        "endpoint": "/",
+        "issue": "grafana-cve",
+        "indicator": "grafana-version-indicator",
+        "indicator_fired": true,
+        "validation": "CVE-2021-43798",
+        "status": "CONFIRMED",
+        "tech_severity": "high",
+        "business_importance": "high",
+        "evidence": {
+          "matched": true,
+          "matched_at": "http://127.0.0.1:3000/public/plugins/alertlist/../../../../../../../../../../../../../../../../../../etc/passwd",
+          "matcher": null,
+          "error": null
+        }
+      }
+    ],
+    "trace": [
+      {
+        "step": "decision",
+        "detail": {
+          "planner": "fixed",
+          "chosen": "CVE-2021-43798",
+          "reason": "fixed/exhaustive: run every validation",
+          "confidence": null,
+          "stop_reason": null,
+          "raw": null
+        }
+      },
+      {
+        "step": "policy",
+        "detail": {
+          "chosen": "CVE-2021-43798",
+          "ok": true,
+          "reason": "approved: 'CVE-2021-43798' is in the allowlist and eligible"
+        }
+      },
+      {
+        "step": "action",
+        "detail": {
+          "validation": "CVE-2021-43798",
+          "endpoint": "/",
+          "executed": true,
+          "status": "CONFIRMED",
+          "matched": true,
+          "matched_at": "http://127.0.0.1:3000/public/plugins/alertlist/../../../../../../../../../../../../../../../../../../etc/passwd",
+          "error": null
+        }
+      },
+      {
+        "step": "reassess",
+        "detail": {
+          "findings": [
+            {
+              "endpoint": "/",
+              "issue": "grafana-cve",
+              "indicator": "grafana-version-indicator",
+              "indicator_fired": true,
+              "validation": "CVE-2021-43798",
+              "status": "CONFIRMED",
+              "tech_severity": "high",
+              "business_importance": "high",
+              "evidence": {
+                "matched": true,
+                "matched_at": "http://127.0.0.1:3000/public/plugins/alertlist/../../../../../../../../../../../../../../../../../../etc/passwd",
+                "matcher": null,
+                "error": null
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

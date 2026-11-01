@@ -98,31 +98,3 @@ def profile_target(asset: dict, catalog: dict, *, nuclei_bin=None, **kw) -> Prof
     base_url = asset.get("base_url")
     disc = discover(base_url, catalog, nuclei_bin=nuclei_bin, **kw)
     return build_profile(asset, catalog, disc, base_url=base_url)
-
-
-def profile_grafana(asset: dict, catalog: dict, *, base_url=None, timeout=5) -> Profile:
-    """Fingerprint a real app (Grafana) via /api/health and present ALL catalog CVE
-    candidates for the planner to reason over. Same Profile shape as the toy, so the
-    SAME engine runs it -- a new target is just another asset + catalog. The detected
-    version goes in tech_facts; the planner (or a rule) must decide which CVE applies.
-    """
-    import json as _json
-    import urllib.request
-    base = base_url or asset.get("base_url")
-    version = None
-    try:
-        with urllib.request.urlopen(base.rstrip("/") + "/api/health", timeout=timeout) as r:
-            version = _json.loads(r.read().decode("utf-8", "replace")).get("version")
-    except Exception:
-        version = None
-    ep = next(iter(asset.get("endpoints", {"/": {}})), "/")
-    candidates = [t.id for t in policy.validations(catalog)]
-    endpoints = {ep: {
-        "business_importance": registry.business_importance(asset, ep),
-        "fired_indicators": ["grafana-version-indicator"],   # the fingerprint, not a Nuclei template
-        "candidate_validations": candidates,
-    }}
-    return Profile(
-        asset_id=asset.get("id"), base_url=base, budget=registry.budget(asset),
-        endpoints=endpoints, tech_facts={"product": "grafana", "version": version},
-    )

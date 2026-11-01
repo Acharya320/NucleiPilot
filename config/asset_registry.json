@@ -1,5 +1,5 @@
 {
-  "_comment": "Authorized assets: the scope + per-endpoint business-context seam. The scope guard only scans what is listed here (and only localhost). Business importance is set PER ENDPOINT. 'budget' = validation units per target. Each asset names its own 'catalog'. Adding a future authorized target = one more entry (the generalization seam) -- Grafana is a second asset here. See docs/toy_spec.md and docs/poc_plan.md.",
+  "_comment": "Authorized assets for the toy experiment (E1-E3): the scope + per-endpoint business-context seam. The scope guard only scans what is listed here (and only localhost). Business importance is set PER ENDPOINT. 'budget' = validation units per target. The Grafana experiment (E4) builds its catalog from the real nuclei-templates corpus and does not use this registry -- see scripts/run_grafana.py. See docs/toy_spec.md and docs/poc_plan.md.",
   "assets": [
     {
       "id": "toy-app",
@@ -13,16 +13,6 @@
         "/docs":     {"business_importance": "low",      "note": "public documentation"},
         "/health":   {"business_importance": "low",      "note": "ops/monitoring probe"},
         "/home":     {"business_importance": "low",      "note": "public landing page"}
-      }
-    },
-    {
-      "id": "grafana-local",
-      "base_url": "http://127.0.0.1:3000",
-      "description": "Local Grafana 8.3.0 container (real-app generalization demo, E4)",
-      "budget": 1,
-      "catalog": "grafana_catalog.json",
-      "endpoints": {
-        "/": {"business_importance": "high", "note": "real application under authorized local test"}
       }
     }
   ]
