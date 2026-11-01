@@ -83,10 +83,16 @@ def main():
 
     rows.sort(key=lambda r: r["cve_id"])
     doc = {
-        "_comment": ("Grafana-tagged CVE templates, mechanically extracted from a real "
-                     "nuclei-templates corpus by scripts/build_curation_fixture.py. This is the "
-                     "candidate pool a fair `-tags grafana` rule returns (CVEs only). Metadata "
-                     "only -- the experiment is about SELECTION, not scanning."),
+        "_comment": ("Grafana-tagged CVE templates, mechanically extracted by "
+                     "scripts/build_curation_fixture.py (not hand-picked). Candidate pool a fair "
+                     "`-tags grafana` rule returns (CVEs only); metadata only -- E7 is about "
+                     "SELECTION, not scanning."),
+        "source": ("ProjectDiscovery nuclei-templates (public, ~89 MB -- NOT bundled in this repo). "
+                   "Fetch: `nuclei -update-templates`, or "
+                   "`git clone --branch <version> https://github.com/projectdiscovery/nuclei-templates`. "
+                   "Regenerate this fixture: `python scripts/build_curation_fixture.py --corpus <path>`. "
+                   "The pinned version used for the committed fixture is recorded in "
+                   "results/final/e7_curation_note.md."),
         "target": "Grafana 8.3.0",
         "count": len(rows),
         "templates": rows,

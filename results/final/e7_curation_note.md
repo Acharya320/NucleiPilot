@@ -67,3 +67,21 @@ the text (LLM).
 > On the **large, messy real corpus**, picking the version-applicable check is a reading problem the
 > rule cannot do, and the LLM **clearly wins (F1 1.00 vs 0.15 / 0.29)**. The value of the agent scales
 > with the **size and messiness** of the template space - which is the real-world condition.
+
+## Reproducing from the full corpus (the 14k is referenced, not bundled)
+
+E7 runs off the committed fixture (`config/curation_corpus.json`) with **no external files** - that
+alone reproduces the F1 numbers. To instead regenerate the fixture from the real corpus and verify it
+was not hand-picked:
+
+- **Corpus:** ProjectDiscovery **nuclei-templates `v10.5.1`** - public, ~89 MB, 14,104 templates.
+  Fetch with `nuclei -update-templates`, or
+  `git clone --branch v10.5.1 https://github.com/projectdiscovery/nuclei-templates`.
+- **Engine:** Nuclei **v3.11.1**.
+- **Regenerate:** `python scripts/build_curation_fixture.py --corpus <path-to-nuclei-templates>` -
+  rewrites `config/curation_corpus.json`. On v10.5.1 it yields the same 12 Grafana-tagged CVEs.
+
+**Why the corpus is not shipped in the submission:** it is a large, public, third-party set under
+ProjectDiscovery's license. Pinning the version, committing the extractor (`build_curation_fixture.py`)
+and committing the small derived fixture gives full reproducibility **without vendoring 89 MB of someone
+else's templates** - the standard way to depend on a public corpus.
