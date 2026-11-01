@@ -6,6 +6,25 @@ NucleiPilot extends the open-source [Nuclei scanner](https://github.com/projectd
 
 **Operating rule: the model proposes; code authorizes.** This is a controlled testing prototype, not a fully autonomous penetration-testing product.
 
+## Repository map
+
+| Path | What it is |
+|---|---|
+| `README.md` | this file — overview, architecture, how to run, results |
+| `docs/analysis.md` | **1-page evaluation** — what worked, what didn't, limits |
+| `docs/tool_teardown.md` | teardown of Nuclei (what we extend, and why the agentic layer earns its place) |
+| `docs/poc_plan.md` | design rationale + 2-day build plan (embeds the decision-flow diagram) |
+| `docs/toy_spec.md` | toy-app specification + the experiment matrix (E1–E5) |
+| `docs/figures/poc_flow.png` | the decision-flow diagram |
+| `nucleipilot/` | the library — `engine`, `planners`, `policy`, `scanner`, `verifier`, `profiler`, … |
+| `scripts/` | runnable entry points — `run_experiment` (toy), `run_grafana` (E4), `safety_checks`, `scope_demo`, `show_trace`, `build_grafana_fixture` |
+| `config/` + `templates/` | approved targets, the catalog/fixtures, and the Nuclei checks |
+| `tests/` | automated tests (37) |
+| `results/final/` | recorded evidence, with its own [`README.md`](results/final/README.md) index |
+| `presentation/AXP_Executive_Deck.pptx` | the 5-slide executive deck |
+
+**Suggested reading order for a reviewer:** this README → [`docs/analysis.md`](docs/analysis.md) (the verdict) → [`results/final/README.md`](results/final/README.md) (the evidence) → then, for depth, [`docs/poc_plan.md`](docs/poc_plan.md) and [`docs/toy_spec.md`](docs/toy_spec.md).
+
 ## 1. Why build it?
 
 Nuclei already supports thousands of security checks and template filtering. The question is what to do **after an initial scan reveals several potential issues** but there is only enough time or budget to investigate some of them. Should we investigate the technically severe issue first, or one affecting a business-critical service?
