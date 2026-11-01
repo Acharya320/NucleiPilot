@@ -75,9 +75,9 @@ follow-up round.
 > A template match is not automatically a confirmed vulnerability. And no match does **not** prove an
 > app is clean.
 
-![PoC decision flow](figures/poc_flow.png)
+![NucleiPilot architecture — the governed decision loop](figures/architecture.png)
 
-<sub>Amber = the single LLM-driven step (the planner) · blue = enforced in code. Diagram source: [`figures/poc_flow.mmd`](figures/poc_flow.mmd).</sub>
+<sub>Amber = model-assisted decisions (curate + prioritize) · blue = enforced in code.</sub>
 
 ### What each part does (in plain terms)
 

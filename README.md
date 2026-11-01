@@ -20,7 +20,7 @@ A reviewer with a single link lands here. The assignment's Part-2 deliverables a
 | **6. Analysis (1 page)** | [`docs/analysis.md`](docs/analysis.md) |
 | **7. Executive deck (≤5 slides)** | [`presentation/AXP_Executive_Deck.pptx`](presentation/AXP_Executive_Deck.pptx) |
 
-**Supporting design docs:** [`docs/poc_plan.md`](docs/poc_plan.md) (design + build plan) · [`docs/toy_spec.md`](docs/toy_spec.md) (toy spec + experiment matrix E1–E4) · [`docs/figures/poc_flow.png`](docs/figures/poc_flow.png) (decision-flow diagram).
+**Supporting design docs:** [`docs/poc_plan.md`](docs/poc_plan.md) (design + build plan) · [`docs/toy_spec.md`](docs/toy_spec.md) (toy spec + experiment matrix E1–E4) · [`docs/figures/architecture.png`](docs/figures/architecture.png) (architecture & decision-flow diagram).
 
 **Suggested reading order:** this README → [`docs/analysis.md`](docs/analysis.md) (the verdict) → [`results/final/README.md`](results/final/README.md) (the evidence) → then, for depth, `poc_plan.md` and `toy_spec.md`.
 
@@ -94,7 +94,7 @@ py -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-The LLM steps need an API key: copy `.env.example` to `.env` and fill in your key (keep `.env` out of Git and ZIPs). Without a key, the LLM method is skipped automatically and the run says so.
+The LLM steps need an API key: copy `.env.example` to `.env` and fill in your key (keep `.env` out of Git and ZIPs). Prefer no file? Export `NUCLEIPILOT_API_BASE`, `NUCLEIPILOT_API_KEY`, and `NUCLEIPILOT_MODEL` as environment variables instead — real env vars take precedence over `.env`. Any **OpenAI-compatible** endpoint works (OpenRouter, OpenAI, Anthropic, or local Ollama — ready-made blocks in `.env.example`). Without a key, the LLM method is skipped automatically and the run says so.
 
 ### 4A — Toy demo (E1–E2, plus safety E4)
 

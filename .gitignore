@@ -24,3 +24,6 @@ results/reproduced/
 Thumbs.db
 .vscode/
 .idea/
+
+# --- Office lock/temp files (appear while a file is open) ---
+~$*
