@@ -1,6 +1,6 @@
 # Part 2 — POC Evaluation (One Page)
 
-**Goal.** Can an LLM help select useful follow-up checks around Nuclei, safely and under a limited scan budget? Nuclei remains the scanner; NucleiPilot adds planning, an independent permission check, and evidence-based finding status.
+**Goal.** Can a **governed AI agent** (an LLM planner on top of Nuclei) help select useful follow-up checks, safely and under a limited scan budget? Nuclei remains the scanner; NucleiPilot adds the agent's planning, an independent permission check, and evidence-based finding status.
 
 ## What worked
 
