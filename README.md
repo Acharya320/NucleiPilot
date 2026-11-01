@@ -15,7 +15,7 @@ A reviewer with a single link lands here. The assignment's Part-2 deliverables a
 | **1. Tool teardown** | [`docs/tool_teardown.md`](docs/tool_teardown.md) |
 | **2. Implementation (working code)** | this repo: [`nucleipilot/`](nucleipilot/) (library) · [`scripts/`](scripts/) (entry points) · [`config/`](config/) + [`templates/`](templates/) (data) · [`tests/`](tests/) |
 | **3. Documentation (README)** | this file - §1-§5 cover design, agent behavior, architecture, dependencies, setup, how to run, and known limitations |
-| **4. ~5-minute demo video** | **▶ [Watch on Google Drive](https://drive.google.com/file/d/13MMRceYxI4IigYS7yQNLaCe-HJ5QspL4/view?usp=sharing)** |
+| **4. ~5-minute demo video** | Shared privately in the submission document (not published on this public repo) |
 | **5. Test results** | [`results/final/`](results/final/) + its [`README`](results/final/README.md) - comparison, traces (decisions/actions), E3 Grafana run, safety |
 | **6. Analysis (1 page)** | [`docs/analysis.md`](docs/analysis.md) |
 | **7. Executive deck (≤5 slides)** | [`presentation/NucleiPilot_Executive_Deck.pptx`](presentation/NucleiPilot_Executive_Deck.pptx) |
