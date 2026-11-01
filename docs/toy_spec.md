@@ -1,7 +1,7 @@
-# Toy Target Spec — the scaled-up sandbox
+# Toy Target Spec - the scaled-up sandbox
 
 *The measurement bench for NucleiPilot. One small web app on `127.0.0.1` with several endpoints, a
-known answer key, and — on purpose — a case where the **most business-critical** endpoint does **not**
+known answer key, and - on purpose - a case where the **most business-critical** endpoint does **not**
 carry the **highest technical severity**. Everything here is read-only and localhost-only.*
 
 > Read `poc_plan.md` first. This document fills in Section 7 of that plan: it is the single design
@@ -13,7 +13,7 @@ carry the **highest technical severity**. Everything here is read-only and local
 
 One app, several components. Each component has its **own business importance** (set per endpoint, not
 for the whole app). Each planted issue has a **weak signal (indicator)** and a **specific confirmation
-(validation)**. A match on an indicator is *not* a finding — only the validation's **content signature**
+(validation)**. A match on an indicator is *not* a finding - only the validation's **content signature**
 confirms it. A tight budget forces the agent to choose *which* issue is worth confirming.
 
 ---
@@ -31,14 +31,14 @@ A toy "payments company" app. Five endpoints, each with a business-importance la
 | `/home`     | **Low**      | Public landing page. |
 
 Business importance comes from configuration (the asset registry), **not** from the scan. The scanner
-never guesses how much an endpoint matters — a human sets that once.
+never guesses how much an endpoint matters - a human sets that once.
 
 ---
 
 ## 3. The planted issues (sandbox ground truth / answer key)
 
 Three real issues, one benign trap, one clean endpoint. Every signature below is plain text in a
-response **header** or **body**, or a **status code** — all matchable by a normal Nuclei template, all
+response **header** or **body**, or a **status code** - all matchable by a normal Nuclei template, all
 GET-only and non-destructive.
 
 | ID | Endpoint | Issue | Indicator (weak signal) | Validation **content signature** (what confirms it) | Tech severity | Business | Real? |
@@ -46,11 +46,11 @@ GET-only and non-destructive.
 | **ISSUE-ADMIN** | `/payments` | Unauthenticated admin/config exposure | `GET /payments/` body shows an `Admin Console` banner | `GET /payments/admin/config.json` → `200` **and** body contains `authentication` and `disabled` | **Medium** | **Critical** | ✅ yes |
 | **ISSUE-DEBUG** | `/docs` | Debug interface leaks internals | response header `X-Debug-Mode: enabled` | `GET /docs/debug/vars` → `200` **and** body contains `"stacktrace"` and the path `/srv/app/internal` | **High** | **Low** | ✅ yes |
 | **ISSUE-PII** | `/account` | Verbose-error info disclosure | error page body names the framework (`Jinja2`) | `GET /account/export?id=../` → body contains `Traceback (most recent call last)` and `TOY_SECRET_KEY=planted-marker` | **Medium** | **High** | ✅ yes |
-| **TRAP-DEBUG** | `/health` | Debug flag set, but **no** interface (benign) | response header `X-Debug-Mode: enabled` — **the same signal as ISSUE-DEBUG** | `GET /health/debug/vars` → `404`, body has **no** `stacktrace` signature | — | Low | ❌ no (false-positive trap) |
-| **(clean)** | `/home` | Nothing wrong | no indicator fires | — | — | Low | ❌ no (no planted issue) |
+| **TRAP-DEBUG** | `/health` | Debug flag set, but **no** interface (benign) | response header `X-Debug-Mode: enabled` - **the same signal as ISSUE-DEBUG** | `GET /health/debug/vars` → `404`, body has **no** `stacktrace` signature | - | Low | ❌ no (false-positive trap) |
+| **(clean)** | `/home` | Nothing wrong | no indicator fires | - | - | Low | ❌ no (no planted issue) |
 
-**The key trick — the trap shares its signal with a real issue.** `/health` and `/docs` both send
-`X-Debug-Mode: enabled`. From the *indicator alone*, no method — rule or LLM — can tell the real debug
+**The key trick - the trap shares its signal with a real issue.** `/health` and `/docs` both send
+`X-Debug-Mode: enabled`. From the *indicator alone*, no method - rule or LLM - can tell the real debug
 leak from the harmless flag. Only the **validation content signature** (`stacktrace` + internal path)
 separates them. This is the whole point of "model proposes, code authorizes": a fired template is a
 hint, not a verdict.
@@ -61,8 +61,8 @@ hint, not a verdict.
 
 Look at the two highlighted rows:
 
-- `/payments` — **Critical** business, but only **Medium** severity.
-- `/docs` — **Low** business, but **High** severity.
+- `/payments` - **Critical** business, but only **Medium** severity.
+- `/docs` - **Low** business, but **High** severity.
 
 So the business-critical issue is **not** the highest-severity issue. This is deliberate. If the most
 important issue were always also the highest severity, every method would pick the same thing and we
@@ -75,7 +75,7 @@ would learn nothing. The divergence is what separates a **severity-only** strate
 
 All methods first run the **same** approved indicator-discovery stage. Then:
 
-- **Indicator checks cost zero *validation-budget units* — but not zero HTTP requests or time.** They
+- **Indicator checks cost zero *validation-budget units* - but not zero HTTP requests or time.** They
   still hit the network and take wall-clock seconds, and we **measure** that. "Cost 0" is only about the
   validation budget.
 - **Each validation template costs one budget unit.** Validations are the expensive, careful
@@ -85,12 +85,12 @@ All methods first run the **same** approved indicator-discovery stage. Then:
   the agent from spending everything blindly up front.
 
 **What we log for every run:** templates executed, validation-budget consumed, elapsed seconds, HTTP
-requests (only when actually measured — otherwise omitted, never guessed), per-finding status, chosen
+requests (only when actually measured - otherwise omitted, never guessed), per-finding status, chosen
 template IDs, policy rejections, and LLM input/output token counts where available.
 
 ---
 
-## 6. The comparison — four methods, a fair fight
+## 6. The comparison - four methods, a fair fight
 
 We run four methods on the **same** target, catalog, discovery matches, and budget. Beating a weak
 baseline proves nothing, so we include a **strong non-LLM baseline (B2)**.
@@ -99,17 +99,17 @@ baseline proves nothing, so we include a **strong non-LLM baseline (B2)**.
 |---|---|---|---|
 | **A · Fixed (reference)** | Run **all** reviewed validations | no cap | Full-set ceiling: the answer key and the "most work" number. Not a same-budget competitor. |
 | **B1 · Severity-only rules** | Order candidates by technical severity, with a documented tie-break | 2 | Conventional priority baseline. |
-| **B2 · Context-aware rules** | Order by configured business importance, then severity, with a documented tie-break | 2 | **The strong non-LLM baseline — the real bar to clear.** A few lines of Python. |
+| **B2 · Context-aware rules** | Order by configured business importance, then severity, with a documented tie-break | 2 | **The strong non-LLM baseline - the real bar to clear.** A few lines of Python. |
 | **C · NucleiPilot (LLM)** | Propose validations from structured context + evidence + budget; Python enforces every choice | 2 | Tests whether the LLM adds judgment **beyond the rules**. |
 
 All of B1/B2/C get the same fired indicators and the same 2-unit budget, with the same reserve rule. Use
 a **stable tie-break** (e.g. issue ID alphabetical) so the rule results are not secretly engineered to
-hit — or avoid — the trap.
+hit - or avoid - the trap.
 
 > **The actual recorded outcome** (`results/final/summary.md`, generated by the harness): under
 > budget 2, **B1** chose the High-severity debug validations and could not tell `/docs` from the
-> `/health` trap — so it **missed** the business-critical `/payments` and `/account`. **B2** and **C**
-> both confirmed `/payments` + `/account`. **C tied B2 on outcome** — the same confirmed findings on
+> `/health` trap - so it **missed** the business-critical `/payments` and `/account`. **B2** and **C**
+> both confirmed `/payments` + `/account`. **C tied B2 on outcome** - the same confirmed findings on
 > every one of 3 runs (the validation *order* varied run-to-run, the expected LLM nondeterminism, but
 > the outcome did not). As promised, we say it plainly: on this small toy the LLM shows **no
 > prioritization advantage over the context-aware rule**; the win is the governed, evidence-driven loop,
@@ -117,21 +117,21 @@ hit — or avoid — the trap.
 
 ---
 
-## 7. What this toy proves — and where the agent's value really sits
+## 7. What this toy proves - and where the agent's value really sits
 
 Be honest, but do **not** undervalue the agent. Its worth is a **stack of four things**, and only one of
 them is the "the LLM out-picks a rule" claim that this toy cannot settle:
 
-1. **Governance — "model proposes, code authorizes."** A flexible proposer (today an LLM) drives a real
+1. **Governance - "model proposes, code authorizes."** A flexible proposer (today an LLM) drives a real
    scanner while code enforces scope, allowlist, and budget and logs every step. For a regulated buyer
    this *is* the product. Fully demonstrable here (E4, traces).
 2. **Evidence discipline.** Indicator→validation with content-signature verdicts turns raw matches into
-   trustworthy findings and rejects false positives *on evidence*. Demonstrable here (part of E1 — the
+   trustworthy findings and rejects false positives *on evidence*. Demonstrable here (part of E1 - the
    false-positive trap).
 3. **Budget-aware prioritization.** A real capability. On this small, fully-labeled toy a context-aware
-   rule (B2) matches it — **as expected**. That tie is a property of the toy's size, not a weakness of
+   rule (B2) matches it - **as expected**. That tie is a property of the toy's size, not a weakness of
    the agent (see below).
-4. **Generalization without hand-written rules.** The LLM extends 1–3 to targets, technologies, and
+4. **Generalization without hand-written rules.** The LLM extends 1-3 to targets, technologies, and
    evidence patterns nobody pre-coded. This is where rules get expensive and the agent earns its cost.
    Demonstrated and **measured** here (E3: on the real ~14k corpus the LLM picks the version-applicable
    Grafana CVE at F1 1.00 vs rules 0.15/0.29, with **zero CVE-specific decision code**); its *reliability
@@ -139,10 +139,10 @@ them is the "the LLM out-picks a rule" claim that this toy cannot settle:
 
 **The point that keeps us honest without underselling:** *a rule like B2 is the LLM's decision policy,
 frozen into code.* You can only write that rule once you already know the right policy. On a 5-endpoint
-labeled board the policy is trivial to know and freeze, so B2 ties C — of course it does. The agent's
+labeled board the policy is trivial to know and freeze, so B2 ties C - of course it does. The agent's
 value is producing a good policy on the inputs you *haven't* enumerated and *can't* cheaply pre-write:
 new assets, new CVEs, messy unlabeled context. AMEX's real world is thousands of assets and a constant
-stream of new templates — exactly the regime where maintaining rules by hand breaks down and a governed,
+stream of new templates - exactly the regime where maintaining rules by hand breaks down and a governed,
 generalizing agent pays off.
 
 So the honest headline is **not** "the LLM wins" and **not** "the agent adds nothing." It is: *a bounded,
@@ -160,10 +160,10 @@ reliability edge on messy real targets is the pilot's job.*
    business context, not a fixed favourite.
 3. **Trap verification (part of E1):** a small separate run that **actually validates both** `/docs` and
    `/health`. `/docs/debug/vars` matches its signature → `CONFIRMED`; `/health/debug/vars` returns 404
-   with no signature → `NOT_CONFIRMED`. This is what proves the FP is *rejected on evidence* — skipping
+   with no signature → `NOT_CONFIRMED`. This is what proves the FP is *rejected on evidence* - skipping
    `/health` in the budget run does **not** prove that.
 4. **Evidence-aware second decision (E1 follow-up):** the LLM's second call receives a **small
-   structured summary of the first validation's actual result** (see below), not raw HTML — so the
+   structured summary of the first validation's actual result** (see below), not raw HTML - so the
    follow-up is informed by evidence. We log the first result, the second proposal + reason, the policy
    verdict, and the final scan. We do **not** claim "adaptive improvement" just because the LLM was
    called twice, and we do **not** invent a changed choice when the same next check is still rational.
@@ -198,7 +198,7 @@ Two things are kept separate: the **sandbox ground truth** (what the author plan
 | `NOT_CONFIRMED` | The validation completed, but the required evidence was **absent** (does not prove the issue is impossible) | `/health/debug/vars`: 404, no `stacktrace` marker → the benign trap |
 | `UNVERIFIED` | An indicator matched, but no validation ran (budget exhausted) | `/account` indicator skipped under budget |
 | `NO_INDICATOR` | No indicator matched **among the checks actually performed** (not a claim the endpoint is secure) | `/home` in this limited test |
-| `TEST_ERROR` | The scan/HTTP validation failed or produced unusable evidence — **never** counted as a negative | timeout, malformed output, tool error |
+| `TEST_ERROR` | The scan/HTTP validation failed or produced unusable evidence - **never** counted as a negative | timeout, malformed output, tool error |
 
 The LLM **may not assign or overwrite** these labels. It only explains relevance and business priority.
 
@@ -208,7 +208,7 @@ The LLM **may not assign or overwrite** these labels. It only explains relevance
 
 | # | Setup | What it shows | Success criterion |
 |---|---|---|---|
-| **E1** | Five-endpoint toy, budget 2 — including the false-positive trap (`/docs` vs `/health`, both validated) | A vs B1 vs B2 vs C, with the actual chosen templates + confirmed issues; plus identical indicator → different validation results on the trap | Reproducible, fair (**no assumed LLM win**); evidence-based `CONFIRMED` vs `NOT_CONFIRMED` on the trap |
+| **E1** | Five-endpoint toy, budget 2 - including the false-positive trap (`/docs` vs `/health`, both validated) | A vs B1 vs B2 vs C, with the actual chosen templates + confirmed issues; plus identical indicator → different validation results on the trap | Reproducible, fair (**no assumed LLM win**); evidence-based `CONFIRMED` vs `NOT_CONFIRMED` on the trap |
 | **E2** | Swap `/payments` ↔ `/docs` importance; responses unchanged | Repeat B2 and C | Choices/reasons track context; report both |
 | **E3** | Live local Grafana 8.3.0 + the real ~14k corpus | Curate grafana-tagged CVEs → select (tag vs version vs LLM, F1) → same engine runs the applicable **real community template** live → verdict | Measured LLM win (reading beats rules, F1 1.00 vs 0.15/0.29) + a real end-to-end `CONFIRMED`; read-only gate; one product/version |
 | **E4** | Local config only | Invalid template, off-scope target, over-budget proposal, malformed LLM JSON | Each blocked/rejected; **zero** off-scope executions |
@@ -223,17 +223,17 @@ reasons, and the deterministic verifier's final decision for every run.
 The components below serve the ground-truth endpoints and the indicator/validation + benign-trap
 pattern:
 
-- **Sandbox** — serve the five endpoints with their exact headers, bodies, and signatures (one small
-  localhost-only Python handler — the scope guard already covers it).
-- **Templates** — grow from 4 to the indicator+validation pairs for ADMIN, DEBUG, PII, plus the shared
+- **Sandbox** - serve the five endpoints with their exact headers, bodies, and signatures (one small
+  localhost-only Python handler - the scope guard already covers it).
+- **Templates** - grow from 4 to the indicator+validation pairs for ADMIN, DEBUG, PII, plus the shared
   debug indicator used by the trap. Each **validation** matches on its **content signature**, never on a
   bare status code alone.
-- **Asset registry** — new small config: the five endpoints, each with its business-importance label and
+- **Asset registry** - new small config: the five endpoints, each with its business-importance label and
   the budget. A future authorized target = one more entry.
-- **Catalog** — the templates above, tagged indicator/validation, with severity and cost (0 or 1).
-- **Baseline B2** — a few lines of Python (importance → severity → stable tie-break), kept outside the
+- **Catalog** - the templates above, tagged indicator/validation, with severity and cost (0 or 1).
+- **Baseline B2** - a few lines of Python (importance → severity → stable tie-break), kept outside the
   LLM so it is a genuine independent baseline.
-- **Two-stage LLM** — first proposal, then a second proposal that receives the structured evidence
+- **Two-stage LLM** - first proposal, then a second proposal that receives the structured evidence
   summary from §8; both pass through the same policy guard.
 
 Everything else (policy gate, scanner runner, evidence verifier, trace log) reads the per-endpoint

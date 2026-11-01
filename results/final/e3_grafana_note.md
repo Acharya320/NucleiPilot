@@ -33,16 +33,16 @@ generalization is shown as **data, not code**. Read with `e3_grafana_summary.md`
 **Task:** from the **12** grafana-tagged candidate CVEs, pick the ones that apply to **Grafana 8.3.0**.
 
 **Ground truth (`config/grafana_ground_truth.json`):** exactly **one** of the 12 applies to a stock,
-unauthenticated 8.3.0 — **CVE-2021-43798**. It was hand-verified from each template's own
+unauthenticated 8.3.0 - **CVE-2021-43798**. It was hand-verified from each template's own
 description, and it is **empirically confirmed**: it was run live and the verdict is CONFIRMED (real
 `/etc/passwd` read). The other 11 target different versions/features.
 
 Each method outputs a **selected set**; `scripts/run_grafana.py` `score()` compares it to the answer key:
 
 - **TP** = selected **and** applies &nbsp;|&nbsp; **FP** = selected but does **not** apply (junk) &nbsp;|&nbsp; **FN** = applies but **missed**
-- **Precision** = TP / (TP + FP) — of what you flagged, how much was right
-- **Recall** = TP / (TP + FN) — of what truly applies, how much you caught
-- **F1** = 2·P·R / (P + R) — one balanced score
+- **Precision** = TP / (TP + FP) - of what you flagged, how much was right
+- **Recall** = TP / (TP + FN) - of what truly applies, how much you caught
+- **F1** = 2·P·R / (P + R) - one balanced score
 
 With the answer key = {CVE-2021-43798}:
 
@@ -52,10 +52,10 @@ With the answer key = {CVE-2021-43798}:
 | VERSION rule | 6 | 1 | 5 | 0 | 1/6 = 0.17 | 1.00 | 0.29 |
 | **LLM** | 1 | 1 | 0 | 0 | 1.00 | 1.00 | **1.00** |
 
-**Reading it:** recall is 1.00 for all three — everyone *found* the real CVE; nobody missed it. The
+**Reading it:** recall is 1.00 for all three - everyone *found* the real CVE; nobody missed it. The
 difference is **precision** (how much junk came along): the tag rule drags 11 irrelevant checks, the
 parser 5, the LLM none. Caveat: with a single positive, recall is only 0-or-1, so F1 here is
-precision-driven — this is one product/version, a demonstration that the gap is real, not a breadth
+precision-driven - this is one product/version, a demonstration that the gap is real, not a breadth
 benchmark.
 
 ## Why the LLM is genuinely needed here (not a rigged win)
