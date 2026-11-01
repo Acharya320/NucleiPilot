@@ -36,6 +36,8 @@ Approved local target -> Nuclei indicator checks -> target profile
 
 The components are in `nucleipilot/`: `profiler.py` (initial observations), `planners.py` (four planning methods), `policy.py` (allowed choices), `scanner.py` (Nuclei command execution), `verifier.py` (evidence status), and `engine.py` (the loop). The input assets and approved templates are in `config/` and `templates/`.
 
+**Two decision points, one engine.** The pipeline makes two kinds of decision: **curation** — which templates are even *relevant/applicable* to a target (the hard part when the corpus is large) — and **prioritization** — which relevant check to run next under a budget. The **toy demo (E1–E3)** stresses *prioritization* (a tiny pre-curated catalog, a tight budget → the planners A/B1/B2/C); the **Grafana demo (E4)** stresses *curation* (the real ~14k corpus, one applicable CVE → tag-rule vs version-parser vs LLM). Both run through the **same** `profile → decide → authorize → scan → verify` engine; only the rule baseline each is compared against differs, because the decision being tested differs.
+
 **Testing boundary:** the project records tests on a self-hosted five-endpoint toy app and a local Grafana 8.3.0 container. Both are deliberately controlled lab targets. The code restricts submitted target hostnames to localhost, but does **not** provide enterprise-grade network isolation or a full redirect/egress policy. Do not use it against production or third-party systems.
 
 ## 3. Evidence and results
@@ -60,37 +62,48 @@ Other focused checks:
 
 Open [`results/final/README.md`](results/final/README.md) for the evidence index, [`results/final/summary.md`](results/final/summary.md) for recorded comparisons, and [`docs/analysis.md`](docs/analysis.md) for the short evaluation.
 
-## 4. How to reproduce
+## 4. How to run it
 
-**Requirements:** Python 3.10+, Nuclei v3 (tested with v3.11.1), an API key for the LLM planner only, and Docker for the Grafana demo. Install Nuclei separately and put it on `PATH` or set `NUCLEIPILOT_NUCLEI_BIN`. Keep any `.env` with real credentials **outside shared ZIP files and Git**.
+> Commands below are **Windows PowerShell**. On **macOS/Linux**, replace `py` with `python3` and `.\.venv\Scripts\python.exe` with `./.venv/bin/python`.
 
-From the repository root — **Windows (PowerShell):**
+### One-time setup (both demos)
+
+Requirements: **Python 3.10+** and **Nuclei v3** (tested v3.11.1) on `PATH` (or set `NUCLEIPILOT_NUCLEI_BIN`). From the repo root:
 
 ```powershell
 py -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m unittest discover -s tests
-.\.venv\Scripts\python.exe scripts\smoke_toyapp.py
-.\.venv\Scripts\python.exe scripts\run_experiment.py
-.\.venv\Scripts\python.exe scripts\safety_checks.py
-.\.venv\Scripts\python.exe scripts\run_grafana.py   # E4: needs Docker + the nuclei-templates corpus
 ```
 
-**macOS / Linux (bash):**
+The LLM steps need an API key: copy `.env.example` to `.env` and fill in your key (keep `.env` out of Git and ZIPs). Without a key, the LLM method is skipped automatically and the run says so.
 
-```bash
-python3 -m venv .venv
-./.venv/bin/python -m pip install -r requirements.txt
-./.venv/bin/python -m unittest discover -s tests
-./.venv/bin/python scripts/smoke_toyapp.py
-./.venv/bin/python scripts/run_experiment.py
-./.venv/bin/python scripts/safety_checks.py
-./.venv/bin/python scripts/run_grafana.py   # E4: needs Docker + the nuclei-templates corpus
+### 4A — Toy demo (E1–E3, plus safety E5)
+
+**Needs:** Python + Nuclei. API key *optional* (only method C uses it). **No Docker.**
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests    # 37 logic + safety tests (offline)
+.\.venv\Scripts\python.exe scripts\smoke_toyapp.py          # confirm the toy target serves its signatures
+.\.venv\Scripts\python.exe scripts\run_experiment.py        # E1-E3: A / B1 / B2 / C under a tight budget
+.\.venv\Scripts\python.exe scripts\safety_checks.py         # E5: four fail-safe demonstrations
+.\.venv\Scripts\python.exe scripts\scope_demo.py            # E5: live scope-guard demo (real engine)
 ```
+Outputs → `results/reproduced/`: `summary.md`, `comparison.csv`, `traces/`, `e3_trap.json`, `safety_checks.md`.
 
-For the LLM experiment, copy `.env.example` to `.env` locally and fill in the API settings. `scripts/run_grafana.py` additionally requires Docker; it binds the container to **`127.0.0.1` only**, so the lab Grafana is not exposed on the network. Shut down the lab container after the demonstration (`docker rm -f np-grafana`).
+### 4B — Grafana demo (E4, real 14k corpus + live container)
 
-The deterministic tests can run without Nuclei or an LLM. The end-to-end experiments need the dependencies noted above; **without an API key, method C (the LLM planner) is skipped automatically** and the summary records that. Reproduction runs write to `results/reproduced/` by default, so the committed reference evidence in `results/final/` is never overwritten (regenerate the reference deliberately with `--out results/final`). Individual decisions can be displayed with `python scripts/show_trace.py results/final/traces/e1_C_run0.json`.
+**Needs (in addition to the setup above):** **Docker running**, an **API key** in `.env` (E4's selection uses the LLM), and the **nuclei-templates corpus**.
+
+```powershell
+nuclei -update-templates                                    # fetch the ~14k corpus to ~/nuclei-templates (once)
+.\.venv\Scripts\python.exe scripts\run_grafana.py           # E4: fingerprint -> curate -> select -> live scan -> verdict
+docker rm -f np-grafana                                     # stop the lab container when done
+```
+`run_grafana.py` starts `grafana/grafana:8.3.0` bound to **`127.0.0.1` only**. If your corpus is not at `~/nuclei-templates`, add `--corpus "<path>"`. Outputs → `results/reproduced/`: `e4_grafana_summary.md`, `e4_grafana_run.json`. *(Optional — prove the candidate pool isn't hand-picked:* `.\.venv\Scripts\python.exe scripts\build_grafana_fixture.py --corpus "<path>"`*.)*
+
+### Notes
+
+Reproduction runs write to `results/reproduced/` so the committed reference in `results/final/` is never overwritten (regenerate the reference deliberately with `--out results/final`). View one decision's full trace: `.\.venv\Scripts\python.exe scripts\show_trace.py results\final\traces\e1_C_run0.json`.
 
 ## 5. Deliverables and limits
 

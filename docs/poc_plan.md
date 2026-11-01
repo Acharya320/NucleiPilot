@@ -51,15 +51,16 @@ purpose and a **known answer key**. This is our main test of correctness, becaus
 what is there.
 
 **Target 2 — local Grafana 8.3.0.** A real piece of software, pinned to an old version, run in an
-isolated local container. It shows the same agent flow works on software we did not write.
+isolated local container. It shows the **same agent flow works on software we did not write** — and, in
+the final build (experiment **E4**), that the agent can **curate the right check from the real ~14k
+ProjectDiscovery template corpus**, not just a hand-made catalog.
 - **Non-destructive checks only.** "Non-destructive" means the check **reads only** — no writes, no
-  changes to the app's state, no denial of service.
-- **Prove the file-read with a harmless marker file.** To show the arbitrary-file-read
-  (`CVE-2021-43798`) safely, we plant a **harmless marker file we control** inside our own container
-  and have the agent retrieve that exact marker. This proves the read primitive works without pulling
-  real system files. (On our isolated container, reading `/etc/passwd` is also harmless and is what the
-  stock official template does, so we keep it as a secondary proof of the "unmodified official
-  template" point.)
+  changes to the app's state, no denial of service. A **read-only safety allowlist** enforces this: an
+  intrusive CVE (several Grafana CVEs are DoS / state-changing) is refused by the policy gate even if the
+  model proposes it.
+- **Real community template.** The arbitrary-file-read (`CVE-2021-43798`) is confirmed with the
+  **official ProjectDiscovery community template** taken from the corpus — it reads `/etc/passwd`, which
+  is harmless on our throwaway local container — not with a hand-written one.
 - **Local only.** No public network. We report only what we can actually show — no vulnerability
   claims we cannot back with evidence.
 
@@ -82,8 +83,10 @@ follow-up round.
 
 - **Asset registry** — the list of targets we are *allowed* to scan. Each entry has the URL, the
   **business context (which can be set per endpoint/component, not just per site)**, and the budget.
-  The toy app and Grafana are two entries. A future authorized site is just **one more entry**. The
-  scope check reads this list; it is enforced in code.
+  The toy app is the registry entry; the scope check reads this list and is enforced in code. (The
+  Grafana experiment, E4, builds its candidate catalog from the real nuclei-templates corpus rather than
+  this registry — see `scripts/run_grafana.py`.) A future authorized site is just **one more entry (or
+  one more corpus filter)**.
 - **Context profiler (Python)** — reads the allowed target and collects simple technology facts
   (what software, what version). The business context and the budget come from configuration. This
   step uses **no LLM**, which keeps the attack surface small.
