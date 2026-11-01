@@ -1,4 +1,4 @@
-# NucleiPilot - Failure & Safety Checks (E5)
+# NucleiPilot - Failure & Safety Checks (E4)
 
 Deterministic demonstrations (no Nuclei, no API) that the engine fails safe: the model proposes, but code authorizes, bounds, and scopes every action.
 

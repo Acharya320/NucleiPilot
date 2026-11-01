@@ -1,4 +1,4 @@
-"""E5 -- failure & safety demonstrations for the engine (deterministic; no Nuclei, no API).
+"""E4 -- failure & safety demonstrations for the engine (deterministic; no Nuclei, no API).
 
 Shows the harness does the safe thing when the model or the caller misbehaves:
   1. An out-of-scope target is rejected before any scan (scope guard, in code).
@@ -18,7 +18,7 @@ from nucleipilot import policy, registry, profiler, engine, planners        # no
 from nucleipilot.scanner import ScanResult, assert_in_scope, ScopeError     # noqa: E402
 
 import argparse                                                             # noqa: E402
-_ap = argparse.ArgumentParser(description="E5 deterministic safety/failure checks (no Nuclei, no API).")
+_ap = argparse.ArgumentParser(description="E4 deterministic safety/failure checks (no Nuclei, no API).")
 _ap.add_argument("--out", default=os.path.join("results", "reproduced"),
                  help="output dir for safety_checks.md (default: results/reproduced; "
                       "results/final holds the committed reference evidence).")
@@ -122,7 +122,7 @@ out_dir = OUT_DIR
 os.makedirs(out_dir, exist_ok=True)
 md = os.path.join(out_dir, "safety_checks.md")
 with open(md, "w", encoding="utf-8") as fh:
-    fh.write("# NucleiPilot - Failure & Safety Checks (E5)\n\n")
+    fh.write("# NucleiPilot - Failure & Safety Checks (E4)\n\n")
     fh.write("Deterministic demonstrations (no Nuclei, no API) that the engine fails safe: the model "
              "proposes, but code authorizes, bounds, and scopes every action.\n\n")
     fh.write("| Check | Result | Detail |\n|---|---|---|\n")

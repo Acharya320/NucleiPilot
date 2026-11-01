@@ -29,7 +29,7 @@ class TemplateSpec:
     purpose: str               # plain-language description for the planner
     severity: str              # info | low | medium | high | critical
     validates: str | None = None          # for a validation: the indicator it confirms
-    cost: int = 1                          # budget units this check consumes (v2: indicator=0, validation=1)
+    cost: int = 1                          # budget units this check consumes (indicator=0, validation=1)
     possible_false_positive: str | None = None
     endpoint: str | None = None            # app component this maps to (None = shared, e.g. the debug indicator)
 

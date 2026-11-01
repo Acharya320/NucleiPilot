@@ -1,8 +1,8 @@
 """NucleiPilot scaled toy app (the measurement bench).
 
 A single small web app on 127.0.0.1 with FIVE components, each carrying its own
-*synthetic* condition. Unlike the v1 profile sandbox (nucleipilot/sandbox.py),
-all conditions are present AT ONCE -- this is one app with several endpoints,
+*synthetic* condition. Rather than one condition per run, all conditions are
+present AT ONCE -- this is one app with several endpoints,
 and business importance is assigned PER ENDPOINT by configuration (the asset
 registry, Phase 2), not by the server. See docs/toy_spec.md for the full design.
 

@@ -1,9 +1,9 @@
-# E4 - NucleiPilot on live Grafana 8.3.0, using the real ~14k corpus
+# E3 - NucleiPilot on live Grafana 8.3.0, using the real ~14k corpus
 
-*The real-world counterpart to the toy (E1-E3). Same engine, a real app, and the actual
+*The real-world counterpart to the toy (E1-E2). Same engine, a real app, and the actual
 ProjectDiscovery template corpus. This is where the LLM earns its place -- and where
-generalization is shown as **data, not code**. Read with `e4_grafana_summary.md` and
-`e4_grafana_run.json`.*
+generalization is shown as **data, not code**. Read with `e3_grafana_summary.md` and
+`e3_grafana_run.json`.*
 
 ## What it does (one run, four steps)
 
@@ -33,7 +33,7 @@ generalization is shown as **data, not code**. Read with `e4_grafana_summary.md`
 Affected-version data in real templates is **inconsistent free-text prose**, with no
 machine-readable range field. Matching the detected version against it is a reading task -
 exactly where tag/keyword rules and simple parsers break and an LLM does well. On the small,
-clean toy (E1-E3) the LLM only **ties** a rule; here, on the large messy corpus, it **clearly
+clean toy (E1-E2) the LLM only **ties** a rule; here, on the large messy corpus, it **clearly
 wins**. The agent's value scales with the size and messiness of the template space.
 
 ## Generalization: data, not code
@@ -65,7 +65,7 @@ proposes, code authorizes" hold against a real corpus.
 
 ## Reproducing from the full corpus (the 14k is referenced, not bundled)
 
-E4's candidate pool (`config/grafana_corpus.json`) reproduces the selection scores with **no
+E3's candidate pool (`config/grafana_corpus.json`) reproduces the selection scores with **no
 external files**. To regenerate it from the real corpus and verify it was not hand-picked:
 
 - **Corpus:** ProjectDiscovery **nuclei-templates `v10.5.1`** - public, ~89 MB, 14,104 templates.

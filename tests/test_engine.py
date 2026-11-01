@@ -98,7 +98,7 @@ class TestEngine(unittest.TestCase):
         self.assertEqual(r["chosen_order"], ["toy-admin-validation", "toy-pii-validation"])
         self.assertEqual(_statuses(r)["/payments"], "CONFIRMED")
 
-    # --- E5 safety properties ---------------------------------------------
+    # --- E4 safety properties ---------------------------------------------
     def test_out_of_scope_asset_refused_before_scanning(self):
         evil = copy.deepcopy(self.asset)
         evil["base_url"] = "http://attacker.example.com"

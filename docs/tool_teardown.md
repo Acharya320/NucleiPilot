@@ -12,7 +12,7 @@ not in code: each template declares one or more requests (HTTP / DNS / TCP / hea
 **matchers** — status code, word, regex, or DSL expressions — that decide whether a target is
 affected. ProjectDiscovery maintains a large community template library (thousands of templates, many
 mapped to specific CVEs), and users can write their own. The PoC uses **Nuclei v3.11.1** with custom toy
-templates and, for the Grafana case (E4), the **official community templates** from this library
+templates and, for the Grafana case (E3), the **official community templates** from this library
 (nuclei-templates v10.5.1). Nuclei is listed in the assignment's "foundational tools — add an agentic layer."
 
 ## How it works
@@ -52,7 +52,7 @@ NucleiPilot keeps Nuclei as the detection engine and adds a thin layer that:
   catalog + budget) and records a full trace. The invariant is *"model proposes, code authorizes."*
 - **Generalizes to new targets as data, not code** — the same engine runs a new target with zero
   CVE-specific decision code; on the real ~14k-template corpus it **curates** the Grafana CVE applicable
-  to the detected version and confirms it live (E4), where keyword/version rules cannot (F1 1.00 vs
+  to the detected version and confirms it live (E3), where keyword/version rules cannot (F1 1.00 vs
   0.15 / 0.29).
 
 See the [README](../README.md) to run it, and [analysis.md](analysis.md) for the honest evaluation of

@@ -16,11 +16,11 @@ A reviewer with a single link lands here. The assignment's Part-2 deliverables a
 | **2. Implementation (working code)** | this repo: [`nucleipilot/`](nucleipilot/) (library) · [`scripts/`](scripts/) (entry points) · [`config/`](config/) + [`templates/`](templates/) (data) · [`tests/`](tests/) |
 | **3. Documentation (README)** | this file — §1–§5 cover design, agent behavior, architecture, dependencies, setup, how to run, and known limitations |
 | **4. ~5-minute demo video** | **▶ ‹DEMO VIDEO URL — add before submission›** |
-| **5. Test results** | [`results/final/`](results/final/) + its [`README`](results/final/README.md) — comparison, traces (decisions/actions), E4 run, safety |
+| **5. Test results** | [`results/final/`](results/final/) + its [`README`](results/final/README.md) — comparison, traces (decisions/actions), E3 Grafana run, safety |
 | **6. Analysis (1 page)** | [`docs/analysis.md`](docs/analysis.md) |
 | **7. Executive deck (≤5 slides)** | [`presentation/AXP_Executive_Deck.pptx`](presentation/AXP_Executive_Deck.pptx) |
 
-**Supporting design docs:** [`docs/poc_plan.md`](docs/poc_plan.md) (design + build plan) · [`docs/toy_spec.md`](docs/toy_spec.md) (toy spec + experiment matrix E1–E5) · [`docs/figures/poc_flow.png`](docs/figures/poc_flow.png) (decision-flow diagram).
+**Supporting design docs:** [`docs/poc_plan.md`](docs/poc_plan.md) (design + build plan) · [`docs/toy_spec.md`](docs/toy_spec.md) (toy spec + experiment matrix E1–E4) · [`docs/figures/poc_flow.png`](docs/figures/poc_flow.png) (decision-flow diagram).
 
 **Suggested reading order:** this README → [`docs/analysis.md`](docs/analysis.md) (the verdict) → [`results/final/README.md`](results/final/README.md) (the evidence) → then, for depth, `poc_plan.md` and `toy_spec.md`.
 
@@ -54,7 +54,7 @@ Approved local target -> Nuclei indicator checks -> target profile
 
 The components are in `nucleipilot/`: `profiler.py` (initial observations), `planners.py` (four planning methods), `policy.py` (allowed choices), `scanner.py` (Nuclei command execution), `verifier.py` (evidence status), and `engine.py` (the loop). The input assets and approved templates are in `config/` and `templates/`.
 
-**Two decision points, one engine.** The pipeline makes two kinds of decision: **curation** — which templates are even *relevant/applicable* to a target (the hard part when the corpus is large) — and **prioritization** — which relevant check to run next under a budget. The **toy demo (E1–E3)** stresses *prioritization* (a tiny pre-curated catalog, a tight budget → the planners A/B1/B2/C); the **Grafana demo (E4)** stresses *curation* (the real ~14k corpus, one applicable CVE → tag-rule vs version-parser vs LLM). Both run through the **same** `profile → decide → authorize → scan → verify` engine; only the rule baseline each is compared against differs, because the decision being tested differs.
+**Two decision points, one engine.** The pipeline makes two kinds of decision: **curation** — which templates are even *relevant/applicable* to a target (the hard part when the corpus is large) — and **prioritization** — which relevant check to run next under a budget. The **toy demo (E1–E2)** stresses *prioritization* (a tiny pre-curated catalog, a tight budget → the planners A/B1/B2/C); the **Grafana demo (E3)** stresses *curation* (the real ~14k corpus, one applicable CVE → tag-rule vs version-parser vs LLM). Both run through the **same** `profile → decide → authorize → scan → verify` engine; only the rule baseline each is compared against differs, because the decision being tested differs.
 
 **Testing boundary:** the project records tests on a self-hosted five-endpoint toy app and a local Grafana 8.3.0 container. Both are deliberately controlled lab targets. The code restricts submitted target hostnames to localhost, but does **not** provide enterprise-grade network isolation or a full redirect/egress policy. Do not use it against production or third-party systems.
 
@@ -69,14 +69,15 @@ The toy app presents three real issues and one deliberately misleading debug sig
 | **B2 — context rule** | 2 | Confirms `/payments` and `/account` | Strong non-LLM baseline |
 | **C — LLM planner** | 2 | Same two findings in all 3 recorded runs | **Matches B2; does not beat it** |
 
+**False-positive discipline (part of E1):** a weak debug signal appears at both `/docs` and `/health`; a focused check validates both — `/docs` is CONFIRMED, the look-alike `/health` is **NOT_CONFIRMED**. A fired template is a hint, not a verdict (`results/final/e1_trap.json`). This is a **separate** check, not proof that the budget-2 LLM run tested `/health`.
+
 Other focused checks:
 
 - **E2 — context change:** when `/docs` becomes the most business-important target, B2 and C both select its validation first.
-- **E3 — independent false-positive test:** a weak debug signal appears at `/docs` and `/health`. A targeted check confirms the `/docs` issue and does **not confirm** `/health`. This is a **separate** check, not proof that the budget-2 LLM run tested `/health`.
-- **E4 — Grafana on the real 14k corpus (the LLM's clear win):** against a **live** Grafana 8.3.0 container, from the 12 grafana-tagged CVEs a `-tags grafana` rule gathers out of the real ~14k-template corpus, the LLM selects the one applicable to 8.3.0 — **F1 1.00** vs a tag rule **0.15** and a naive version parser **0.29** (stable over 3 runs) — then the **same engine runs that real community template live and the code verdict is CONFIRMED** (file read). Affected versions are inconsistent free-text, so this is the task where reading beats keyword/parse rules. A read-only safety gate refuses intrusive picks. The corpus is **referenced, not bundled** (ProjectDiscovery nuclei-templates **v10.5.1**, public, ~89 MB); the committed fixture (`config/grafana_corpus.json`) reproduces the selection with no external files. See [`results/final/e4_grafana_note.md`](results/final/e4_grafana_note.md).
-- **E5 — four deterministic safety tests:** scope rejection, unknown-template rejection, malformed-output stop, and budget enforcement passed without requiring an LLM or live scanner.
+- **E3 — Grafana on the real 14k corpus (the LLM's clear win):** against a **live** Grafana 8.3.0 container, from the 12 grafana-tagged CVEs a `-tags grafana` rule gathers out of the real ~14k-template corpus, the LLM selects the one applicable to 8.3.0 — **F1 1.00** vs a tag rule **0.15** and a naive version parser **0.29** (stable over 3 runs) — then the **same engine runs that real community template live and the code verdict is CONFIRMED** (file read). Affected versions are inconsistent free-text, so this is the task where reading beats keyword/parse rules. A read-only safety gate refuses intrusive picks. The corpus is **referenced, not bundled** (ProjectDiscovery nuclei-templates **v10.5.1**, public, ~89 MB); the committed fixture (`config/grafana_corpus.json`) reproduces the selection with no external files. See [`results/final/e3_grafana_note.md`](results/final/e3_grafana_note.md).
+- **E4 — four deterministic safety tests:** scope rejection, unknown-template rejection, malformed-output stop, and budget enforcement passed without requiring an LLM or live scanner.
 
-**Takeaway:** the main implementation result is an inspectable, bounded follow-up workflow. On the small toy, the LLM only **ties** a well-designed context rule (it is not needed there); but on **Grafana + the large, messy real corpus (E4)** it **clearly wins**. The agent's value scales with the size and messiness of the template space.
+**Takeaway:** the main implementation result is an inspectable, bounded follow-up workflow. On the small toy, the LLM only **ties** a well-designed context rule (it is not needed there); but on **Grafana + the large, messy real corpus (E3)** it **clearly wins**. The agent's value scales with the size and messiness of the template space.
 
 Open [`results/final/README.md`](results/final/README.md) for the evidence index, [`results/final/summary.md`](results/final/summary.md) for recorded comparisons, and [`docs/analysis.md`](docs/analysis.md) for the short evaluation.
 
@@ -95,29 +96,29 @@ py -m venv .venv
 
 The LLM steps need an API key: copy `.env.example` to `.env` and fill in your key (keep `.env` out of Git and ZIPs). Without a key, the LLM method is skipped automatically and the run says so.
 
-### 4A — Toy demo (E1–E3, plus safety E5)
+### 4A — Toy demo (E1–E2, plus safety E4)
 
 **Needs:** Python + Nuclei. API key *optional* (only method C uses it). **No Docker.**
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover -s tests    # 37 logic + safety tests (offline)
 .\.venv\Scripts\python.exe scripts\smoke_toyapp.py          # confirm the toy target serves its signatures
-.\.venv\Scripts\python.exe scripts\run_experiment.py        # E1-E3: A / B1 / B2 / C under a tight budget
-.\.venv\Scripts\python.exe scripts\safety_checks.py         # E5: four fail-safe demonstrations
-.\.venv\Scripts\python.exe scripts\scope_demo.py            # E5: live scope-guard demo (real engine)
+.\.venv\Scripts\python.exe scripts\run_experiment.py        # E1-E2: A / B1 / B2 / C under a tight budget (+ E1 trap)
+.\.venv\Scripts\python.exe scripts\safety_checks.py         # E4: four fail-safe demonstrations
+.\.venv\Scripts\python.exe scripts\scope_demo.py            # E4: live scope-guard demo (real engine)
 ```
-Outputs → `results/reproduced/`: `summary.md`, `comparison.csv`, `traces/`, `e3_trap.json`, `safety_checks.md`.
+Outputs → `results/reproduced/`: `summary.md`, `comparison.csv`, `traces/`, `e1_trap.json`, `safety_checks.md`.
 
-### 4B — Grafana demo (E4, real 14k corpus + live container)
+### 4B — Grafana demo (E3, real 14k corpus + live container)
 
-**Needs (in addition to the setup above):** **Docker running**, an **API key** in `.env` (E4's selection uses the LLM), and the **nuclei-templates corpus**.
+**Needs (in addition to the setup above):** **Docker running**, an **API key** in `.env` (E3's selection uses the LLM), and the **nuclei-templates corpus**.
 
 ```powershell
 nuclei -update-templates                                    # fetch the ~14k corpus to ~/nuclei-templates (once)
-.\.venv\Scripts\python.exe scripts\run_grafana.py           # E4: fingerprint -> curate -> select -> live scan -> verdict
+.\.venv\Scripts\python.exe scripts\run_grafana.py           # E3: fingerprint -> curate -> select -> live scan -> verdict
 docker rm -f np-grafana                                     # stop the lab container when done
 ```
-`run_grafana.py` starts `grafana/grafana:8.3.0` bound to **`127.0.0.1` only**. If your corpus is not at `~/nuclei-templates`, add `--corpus "<path>"`. Outputs → `results/reproduced/`: `e4_grafana_summary.md`, `e4_grafana_run.json`. *(Optional — prove the candidate pool isn't hand-picked:* `.\.venv\Scripts\python.exe scripts\build_grafana_fixture.py --corpus "<path>"`*.)*
+`run_grafana.py` starts `grafana/grafana:8.3.0` bound to **`127.0.0.1` only**. If your corpus is not at `~/nuclei-templates`, add `--corpus "<path>"`. Outputs → `results/reproduced/`: `e3_grafana_summary.md`, `e3_grafana_run.json`. *(Optional — prove the candidate pool isn't hand-picked:* `.\.venv\Scripts\python.exe scripts\build_grafana_fixture.py --corpus "<path>"`*.)*
 
 ### Notes
 
@@ -125,4 +126,4 @@ Reproduction runs write to `results/reproduced/` so the committed reference in `
 
 ## 5. Known limitations
 
-One LLM model; small, controlled test data; three repeated LLM runs per toy scenario; no proven real-world accuracy or scaling advantage; and lab-level rather than enterprise-grade network restrictions. E4 is **one product / version** — a demonstration, not a breadth guarantee. A larger pilot should compare the LLM with tuned rules on diverse, authorized systems before committing to an AI decision layer. *(All Part-2 deliverables and their locations are mapped at the top of this README.)*
+One LLM model; small, controlled test data; three repeated LLM runs per toy scenario; no proven real-world accuracy or scaling advantage; and lab-level rather than enterprise-grade network restrictions. E3 is **one product / version** — a demonstration, not a breadth guarantee. A larger pilot should compare the LLM with tuned rules on diverse, authorized systems before committing to an AI decision layer. *(All Part-2 deliverables and their locations are mapped at the top of this README.)*

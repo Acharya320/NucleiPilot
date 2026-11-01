@@ -1,4 +1,4 @@
-"""Build the E4 Grafana fixture by MECHANICALLY extracting metadata for every
+"""Build the E3 Grafana fixture by MECHANICALLY extracting metadata for every
 Grafana-tagged CVE template from a real nuclei-templates corpus.
 
 This exists so the fixture is auditable and reproducible: it is not hand-picked.
@@ -85,14 +85,14 @@ def main():
     doc = {
         "_comment": ("Grafana-tagged CVE templates, mechanically extracted by "
                      "scripts/build_grafana_fixture.py (not hand-picked). Candidate pool a fair "
-                     "`-tags grafana` rule returns (CVEs only); metadata only -- E4 is about "
+                     "`-tags grafana` rule returns (CVEs only); metadata only -- E3 is about "
                      "SELECTION, not scanning."),
         "source": ("ProjectDiscovery nuclei-templates (public, ~89 MB -- NOT bundled in this repo). "
                    "Fetch: `nuclei -update-templates`, or "
                    "`git clone --branch <version> https://github.com/projectdiscovery/nuclei-templates`. "
                    "Regenerate this fixture: `python scripts/build_grafana_fixture.py --corpus <path>`. "
                    "The pinned version used for the committed fixture is recorded in "
-                   "results/final/e4_grafana_note.md."),
+                   "results/final/e3_grafana_note.md."),
         "target": "Grafana 8.3.0",
         "count": len(rows),
         "templates": rows,

@@ -124,15 +124,16 @@ them is the "the LLM out-picks a rule" claim that this toy cannot settle:
 
 1. **Governance — "model proposes, code authorizes."** A flexible proposer (today an LLM) drives a real
    scanner while code enforces scope, allowlist, and budget and logs every step. For a regulated buyer
-   this *is* the product. Fully demonstrable here (E5, traces).
+   this *is* the product. Fully demonstrable here (E4, traces).
 2. **Evidence discipline.** Indicator→validation with content-signature verdicts turns raw matches into
-   trustworthy findings and rejects false positives *on evidence*. Demonstrable here (E3).
+   trustworthy findings and rejects false positives *on evidence*. Demonstrable here (part of E1 — the
+   false-positive trap).
 3. **Budget-aware prioritization.** A real capability. On this small, fully-labeled toy a context-aware
    rule (B2) matches it — **as expected**. That tie is a property of the toy's size, not a weakness of
    the agent (see below).
 4. **Generalization without hand-written rules.** The LLM extends 1–3 to targets, technologies, and
    evidence patterns nobody pre-coded. This is where rules get expensive and the agent earns its cost.
-   Demonstrated and **measured** here (E4: on the real ~14k corpus the LLM picks the version-applicable
+   Demonstrated and **measured** here (E3: on the real ~14k corpus the LLM picks the version-applicable
    Grafana CVE at F1 1.00 vs rules 0.15/0.29, with **zero CVE-specific decision code**); its *reliability
    at scale* is the 90-day pilot's job (the Part 4 decision brief).
 
@@ -157,7 +158,7 @@ reliability edge on messy real targets is the pilot's job.*
 2. **Context-flip (E2):** swap the importance labels of `/payments` and `/docs`, change **nothing** in
    the HTTP responses, and show B2 and C both shift to the debug issue. This proves the choice tracks
    business context, not a fixed favourite.
-3. **Trap verification (E3):** a small separate run that **actually validates both** `/docs` and
+3. **Trap verification (part of E1):** a small separate run that **actually validates both** `/docs` and
    `/health`. `/docs/debug/vars` matches its signature → `CONFIRMED`; `/health/debug/vars` returns 404
    with no signature → `NOT_CONFIRMED`. This is what proves the FP is *rejected on evidence* — skipping
    `/health` in the budget run does **not** prove that.
@@ -207,21 +208,20 @@ The LLM **may not assign or overwrite** these labels. It only explains relevance
 
 | # | Setup | What it shows | Success criterion |
 |---|---|---|---|
-| **E1** | Five-endpoint toy, budget 2 | A vs B1 vs B2 vs C, with the actual chosen templates + confirmed issues | Reproducible, fair; **no assumed LLM win** |
+| **E1** | Five-endpoint toy, budget 2 — including the false-positive trap (`/docs` vs `/health`, both validated) | A vs B1 vs B2 vs C, with the actual chosen templates + confirmed issues; plus identical indicator → different validation results on the trap | Reproducible, fair (**no assumed LLM win**); evidence-based `CONFIRMED` vs `NOT_CONFIRMED` on the trap |
 | **E2** | Swap `/payments` ↔ `/docs` importance; responses unchanged | Repeat B2 and C | Choices/reasons track context; report both |
-| **E3** | `/docs` vs `/health`, both validated | Identical indicator → different validation results | Evidence-based `CONFIRMED` vs `NOT_CONFIRMED` |
-| **E4** | Live local Grafana 8.3.0 + the real ~14k corpus | Curate grafana-tagged CVEs → select (tag vs version vs LLM, F1) → same engine runs the applicable **real community template** live → verdict | Measured LLM win (reading beats rules, F1 1.00 vs 0.15/0.29) + a real end-to-end `CONFIRMED`; read-only gate; one product/version |
-| **E5** | Local config only | Invalid template, off-scope target, over-budget proposal, malformed LLM JSON | Each blocked/rejected; **zero** off-scope executions |
+| **E3** | Live local Grafana 8.3.0 + the real ~14k corpus | Curate grafana-tagged CVEs → select (tag vs version vs LLM, F1) → same engine runs the applicable **real community template** live → verdict | Measured LLM win (reading beats rules, F1 1.00 vs 0.15/0.29) + a real end-to-end `CONFIRMED`; read-only gate; one product/version |
+| **E4** | Local config only | Invalid template, off-scope target, over-budget proposal, malformed LLM JSON | Each blocked/rejected; **zero** off-scope executions |
 
 Run the LLM cases ≥ 3× with fixed settings. Keep the full Nuclei output, the model's proposed IDs +
 reasons, and the deterministic verifier's final decision for every run.
 
 ---
 
-## 11. What we build for this (reusing v1)
+## 11. What we build for this
 
-The v1 sandbox already serves ground-truth profiles and the indicator/validation + benign-trap pattern,
-so we **extend** it rather than start over:
+The components below serve the ground-truth endpoints and the indicator/validation + benign-trap
+pattern:
 
 - **Sandbox** — serve the five endpoints with their exact headers, bodies, and signatures (one small
   localhost-only Python handler — the scope guard already covers it).
@@ -236,5 +236,5 @@ so we **extend** it rather than start over:
 - **Two-stage LLM** — first proposal, then a second proposal that receives the structured evidence
   summary from §8; both pass through the same policy guard.
 
-Everything else (policy gate, scanner runner, evidence verifier, trace log) is reused from v1 and only
-adapted to read the per-endpoint business context and to emit the §9 status labels.
+Everything else (policy gate, scanner runner, evidence verifier, trace log) reads the per-endpoint
+business context and emits the §9 status labels.

@@ -52,7 +52,7 @@ what is there.
 
 **Target 2 — local Grafana 8.3.0.** A real piece of software, pinned to an old version, run in an
 isolated local container. It shows the **same agent flow works on software we did not write** — and, in
-the final build (experiment **E4**), that the agent can **curate the right check from the real ~14k
+the final build (experiment **E3**), that the agent can **curate the right check from the real ~14k
 ProjectDiscovery template corpus**, not just a hand-made catalog.
 - **Non-destructive checks only.** "Non-destructive" means the check **reads only** — no writes, no
   changes to the app's state, no denial of service. A **read-only safety allowlist** enforces this: an
@@ -84,7 +84,7 @@ follow-up round.
 - **Asset registry** — the list of targets we are *allowed* to scan. Each entry has the URL, the
   **business context (which can be set per endpoint/component, not just per site)**, and the budget.
   The toy app is the registry entry; the scope check reads this list and is enforced in code. (The
-  Grafana experiment, E4, builds its candidate catalog from the real nuclei-templates corpus rather than
+  Grafana experiment, E3, builds its candidate catalog from the real nuclei-templates corpus rather than
   this registry — see `scripts/run_grafana.py`.) A future authorized site is just **one more entry (or
   one more corpus filter)**.
 - **Context profiler (Python)** — reads the allowed target and collects simple technology facts
