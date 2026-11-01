@@ -6,24 +6,23 @@ NucleiPilot extends the open-source [Nuclei scanner](https://github.com/projectd
 
 **Operating rule: the model proposes; code authorizes.** This is a controlled testing prototype, not a fully autonomous penetration-testing product.
 
-## Repository map
+## Part 2 deliverables — where to find each
 
-| Path | What it is |
+A reviewer with a single link lands here. The assignment's Part-2 deliverables and exactly where each lives:
+
+| Assignment deliverable | Where to find it |
 |---|---|
-| `README.md` | this file — overview, architecture, how to run, results |
-| `docs/analysis.md` | **1-page evaluation** — what worked, what didn't, limits |
-| `docs/tool_teardown.md` | teardown of Nuclei (what we extend, and why the agentic layer earns its place) |
-| `docs/poc_plan.md` | design rationale + 2-day build plan (embeds the decision-flow diagram) |
-| `docs/toy_spec.md` | toy-app specification + the experiment matrix (E1–E5) |
-| `docs/figures/poc_flow.png` | the decision-flow diagram |
-| `nucleipilot/` | the library — `engine`, `planners`, `policy`, `scanner`, `verifier`, `profiler`, … |
-| `scripts/` | runnable entry points — `run_experiment` (toy), `run_grafana` (E4), `safety_checks`, `scope_demo`, `show_trace`, `build_grafana_fixture` |
-| `config/` + `templates/` | approved targets, the catalog/fixtures, and the Nuclei checks |
-| `tests/` | automated tests (37) |
-| `results/final/` | recorded evidence, with its own [`README.md`](results/final/README.md) index |
-| `presentation/AXP_Executive_Deck.pptx` | the 5-slide executive deck |
+| **1. Tool teardown** | [`docs/tool_teardown.md`](docs/tool_teardown.md) |
+| **2. Implementation (working code)** | this repo: [`nucleipilot/`](nucleipilot/) (library) · [`scripts/`](scripts/) (entry points) · [`config/`](config/) + [`templates/`](templates/) (data) · [`tests/`](tests/) |
+| **3. Documentation (README)** | this file — §1–§5 cover design, agent behavior, architecture, dependencies, setup, how to run, and known limitations |
+| **4. ~5-minute demo video** | **▶ ‹DEMO VIDEO URL — add before submission›** |
+| **5. Test results** | [`results/final/`](results/final/) + its [`README`](results/final/README.md) — comparison, traces (decisions/actions), E4 run, safety |
+| **6. Analysis (1 page)** | [`docs/analysis.md`](docs/analysis.md) |
+| **7. Executive deck (≤5 slides)** | [`presentation/AXP_Executive_Deck.pptx`](presentation/AXP_Executive_Deck.pptx) |
 
-**Suggested reading order for a reviewer:** this README → [`docs/analysis.md`](docs/analysis.md) (the verdict) → [`results/final/README.md`](results/final/README.md) (the evidence) → then, for depth, [`docs/poc_plan.md`](docs/poc_plan.md) and [`docs/toy_spec.md`](docs/toy_spec.md).
+**Supporting design docs:** [`docs/poc_plan.md`](docs/poc_plan.md) (design + build plan) · [`docs/toy_spec.md`](docs/toy_spec.md) (toy spec + experiment matrix E1–E5) · [`docs/figures/poc_flow.png`](docs/figures/poc_flow.png) (decision-flow diagram).
+
+**Suggested reading order:** this README → [`docs/analysis.md`](docs/analysis.md) (the verdict) → [`results/final/README.md`](results/final/README.md) (the evidence) → then, for depth, `poc_plan.md` and `toy_spec.md`.
 
 ## 1. Why build it?
 
@@ -124,13 +123,6 @@ docker rm -f np-grafana                                     # stop the lab conta
 
 Reproduction runs write to `results/reproduced/` so the committed reference in `results/final/` is never overwritten (regenerate the reference deliberately with `--out results/final`). View one decision's full trace: `.\.venv\Scripts\python.exe scripts\show_trace.py results\final\traces\e1_C_run0.json`.
 
-## 5. Deliverables and limits
+## 5. Known limitations
 
-- **Implementation:** `nucleipilot/`, `scripts/`, `config/`, `templates/`, `tests/`.
-- **POC evidence:** `results/final/README.md`, `summary.md`, `comparison.csv`, `traces/` (E1–E3), `safety_checks.md` (E5), `e4_grafana_summary.md` + `e4_grafana_run.json` + `e4_grafana_note.md` (E4).
-- **One-page evaluation:** [`docs/analysis.md`](docs/analysis.md).
-- **Tool overview:** [`docs/tool_teardown.md`](docs/tool_teardown.md).
-- **Executive slides:** [`presentation/AXP_Executive_Deck.pptx`](presentation/AXP_Executive_Deck.pptx).
-- **Demo video:** must be recorded and linked before submission.
-
-**Limitations:** one LLM model, small controlled test data, three repeated LLM runs in E1, no proven real-world accuracy or scaling advantage, and lab-level rather than enterprise-grade network restrictions. A larger pilot should compare the LLM with tuned rules on real authorized systems before committing to an AI decision layer.
+One LLM model; small, controlled test data; three repeated LLM runs per toy scenario; no proven real-world accuracy or scaling advantage; and lab-level rather than enterprise-grade network restrictions. E4 is **one product / version** — a demonstration, not a breadth guarantee. A larger pilot should compare the LLM with tuned rules on diverse, authorized systems before committing to an AI decision layer. *(All Part-2 deliverables and their locations are mapped at the top of this README.)*
