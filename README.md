@@ -129,3 +129,7 @@ Reproduction runs write to `results/reproduced/` so the committed reference in `
 One LLM model; small, controlled test data; three repeated LLM runs per toy scenario; no proven real-world accuracy or scaling advantage; and lab-level rather than enterprise-grade network restrictions. E3 is **one product / version** - a demonstration, not a breadth guarantee. A larger pilot should compare the LLM with tuned rules on diverse, authorized systems before committing to an AI decision layer.
 
 None of this changes what is already demonstrated here: a governed agent that ties a tuned rule where rules already suffice, and clearly beats them - live, on a real CVE - exactly where the problem gets hard. That result is the case for the pilot. *(All Part-2 deliverables and their locations are mapped at the top of this README.)*
+
+## License
+
+[MIT](LICENSE) - the same license Nuclei itself uses.
