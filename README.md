@@ -18,7 +18,7 @@ A reviewer with a single link lands here. The assignment's Part-2 deliverables a
 | **4. ~5-minute demo video** | Shared privately in the submission document (not published on this public repo) |
 | **5. Test results** | [`results/final/`](results/final/) + its [`README`](results/final/README.md) - comparison, traces (decisions/actions), E3 Grafana run, safety |
 | **6. Analysis (1 page)** | [`docs/analysis.md`](docs/analysis.md) |
-| **7. Executive deck (≤5 slides)** | [`presentation/NucleiPilot_Executive_Deck.pptx`](presentation/NucleiPilot_Executive_Deck.pptx) |
+| **7. Executive deck (≤5 slides)** | [`presentation/NucleiPilot_Executive_Deck.pdf`](presentation/NucleiPilot_Executive_Deck.pdf) |
 
 **Supporting design docs:** [`docs/poc_plan.md`](docs/poc_plan.md) (design + build plan) · [`docs/toy_spec.md`](docs/toy_spec.md) (toy spec + experiment matrix E1-E4) · [`docs/figures/poc_flow.png`](docs/figures/poc_flow.png) (the POC's internal decision-flow diagram - not to be confused with the production-stack architecture diagram in Part 3 of the written brief).
 

@@ -18,6 +18,7 @@ results/reproduced/
 
 # --- Never commit protected assignment materials ---
 *.pdf
+!presentation/NucleiPilot_Executive_Deck.pdf
 
 # --- OS / editor noise ---
 .DS_Store
