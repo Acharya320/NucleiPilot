@@ -4,7 +4,7 @@
 
 NucleiPilot is a small, **governed AI agent** - an agentic decision layer - on top of the open-source [Nuclei scanner](https://github.com/projectdiscovery/nuclei). After collecting initial signals, the agent selects **which approved check to run next** based on business importance, available evidence, and a limited testing budget. Nuclei performs the scan; deterministic Python code checks permissions and interprets the result.
 
-**Operating rule: the model proposes; code authorizes.** This is a controlled testing prototype, not a fully autonomous penetration-testing product.
+**Operating rule: the language model proposes; code authorizes.** This is a controlled testing prototype, not a fully autonomous penetration-testing product.
 
 ## Part 2 deliverables - where to find each
 
