@@ -20,7 +20,7 @@ A reviewer with a single link lands here. The assignment's Part-2 deliverables a
 | **6. Analysis (1 page)** | [`docs/analysis.md`](docs/analysis.md) |
 | **7. Executive deck (≤5 slides)** | [`presentation/NucleiPilot_Executive_Deck.pptx`](presentation/NucleiPilot_Executive_Deck.pptx) |
 
-**Supporting design docs:** [`docs/poc_plan.md`](docs/poc_plan.md) (design + build plan) · [`docs/toy_spec.md`](docs/toy_spec.md) (toy spec + experiment matrix E1-E4) · [`docs/figures/architecture.png`](docs/figures/architecture.png) (architecture & decision-flow diagram).
+**Supporting design docs:** [`docs/poc_plan.md`](docs/poc_plan.md) (design + build plan) · [`docs/toy_spec.md`](docs/toy_spec.md) (toy spec + experiment matrix E1-E4) · [`docs/figures/poc_flow.png`](docs/figures/poc_flow.png) (the POC's internal decision-flow diagram - not to be confused with the production-stack architecture diagram in Part 3 of the written brief).
 
 **Suggested reading order:** this README → [`docs/analysis.md`](docs/analysis.md) (the verdict) → [`results/final/README.md`](results/final/README.md) (the evidence) → then, for depth, `poc_plan.md` and `toy_spec.md`.
 

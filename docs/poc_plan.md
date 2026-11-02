@@ -75,7 +75,7 @@ follow-up round.
 > A template match is not automatically a confirmed vulnerability. And no match does **not** prove an
 > app is clean.
 
-![NucleiPilot architecture - the governed decision loop](figures/architecture.png)
+![NucleiPilot's decision loop - how the POC proposes, authorizes, and verifies each check](figures/poc_flow.png)
 
 <sub>Amber = model-assisted decisions (curate + prioritize) · blue = enforced in code.</sub>
 
