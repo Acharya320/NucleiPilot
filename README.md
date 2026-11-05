@@ -58,6 +58,100 @@ The components are in `nucleipilot/`: `profiler.py` (initial observations), `pla
 
 **Testing boundary:** the project records tests on a self-hosted five-endpoint toy app and a local Grafana 8.3.0 container. Both are deliberately controlled lab targets. The code restricts submitted target hostnames to localhost, but does **not** provide enterprise-grade network isolation or a full redirect/egress policy. Do not use it against production or third-party systems.
 
+### Control flow, file by file
+
+**Toy demo** (`scripts/run_experiment.py`):
+
+```text
+run_experiment.py
+ |
+ +-> toyapp.py            starts the toy website itself, in a background thread
+ |
+ +-> policy.py             toy_catalog() -> loads config/catalog.json
+ |                         (the 7 approved toy-* templates)
+ |
+ +-> registry.py           load_registry() + get_asset() -> loads
+ |                         config/asset_registry.json (5 endpoints,
+ |                         business importance, budget=2)
+ |
+ +-> profiler.py           discover(base_url, catalog)
+ |     +-> scanner.py        run_template() for every indicator template
+ |                           (real `nuclei` binary via subprocess)
+ |     then build_profile(asset, catalog, discovery) -> one Profile
+ |
+ +-> llm_client.py          builds an LLMClient() if .env has a key;
+ |                          otherwise method C is skipped for the run
+ |
+ +-> for each planner (A, B1, B2, C x3 on E1; B2, C x3 on E2):
+        engine.run(asset, catalog, planner, profile)   <- the ONE shared loop
+           |
+           +- scanner.assert_in_scope(base_url)         scope guard, always first
+           |
+           +- loop until budget spent:
+                +- planner.decide(...)   <- planners.py
+                |     A/B1/B2: pure sort logic, no I/O
+                |     C (LLMPlanner): prompt -> llm_client.chat_json()
+                |                     -> real OpenRouter API call
+                +- policy.validate_choice(...)   <- policy.py
+                |     independent allowlist + eligibility check, code only
+                +- scanner.run_template(...)     <- real `nuclei` binary again
+                +- verifier.verdict() / make_finding()   <- verifier.py
+                      CONFIRMED / NOT_CONFIRMED / etc. - code, never the model
+
+   (separately, not through engine.run - a direct trap check):
+   scanner.run_template() on /docs and /health validations -> verifier.verdict()
+        -> results/reproduced/e1_trap.json
+
+   finally (inside run_experiment.py itself): _write_csv() / _write_summary()
+        -> results/reproduced/{comparison.csv, summary.md, traces/*.json}
+```
+
+**Grafana demo** (`scripts/run_grafana.py`) - curation already happened offline: `scripts/build_grafana_fixture.py` ran once, earlier, scanned the real ~14k corpus on disk, and wrote the 12 grafana-tagged candidates into `config/grafana_corpus.json`. `run_grafana.py` only loads that pre-built file; it never re-touches the full corpus itself.
+
+```text
+run_grafana.py
+ |
+ +- json.load(config/grafana_corpus.json)        the 12 pre-curated CVE candidates
+ +- json.load(config/grafana_ground_truth.json)  answer key + read-only-safe list
+ |
+ +- ensure_grafana()              [step 1: FINGERPRINT]
+ |     urllib -> GET /api/health on the live container (starting it via
+ |     `docker run` if needed) -> detects "8.3.0"
+ |
+ +- [step 3: SELECT] three scorers, all local to this file:
+ |     select_tag(pool)         -> returns all 12 ids, no reasoning
+ |     select_version(pool)     -> a naive regex version-range parser
+ |     select_llm(pool, client) -> prompt of all 12 descriptions
+ |          +-> llm_client.py     chat_json() -> real OpenRouter API call
+ |     score(...) -> precision/recall/F1 vs the ground-truth file
+ |
+ +- [step 4: VALIDATE LIVE] only if the LLM's pick is read-only-safe:
+        validate_live(ids, pool_by_id, corpus_dir)
+           |
+           +- policy.TemplateSpec(...)   built directly in code, pointing at
+           |                             the REAL community template on disk
+           +- profiler.Profile(...)      also built directly, not via
+           |                             build_profile() - no registry entry
+           |                             exists for Grafana
+           +- engine.run(asset, catalog, planners.FixedPlanner(), profile)
+                 <- THE SAME engine.run() loop as the toy demo
+                 -> scope guard -> policy.validate_choice() ->
+                    scanner.run_template() (real nuclei, real container) ->
+                    verifier.verdict() -> CONFIRMED
+
+   writes -> results/reproduced/{e3_grafana_run.json, e3_grafana_summary.md}
+```
+
+**What's genuinely different between the two:** both converge on the identical `engine.run()` loop for the actual propose -> authorize -> scan -> verify cycle (same engine, two targets). What differs is how the inputs to that loop get built:
+
+| | Toy | Grafana |
+|---|---|---|
+| Template list | `policy.load_catalog()` reads a real file (`catalog.json`) | `policy.TemplateSpec` built directly in code, from the fixture |
+| Target profile | `profiler.discover()` + `build_profile()` - live indicator scan against registry data | `profiler.Profile` built directly in code |
+| Asset registry | Used (`registry.py` -> `asset_registry.json`) | Not used at all - Grafana was never registered as an asset |
+
+So `registry.py` and the catalog-*loading* half of `policy.py` are only ever exercised by the toy path; the Grafana path reuses just the `TemplateSpec`/`Profile` data structures from `policy.py`/`profiler.py`, not their file-loading functions, because Grafana is handled as corpus data rather than a registered asset.
+
 ## 3. Evidence and results
 
 The toy app presents three real issues and one deliberately misleading debug signal. `/payments` and `/account` have higher *business importance* than `/docs`, even though `/docs` has higher *technical severity*.
