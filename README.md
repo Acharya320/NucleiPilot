@@ -227,3 +227,5 @@ None of this changes what is already demonstrated here: a governed agent that ti
 ## License
 
 [MIT](LICENSE) - the same license Nuclei itself uses.
+
+Copyright (c) 2026 Sudipta Acharya. Released under the MIT License; see [LICENSE](LICENSE) for the full terms. NucleiPilot drives the third-party [Nuclei](https://github.com/projectdiscovery/nuclei) scanner (MIT, ProjectDiscovery), which keeps its own copyright and license.
